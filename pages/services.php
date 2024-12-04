@@ -20,6 +20,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+  <!-- JQuery -->
+  <script src="../assets/js/jquery.js"></script>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -38,7 +40,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Rotinas</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="../pages/dashboard.php">
+          <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">description</i>
             <span class="nav-link-text ms-1">OS</span>
           </a>
@@ -50,7 +52,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/services.php">
+          <a class="nav-link active bg-gradient-dark text-white" href="../pages/services.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
             <span class="nav-link-text ms-1">Cadastro de serviços</span>
           </a>
@@ -78,7 +80,6 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
-
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {

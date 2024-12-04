@@ -2,7 +2,7 @@
   // conexão com postgree
   try {
     $host = '127.0.0.1';
-    $dbname = 'data_praise_lab';
+    $dbname = 'data_costureiros';
     $username = 'root';
     $password = '';
 

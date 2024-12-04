@@ -1,8 +1,8 @@
 <?php
 
-require_once(__DIR__ . "/php/_db.php");
+require_once(__DIR__ . "/_db.php");
 
-$data = json_decode(json_encode($_REQUEST));
+$data = (object) $_REQUEST;
 
 switch ($data->action) {
   case "login":
@@ -14,9 +14,9 @@ switch ($data->action) {
     ];
 
     // busca pelo usuáruio no banco
-    $stmt = $pdo->prepare("SELECT u.id,u.name,u.login 
-      FROM user u 
-      WHERE user = :user AND password = :password
+    $stmt = $pdo->prepare("SELECT u.id,u.name,u.login,u.status 
+      FROM users u 
+      WHERE login = :user AND password = :password
       and u.status = 1
     ");
     $execute = $stmt->execute($data);
@@ -29,12 +29,10 @@ switch ($data->action) {
 
         $response->message = "Ok";
         $response->return = 1;
-        $response->keyProfile = $user->key;
 
       } else {
         $response->return = 0;
         $response->message = "Usuário inativo contate um administrador!";
-        $response->keyProfile = $user->key;
       }
     } else {
       $response->return = 0;

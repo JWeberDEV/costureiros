@@ -28,6 +28,18 @@
   <main class="main-content  mt-0">
     <div class="page-header align-items-start min-vh-100" style="background-image: url('https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');">
       <span class="mask bg-gradient-dark opacity-6"></span>
+      <div
+        class="toast fade hide p-2 mt-2 bg-gradient-danger top-0 end-1"
+        role="alert"
+        aria-live="assertive"
+        id="infoToast"
+        aria-atomic="true"
+        style="z-index: 5; position: fixed;">
+        <hr class="horizontal light m-0" />
+        <div class="toast-body text-white">
+          Senha Incorreta
+        </div>
+      </div>
       <div class="container my-auto">
         <div class="row">
           <div class="col-lg-4 col-md-8 col-12 mx-auto">
@@ -65,28 +77,29 @@
                     <input id="password" type="password" class="form-control">
                   </div>
                   <div class="text-center">
-                    <button type="button" class="btn bg-gradient-dark w-100 my-4 mb-2" onclick="login()">Entrar</button>
+                    <button id="login" type="button" class="btn bg-gradient-dark w-100 my-4 mb-2" onclick="login();">Entrar</button>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-      <footer class="footer position-absolute bottom-2 py-2 w-100">
-        <div class="container">
-          <div class="row align-items-center justify-content-lg-center">
-            <div class="col-12 col-md-6 my-auto">
-              <div class="copyright text-center text-sm text-white">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
-                Ceiado por Josias Weber
-              </div>
+    </div>
+    <footer class="footer position-absolute bottom-2 py-2 w-100">
+      <div class="container">
+        <div class="row align-items-center justify-content-lg-center">
+          <div class="col-12 col-md-6 my-auto">
+            <div class="copyright text-center text-sm text-white">
+              © <script>
+                document.write(new Date().getFullYear())
+              </script>,
+              Ceiado por Josias Weber
             </div>
           </div>
         </div>
-      </footer>
+      </div>
+    </footer>
     </div>
   </main>
   <!--   Core JS Files   -->
@@ -121,17 +134,13 @@
         password
       }
 
-      $.post("php/action.php", data)
+      $.post("../php/action.php", data)
         .done(function(response) {
-          console.log(response);
           response = JSON.parse(response);
           if (response.return == 1) {
-            location.href = '/pages/dashboard.php';
+            location.href = '../pages/dashboard.php';
           } else if (response.return == 0) {
-            default_notification({
-              type: "danger",
-              message: `<b>${response.message}</b>`
-            });
+            $('#infoToast').toast('show');
           }
         });
     }

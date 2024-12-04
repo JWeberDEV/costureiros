@@ -5419,7 +5419,7 @@ fieldset:disabled .btn {
   --bs-card-border-color: #e5e5e5;
   --bs-card-border-radius: 0.5rem;
   --bs-card-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --bs-card-inner-border-radius: 0.5rem;
+  --bs-card-inner-border-radius: 0.7rem;
   --bs-card-cap-padding-y: 0.5rem;
   --bs-card-cap-padding-x: 1rem;
   --bs-card-cap-bg: #fff;
@@ -22446,8 +22446,7 @@ fieldset:disabled .btn {
 }
 
 .card {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.16);
 }
 
 .card[data-animation=true] .card-header {
@@ -25771,8 +25770,7 @@ hr.horizontal.gray-light {
 }
 
 .navbar-vertical.bg-white {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.16);
 }
 
 .navbar-vertical.bg-white .navbar-nav .nav-link.active {
