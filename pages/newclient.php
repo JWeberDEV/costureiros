@@ -106,27 +106,27 @@
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
+                      <div class="input-group input-group-outline my-3 city">
                         <label class="form-label">Cidade</label>
-                        <input id="city" type="text" class="form-control">
+                        <input id="city" type="text" class="form-control"onChange="setActive('city');">
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
+                      <div class="input-group input-group-outline my-3 neigbouhod">
                         <label class="form-label">Bairro</label>
-                        <input id="neigbouhod" type="text" class="form-control">
+                        <input id="neigbouhod" type="text" class="form-control"onChange="setActive('neigbouhod');">
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
+                      <div class="input-group input-group-outline my-3 street">
                         <label class="form-label">Rua</label>
-                        <input id="street" type="text" class="form-control">
+                        <input id="street" type="text" class="form-control"onChange="setActive('street');">
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
+                      <div class="input-group input-group-outline my-3 obs">
                         <label class="form-label">Complemento</label>
-                        <input id="obs" type="text" class="form-control">
+                        <input id="obs" type="text" class="form-control"onChange="setActive('obs');">
                       </div>
                     </div>
                   </div>
@@ -163,10 +163,10 @@
           if (data.erro == 'true') {
             $('#infoToast').toast('show');
           } else {
-            $('#city').val(data.localidade).focus();
-            $('#neigbouhod').val(data.bairro).focus();
-            $('#street').val(data.logradouro).focus();
-            $('#obs').val(data.complemento).focus();
+            $('#city').val(data.localidade);
+            $('#neigbouhod').val(data.bairro);
+            $('#street').val(data.logradouro);
+            $('#obs').val(data.complemento);
           }
         });
     }
