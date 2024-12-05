@@ -22,6 +22,8 @@
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <!-- JQuery -->
   <script src="../assets/js/jquery.js"></script>
+  <!-- swall -->
+  <link rel="stylesheet" href="../libs/sweetalert/dist/sweetalert2.min.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -90,12 +92,12 @@
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Telefone</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ponto de referência</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-boldery opacity-7">Ações</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ponto de referência</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-boldery opacity-7"></th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="list">
                   </tbody>
                 </table>
               </div>
@@ -111,8 +113,64 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <script src="../libs/sweetalert/dist/sweetalert2.all.min.js"></script>
   <script>
+    $(document).ready(function() {
+      listclients();
+    });
 
+    const listclients = () => {
+      $.post("../php/back_client.php", {
+          action: "list_clients"
+        })
+        .done(function(response) {
+          $(".list").html(response);
+        });
+    }
+
+    const deleteUser = (args) => {
+      let data = {
+        action: "delete_server",
+        idUser: args
+      }
+
+      let html =
+        `<i style="font-size: 130px; color: #edb72c;" class="fas fa-exclamation-triangle"></i>
+    </br></br>
+    <div class="alert alert-danger" role="alert">
+      Tem Certeza de que deseja excluir este usuario?
+    </div>
+    `;
+
+      Swal.fire({
+        html: html,
+        customClass: 'swal-height',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        showCancelButton: true,
+        allowEnterKey: true,
+        confirmButtonColor: "#4e73df",
+        width: 500,
+        preConfirm: () => {
+          $.post("../php/back_users.php", data)
+            .done(response => {
+              response = JSON.parse(response);
+              if (response.return == 1) {
+                default_notification({
+                  type: "success",
+                  message: response.message
+                });
+                listUsers();
+              } else {
+                default_notification({
+                  type: "danger",
+                  message: response.message
+                });
+              }
+            });
+        },
+      });
+    }
   </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

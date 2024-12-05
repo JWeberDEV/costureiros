@@ -26,7 +26,7 @@
 
 <body class="g-sidenav-show  bg-gray-100">
   <div
-    class="toast fade hide p-2 mt-2 bg-gradient-danger top-0 end-1"
+    class="toast fade hide p-2 mt-2 top-0 end-1"
     role="alert"
     aria-live="assertive"
     id="infoToast"
@@ -34,7 +34,7 @@
     style="z-index: 5; position: fixed;">
     <hr class="horizontal light m-0" />
     <div class="toast-body text-white">
-      O Cep informado é invalido
+      <div class="html"></div>
     </div>
   </div>
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
@@ -86,19 +86,24 @@
               <hr class="dark horizontal my-0">
               <div class="container">
                 <form role="form" class="text-start">
+                  <input type="hidden" id="id">
                   <div class="row">
+                    <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados Pessoais</div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3">
                         <label class="form-label">Nome</label>
-                        <input id="user" type="user" class="form-control">
+                        <input id="name" type="user" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3">
                         <label class="form-label">Telefone</label>
-                        <input id="password" type="text" class="form-control" maxlength="11">
+                        <input id="phone" type="text" class="form-control" maxlength="11">
                       </div>
                     </div>
+                  </div>
+                  <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</div>
+                  <div class="row">
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3">
                         <label class="form-label">Cep</label>
@@ -108,25 +113,31 @@
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 city">
                         <label class="form-label">Cidade</label>
-                        <input id="city" type="text" class="form-control"onChange="setActive('city');">
+                        <input id="city" type="text" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 neigbouhod">
                         <label class="form-label">Bairro</label>
-                        <input id="neigbouhod" type="text" class="form-control"onChange="setActive('neigbouhod');">
+                        <input id="neigbouhod" type="text" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 street">
                         <label class="form-label">Rua</label>
-                        <input id="street" type="text" class="form-control"onChange="setActive('street');">
+                        <input id="street" type="text" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 obs">
                         <label class="form-label">Complemento</label>
-                        <input id="obs" type="text" class="form-control"onChange="setActive('obs');">
+                        <input id="obs" type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 obs">
+                        <label class="form-label">Numero</label>
+                        <input id="number" type="text" class="form-control">
                       </div>
                     </div>
                   </div>
@@ -137,7 +148,7 @@
               <hr class="dark horizontal my-0">
               <div class="container-fluid text-center">
                 <div class="row justify-content-end">
-                  <div class="col-1"><button id="login" type="button" class="btn bg-gradient-dark mt-2" onclick="newClient();">Salvar</button></div>
+                  <div class="col-1"><button id="login" type="button" class="btn bg-gradient-dark mt-2" onclick="saveClient();">Salvar</button></div>
                 </div>
               </div>
             </div>
@@ -167,8 +178,47 @@
             $('#neigbouhod').val(data.bairro);
             $('#street').val(data.logradouro);
             $('#obs').val(data.complemento);
+
+            setActive();
           }
         });
+    }
+
+    const setActive = () => {
+      let data = ['city', 'neigbouhod', 'street', 'obs'];
+
+      data.forEach(element => {
+        if ($(`#${element}`).val()) {
+          $(`.${element}`).addClass('is-filled');
+        }
+      });
+    }
+
+    const saveClient = () => {
+      if (!$('#id').val()) {
+        $.post("../php/back_client.php", {
+            action: 'save_user',
+            name: $('#name').val(),
+            phone: $('#phone').val(),
+            cep: $('#cep').val(),
+            city: $('#city').val(),
+            neigbouhod: $('#neigbouhod').val(),
+            street: $('#street').val(),
+            obs: $('#obs').val(),
+            number: $('#number').val(),
+          })
+          .done(response => {
+            let data = JSON.parse(response);
+            $('#infoToast').addClass(data.class);
+            $('.html').html(data.message);
+            $('#infoToast').toast('show');
+            if (data.class == 'bg-gradient-success') {
+              setTimeout(() => {
+                window.location = '../pages/clients.php';
+              }, 2000);
+            }
+          });
+      }
     }
   </script>
   <!-- Github buttons -->
