@@ -22,6 +22,8 @@
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <!-- JQuery -->
   <script src="../assets/js/jquery.js"></script>
+  <!-- swall -->
+  <link rel="stylesheet" href="../assets/libs/sweetalert/dist/sweetalert2.min.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -62,15 +64,44 @@
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-3 shadow-none border-radius-xl bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1" id="navbarBlur" data-scroll="true">
-      <div class="card-body">
-        <p class="card-text"></p>
+    <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid text-center">
+        <div class="row justify-content-start">
+          <div class="col-12">
+            <a href="../pages/newservice.php">
+              <button type="button" class="btn bg-gradient-dark w-100 m-0">Novo Serviço</button>
+            </a>
+          </div>
+        </div>
       </div>
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-2">
       <div class="row">
-
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                <h6 class="text-white text-capitalize ps-3">Cadastro de Serviços</h6>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Serviço</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Preço</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-boldery opacity-7"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="list">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -80,13 +111,59 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
   <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
+    $(document).ready(function() {
+      listServicces();
+    });
+
+    const listServicces = () => {
+      $.post("../php/back_service.php", {
+          action: "list_clients"
+        })
+        .done(function(response) {
+          $(".list").html(response);
+        });
+    }
+
+    const deleteService = (args) => {
+      let data = {
+        action: "delete_client",
+        id: args
       }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+
+      let html =
+        `<i style="font-size: 130px; color: #edb72c;" class="fas fa-exclamation-triangle"></i>
+        </br></br>
+        <div class="alert alert-danger" role="alert">
+          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este usuario?</strong></p>
+        </div>
+      `;
+
+      Swal.fire({
+        html: html,
+        customClass: 'swal-height',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        showCancelButton: true,
+        allowEnterKey: true,
+        confirmButtonColor: "#43a047",
+        customClass: {
+          confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+          cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+        },
+        width: 500,
+        preConfirm: () => {
+          $.post("../php/back_service.php", data)
+            .done(response => {
+              response = JSON.parse(response);
+              $('#infoToast').addClass(response.class);
+              $('.html').html(response.message);
+              $('#infoToast').toast('show');
+              listServicces();
+            });
+        },
+      });
     }
   </script>
   <!-- Github buttons -->

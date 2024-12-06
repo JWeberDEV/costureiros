@@ -22,8 +22,6 @@
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <!-- JQuery -->
   <script src="../assets/js/jquery.js"></script>
-  <!-- swall -->
-  <link rel="stylesheet" href="../assets/libs/sweetalert/dist/sweetalert2.min.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -60,13 +58,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="../pages/clients.php">
+          <a class="nav-link text-dark" href="../pages/clients.php">
             <i class="material-symbols-rounded opacity-5">group</i>
             <span class="nav-link-text ms-1">Cadastro de Clientes</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/services.php">
+          <a class="nav-link active bg-gradient-dark text-white" href="../pages/services.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
             <span class="nav-link-text ms-1">Cadastro de serviços</span>
           </a>
@@ -75,48 +73,50 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
-      <div class="container-fluid text-center">
-        <div class="row justify-content-start">
-          <div class="col-12">
-            <a href="../pages/newclient.php">
-              <button type="button" class="btn bg-gradient-dark w-100 m-0">Novo Cliente</button>
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <!-- End Navbar -->
     <div class="container-fluid py-2">
       <div class="row">
         <div class="col-12">
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                <h6 class="text-white text-capitalize ps-3">Cadastro de Clientes</h6>
+                <h6 class="text-white text-capitalize ps-3">Novo Serviço</h6>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Telefone</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ponto de referência</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-boldery opacity-7"></th>
-                    </tr>
-                  </thead>
-                  <tbody class="list">
-                  </tbody>
-                </table>
+              <hr class="dark horizontal my-0">
+              <div class="container">
+                <form role="form" class="text-start">
+                  <input type="hidden" id="id">
+                  <div class="row">
+                    <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados Pessoais</div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 service">
+                        <label class="form-label">Serviço</label>
+                        <input id="service" type="user" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 price">
+                        <label class="form-label">Preço</label>
+                        <input id="price" type="number" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="card-footer px-0 pb-2">
+              <hr class="dark horizontal my-0">
+              <div class="container-fluid text-center">
+                <div class="row justify-content-end">
+                  <div class="col-1"><button id="login" type="button" class="btn bg-gradient-dark mt-2" onclick="saveService();">Salvar</button></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
   </main>
   <!--   Core JS Files   -->
@@ -125,59 +125,61 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
-  <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
   <script>
     $(document).ready(function() {
-      listClients();
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const id = urlParams.get('id');
+      if (id) {
+        listUserId(id);
+      }
     });
 
-    const listClients = () => {
-      $.post("../php/back_client.php", {
-          action: "list_clients"
-        })
-        .done(function(response) {
-          $(".list").html(response);
-        });
+    const setActive = () => {
+      let data = ['service', 'price'];
+
+      data.forEach(element => {
+        if ($(`#${element}`).val()) {
+          $(`.${element}`).addClass('is-filled');
+        }
+      });
     }
 
-    const deleteClient = (args) => {
+    const listUserId = (args) => {
       let data = {
-        action: "delete_client",
+        action: "list_user_id",
         id: args
       }
 
-      let html =
-        `<i style="font-size: 130px; color: #edb72c;" class="fas fa-exclamation-triangle"></i>
-        </br></br>
-        <div class="alert alert-danger" role="alert">
-          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este usuario?</strong></p>
-        </div>
-      `;
+      let response = $.post("../php/back_service.php", data)
+        .done(function(response) {
+          response = JSON.parse(response);
+          $("#id").val(response.id);
+          $("#service").val(response.service);
+          $("#price").val(response.price);
 
-      Swal.fire({
-        html: html,
-        customClass: 'swal-height',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Confirmar',
-        showCancelButton: true,
-        allowEnterKey: true,
-        confirmButtonColor: "#43a047",
-        customClass: {
-          confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
-          cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
-        },
-        width: 500,
-        preConfirm: () => {
-          $.post("../php/back_client.php", data)
-            .done(response => {
-              response = JSON.parse(response);
-              $('#infoToast').addClass(response.class);
-              $('.html').html(response.message);
-              $('#infoToast').toast('show');
-              listClients();
-            });
-        },
-      });
+          setActive();
+        })
+    }
+
+    const saveService = () => {
+      $.post("../php/back_service.php", {
+          action: 'save_service',
+          id: $('#id').val(),
+          service: $('#service').val(),
+          price: $('#price').val(),
+        })
+        .done(response => {
+          let data = JSON.parse(response);
+          $('#infoToast').addClass(data.class);
+          $('.html').html(data.message);
+          $('#infoToast').toast('show');
+          if (data.class == 'bg-gradient-success') {
+            setTimeout(() => {
+              window.location = '../pages/services.php';
+            }, 2000);
+          }
+        });
     }
   </script>
   <!-- Github buttons -->

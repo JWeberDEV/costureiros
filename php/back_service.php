@@ -5,33 +5,21 @@ $data = (object) $_REQUEST;
 $response = (object) [];
 
 switch ($data->action) {
-  case 'save_user':
+  case 'save_service':
     if ($data->id > 0) {
 
       // Decalara os Valores para usar o prepare
       $arrayData = [
         'id' => $data->id,
-        'name' => "$data->name",
-        'phone' => "$data->phone",
-        'cep' => "$data->cep",
-        'city' => "$data->city",
-        'neigbouhod' => "$data->neigbouhod",
-        'street' => "$data->street",
-        'obs' => "$data->obs",
-        'number' => "$data->number",
+        'service' => "$data->service",
+        'price' => "$data->price",
       ];
 
       // Preapara a query de fato
       $stmt = $pdo->prepare(
-        "UPDATE clients SET
-          name = :name,
-          phone = :phone,
-          cep = :cep,
-          city = :city,
-          neigbouhod = :neigbouhod,
-          street = :street,
-          obs = :obs,
-          number = :number
+        "UPDATE services SET
+          service = :service,
+          price = :price
         WHERE id = :id"
       );
 
@@ -48,18 +36,12 @@ switch ($data->action) {
     } else {
 
       $arrayData = [
-        'name' => "$data->name",
-        'phone' => "$data->phone",
-        'cep' => $data->cep,
-        'city' => "$data->city",
-        'neigbouhod' => "$data->neigbouhod",
-        'street' => "$data->street",
-        'obs' => "$data->obs",
-        'number' => "$data->number",
+        'service' => "$data->service",
+        'price' => "$data->price",
       ];
 
-      $stmt = $pdo->prepare("INSERT INTO clients (name,phone,cep,city,neigbouhod,street,obs,number)
-      VALUES (:name, :phone, :cep, :city, :neigbouhod, :street, :obs, :number)");
+      $stmt = $pdo->prepare("INSERT INTO services (service,price)
+      VALUES (:service, :price)");
 
       $execute = $stmt->execute($arrayData);
 
@@ -75,7 +57,7 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'list_clients':
-    $stmt = $pdo->prepare("SELECT id,name,phone,street,number,obs FROM clients where status = 1");
+    $stmt = $pdo->prepare("SELECT id,service,price FROM services where status = 1");
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $list = '';
@@ -86,35 +68,22 @@ switch ($data->action) {
             <td>
               <div class='d-flex px-2 py-1'>
                 <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['name'] . "</h6>
+                  <h6 class='mb-0 text-sm'>" . $value['service'] . "</h6>
                 </div>
               </div>
             </td>
             <td class='align-middle text-center'>
               <div class='d-flex px-2 py-1'>
                 <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['phone'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td class='align-middle text-center'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['street'] . " - " . $value['number'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td class='align-middle text-center'><div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['obs'] . "</h6>
+                  <h6 class='mb-0 text-sm'>" . $value['price'] . "</h6>
                 </div>
               </div>
             </td>
             <td class='text-end'>
-              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' href=\"../pages/newclient.php?id='" . $value['id'] . "'\">
+              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' href=\"../pages/newservice.php?id='" . $value['id'] . "'\">
                 <i class='material-symbols-rounded opacity-5'>edit</i>
               </a>
-              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick=\"deleteClient('" . $value['id'] . "')\">
+              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick=\"deleteService('" . $value['id'] . "')\">
                 <i class='material-symbols-rounded opacity-5'>delete</i>
               </button>
             </td>
@@ -138,7 +107,7 @@ switch ($data->action) {
       'id' => "$data->id"
     ];
 
-    $stmt = $pdo->prepare("UPDATE clients SET status = 0 WHERE id = :id");
+    $stmt = $pdo->prepare("UPDATE services SET status = 0 WHERE id = :id");
     $execute = $stmt->execute($arrayData);
 
     if ($execute) {
@@ -153,7 +122,7 @@ switch ($data->action) {
     break;
   case 'list_user_id':
 
-    $stmt = $pdo->prepare("SELECT * FROM clients WHERE id = $data->id");
+    $stmt = $pdo->prepare("SELECT * FROM services WHERE id = $data->id");
     $stmt->execute();
     $results = $stmt->fetch();
 

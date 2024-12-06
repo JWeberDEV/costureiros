@@ -90,24 +90,24 @@
                   <div class="row">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados Pessoais</div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
+                      <div class="input-group input-group-outline my-3 name">
                         <label class="form-label">Nome</label>
                         <input id="name" type="user" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
+                      <div class="input-group input-group-outline my-3 phone">
                         <label class="form-label">Telefone</label>
-                        <input id="phone" type="text" class="form-control" maxlength="11">
+                        <input id="phone" type="number" class="form-control" maxlength="11">
                       </div>
                     </div>
                   </div>
                   <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</div>
                   <div class="row">
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
+                      <div class="input-group input-group-outline my-3 cep">
                         <label class="form-label">Cep</label>
-                        <input id="cep" type="text" class="form-control" onChange="searchCep()" maxlength="8">
+                        <input id="cep" type="number" class="form-control" onChange="searchCep()" maxlength="8">
                       </div>
                     </div>
                     <div class="col-3">
@@ -137,7 +137,7 @@
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 obs">
                         <label class="form-label">Numero</label>
-                        <input id="number" type="text" class="form-control">
+                        <input id="number" type="number" class="form-control">
                       </div>
                     </div>
                   </div>
@@ -165,6 +165,15 @@
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
   <script>
+    $(document).ready(function() {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const id = urlParams.get('id');
+      if (id) {
+        listUserId(id);
+      }
+    });
+
     const searchCep = () => {
       $.post("../php/cepApi.php", {
           cep: $('#cep').val(),
@@ -194,31 +203,64 @@
       });
     }
 
-    const saveClient = () => {
-      if (!$('#id').val()) {
-        $.post("../php/back_client.php", {
-            action: 'save_user',
-            name: $('#name').val(),
-            phone: $('#phone').val(),
-            cep: $('#cep').val(),
-            city: $('#city').val(),
-            neigbouhod: $('#neigbouhod').val(),
-            street: $('#street').val(),
-            obs: $('#obs').val(),
-            number: $('#number').val(),
-          })
-          .done(response => {
-            let data = JSON.parse(response);
-            $('#infoToast').addClass(data.class);
-            $('.html').html(data.message);
-            $('#infoToast').toast('show');
-            if (data.class == 'bg-gradient-success') {
-              setTimeout(() => {
-                window.location = '../pages/clients.php';
-              }, 2000);
+    const listUserId = (args) => {
+      let data = {
+        action: "list_user_id",
+        id: args
+      }
+
+      let response = $.post("../php/back_client.php", data)
+        .done(function(response) {
+          response = JSON.parse(response);
+          $("#id").val(response.id);
+          $("#name").val(response.name);
+          $("#phone").val(response.phone);
+          $("#cep").val(response.cep);
+          $("#city").val(response.city);
+          $("#neigbouhod").val(response.neigbouhod);
+          $("#street").val(response.street);
+          $("#obs").val(response.obs);
+          $("#number").val(response.number);
+
+          let data = ['name', 'phone', 'cep', 'city', 'neigbouhod', 'street', 'obs', 'number'];
+
+          data.forEach(element => {
+            if ($(`#${element}`).val()) {
+              $(`.${element}`).addClass('is-filled');
             }
           });
-      }
+        }).fail(() => {
+          default_notification({
+            type: "danger",
+            message: error
+          });
+        });
+    }
+
+    const saveClient = () => {
+      $.post("../php/back_client.php", {
+          action: 'save_user',
+          id: $('#id').val(),
+          name: $('#name').val(),
+          phone: $('#phone').val(),
+          cep: $('#cep').val(),
+          city: $('#city').val(),
+          neigbouhod: $('#neigbouhod').val(),
+          street: $('#street').val(),
+          obs: $('#obs').val(),
+          number: $('#number').val(),
+        })
+        .done(response => {
+          let data = JSON.parse(response);
+          $('#infoToast').addClass(data.class);
+          $('.html').html(data.message);
+          $('#infoToast').toast('show');
+          if (data.class == 'bg-gradient-success') {
+            setTimeout(() => {
+              window.location = '../pages/clients.php';
+            }, 2000);
+          }
+        });
     }
   </script>
   <!-- Github buttons -->
