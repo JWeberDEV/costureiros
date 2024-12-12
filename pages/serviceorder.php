@@ -38,7 +38,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Rotinas</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="../pages/dashboard.php">
+          <a class="nav-link active bg-gradient-dark text-white" href="../pages/serviceorder.php">
             <i class="material-symbols-rounded opacity-5">description</i>
             <span class="nav-link-text ms-1">OS</span>
           </a>
@@ -60,15 +60,44 @@
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-3 shadow-none border-radius-xl bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1" id="navbarBlur" data-scroll="true">
-      <div class="card-body">
-        <p class="card-text"></p>
+    <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid text-center">
+        <div class="row justify-content-start">
+          <div class="col-12">
+            <a href="../pages/newserviceorder.php">
+              <button type="button" class="btn bg-gradient-dark w-100 m-0">Nova OS</button>
+            </a>
+          </div>
+        </div>
       </div>
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-2">
       <div class="row">
-
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                <h6 class="text-white text-capitalize ps-3">Cadastro de OS</h6>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Serviço</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Preço</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-boldery opacity-7"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="list">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </main>

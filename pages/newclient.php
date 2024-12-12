@@ -7,7 +7,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-    Ordens de Serviço
+    Novo Cliente
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
@@ -52,7 +52,7 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Rotinas</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/dashboard.php">
+          <a class="nav-link text-dark" href="../pages/serviceorder.php">
             <i class="material-symbols-rounded opacity-5">description</i>
             <span class="nav-link-text ms-1">OS</span>
           </a>
@@ -141,8 +141,8 @@
                       </div>
                     </div>
                   </div>
+                </form>
               </div>
-              </form>
             </div>
             <div class="card-footer px-0 pb-2">
               <hr class="dark horizontal my-0">
