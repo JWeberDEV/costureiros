@@ -35,48 +35,43 @@ switch ($data->action) {
         $response->message = "Erro ao editar o registro!";
       }
     } else {
-      $entry = date_create($string);
-      $entry = date_format($entry, "Y/m/d H:i:s");
-      $out = date_create($string);
-      $out = date_format($out, "Y/m/d H:i:s");
-      
-      $arrayData = [
-        'client' => $data->client,
-        'ticket' => $data->ticket,
-        'entry' => "$entry",
-        'out' => "$out",
-      ];
+      $entry = date_create($data->entry);
+      $entry = date_format($entry, "Y-m-d H:i:s");
+      $out = date_create($data->out);
+      $out = date_format($out, "Y-m-d H:i:s");
 
-      $stmt = $pdo->prepare("INSERT INTO serviceorders (idclient,ticket,entry,out)
-      VALUES (:client, :ticket, :entry, :out)");
+      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,ticket,sevicentry,servicexit)
+      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->ticket, '$entry', '$out' FROM serviceorders WHERE `status` = 1");
 
-      $execute = $stmt->execute($arrayData);
+      $execute = $stmt->execute();
       $lastInsertId = $pdo->lastInsertId();
 
       if ($execute) {
         $services = "";
 
         foreach ($data->data as $key => $value) {
-          $stmt = "INSERT INTO orders (idserviceorders,idservice,price,discount,obs)
-          VALUES ($lastInsertId,$value[service],$value[price],$value[price],$value[discount],$value[obs],)";
-
-          $services = $stmt->execute($arrayData);
+          $stmt = $pdo->prepare("INSERT INTO orders (idserviceorders, idservice, price, discount, obs)
+          SELECT $lastInsertId, 'service', {$value['price']}, {$value['discount']}, '{$value['obs']}' FROM services WHERE service = '{$value['service']}'");
+          $services = $stmt->execute([]);
         }
 
         if ($services) {
           $response->class = 'bg-gradient-success';
-          $response->message = "Registro criado com sucesso!";
+          $response->message = "Ordem de Serviço criado com sucesso!";
         }
       } else {
         $response->class = 'bg-gradient-danger';
-        $response->message = "Erro ao criar o registro!";
+        $response->message = "Erro ao criar a Ordem de Serviço!";
       }
     }
 
     echo (json_encode($response));
     break;
-  case 'list_clients':
-    $stmt = $pdo->prepare("SELECT id,service,price FROM services where status = 1");
+  case 'list_serviceorders':
+    $stmt = $pdo->prepare("SELECT s.id,s.serviceorder,c.name,s.ticket FROM serviceorders s
+      JOIN clients c ON c.id = s.idclient
+      WHERE s.`status` = 1
+    ");
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $list = '';
@@ -84,25 +79,32 @@ switch ($data->action) {
       print_r($value);
       if ($value) {
         $list .= "<tr>
-            <td>
+            <td class='ps-3'>
               <div class='d-flex px-2 py-1'>
                 <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['service'] . "</h6>
+                  <h6 class='mb-0 text-sm'>" . $value['serviceorder'] . "</h6>
                 </div>
               </div>
             </td>
-            <td class='align-middle text-center'>
+            <td class='ps-0'>
               <div class='d-flex px-2 py-1'>
                 <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['price'] . "</h6>
+                  <h6 class='mb-0 text-sm'>" . $value['name'] . "</h6>
+                </div>
+              </div>
+            </td>
+            <td cclass='ps-3'>
+              <div class='d-flex px-2 py-1'>
+                <div class='d-flex flex-column justify-content-center'>
+                  <h6 class='mb-0 text-sm'>" . $value['ticket'] . "</h6>
                 </div>
               </div>
             </td>
             <td class='text-end'>
-              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' href=\"../pages/newservice.php?id='" . $value['id'] . "'\">
+              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' href=\"../pages/newserviceorder.php?id='" . $value['id'] . "'\">
                 <i class='material-symbols-rounded opacity-5'>edit</i>
               </a>
-              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick=\"deleteService('" . $value['id'] . "')\">
+              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick=\"deleteServiceOrder('" . $value['id'] . "')\">
                 <i class='material-symbols-rounded opacity-5'>delete</i>
               </button>
             </td>
@@ -121,12 +123,12 @@ switch ($data->action) {
 
     echo $list;
     break;
-  case 'delete_client':
+  case 'delete_serviceorder':
     $arrayData = [
       'id' => "$data->id"
     ];
 
-    $stmt = $pdo->prepare("UPDATE services SET status = 0 WHERE id = :id");
+    $stmt = $pdo->prepare("UPDATE serviceorders SET status = 0 WHERE id = :id");
     $execute = $stmt->execute($arrayData);
 
     if ($execute) {

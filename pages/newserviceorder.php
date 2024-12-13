@@ -29,6 +29,18 @@
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
+  <div
+    class="toast fade hide p-2 mt-2 top-0 end-1"
+    role="alert"
+    aria-live="assertive"
+    id="infoToast"
+    aria-atomic="true"
+    style="z-index: 5; position: fixed;">
+    <hr class="horizontal light m-0" />
+    <div class="toast-body text-white">
+      <div class="html"></div>
+    </div>
+  </div>
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -171,6 +183,9 @@
     }
 
     $(document).ready(function() {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const id = urlParams.get('id');
       if (!$(`#id`).val()) {
         addRow();
       }
@@ -284,7 +299,10 @@
 
       $('.line').each(function() {
         const row = $(this).attr('row');
-        const service = $(this).find(`.service${row}`).val();
+        const serviceSelectize = $(this).find(`.service${row}`).selectize()[0].selectize;
+        const selectedValue = serviceSelectize.getValue();
+        const selectedOption = serviceSelectize.getOption(selectedValue);
+        const service = selectedOption.text();
         const priceValue = $(this).find(`#price${row}`).val();
         const discountValue = $(this).find(`#discount${row}`).val();
         const obsValue = $(this).find(`#obs${row}`).val();
@@ -298,15 +316,26 @@
       });
 
       $.post("../php/back_serviceoder.php", {
-        action: 'save_orderservice',
-        id : $('#id').val(),
-        client : $('#client').val(),
-        ticket : $('#ticket').val(),
-        entry : $('#entry').val(),
-        out : $('#out').val(),
-        data
-      })
-      return JSON.parse(response);
+          action: 'save_orderservice',
+          id: $('#id').val(),
+          client: $('#client').val(),
+          ticket: $('#ticket').val(),
+          entry: $('#entry').val(),
+          out: $('#out').val(),
+          data
+        })
+        .done(function(response) {
+          response = JSON.parse(response);
+          $('#infoToast').addClass(response.class);
+          $('.html').html(response.message);
+          $('#infoToast').toast('show');
+          if (response.class == 'bg-gradient-success') {
+            setTimeout(() => {
+              window.location = '../pages/serviceorder.php';
+            }, 2000);
+          }
+        });
+
 
     }
   </script>

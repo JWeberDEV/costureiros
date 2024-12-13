@@ -20,6 +20,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+  <!-- JQuery -->
+  <script src="../assets/js/jquery.js"></script>
+  <!-- swall -->
+  <link rel="stylesheet" href="../assets/libs/sweetalert/dist/sweetalert2.min.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -86,9 +90,9 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Serviço</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Preço</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-boldery opacity-7"></th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">OS</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Cliente</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Guichê</th>
                     </tr>
                   </thead>
                   <tbody class="list">
@@ -107,14 +111,59 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
-
+  <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
   <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
+    $(document).ready(function() {
+      listServiccesOrders();
+    });
+
+    const listServiccesOrders = () => {
+      $.post("../php/back_serviceoder.php", {
+          action: "list_serviceorders"
+        })
+        .done(function(response) {
+          $(".list").html(response);
+        });
+    }
+
+    const deleteServiceOrder = (args) => {
+      let data = {
+        action: "delete_serviceorder",
+        id: args
       }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+
+      let html =
+        `<i style="font-size: 130px; color: #edb72c;" class="fas fa-exclamation-triangle"></i>
+        </br></br>
+        <div class="alert alert-danger" role="alert">
+          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este usuario?</strong></p>
+        </div>
+      `;
+
+      Swal.fire({
+        html: html,
+        customClass: 'swal-height',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        showCancelButton: true,
+        allowEnterKey: true,
+        confirmButtonColor: "#43a047",
+        customClass: {
+          confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+          cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+        },
+        width: 500,
+        preConfirm: () => {
+          $.post("../php/back_serviceoder.php", data)
+            .done(response => {
+              response = JSON.parse(response);
+              $('#infoToast').addClass(response.class);
+              $('.html').html(response.message);
+              $('#infoToast').toast('show');
+              listServicces();
+            });
+        },
+      });
     }
   </script>
   <!-- Github buttons -->
