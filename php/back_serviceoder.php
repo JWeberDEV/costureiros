@@ -141,7 +141,13 @@ switch ($data->action) {
 
     echo json_encode($response);
     break;
-  case 'list_user_id':
+  case 'list_serviceorder_id':
+    $stmt = $pdo->prepare("SELECT * FROM serviceordersgit a WHERE id = $data->id");
+    $stmt->execute();
+    $results = $stmt->fetch();
+
+    print_r(json_encode($results));
+    break;
   case 'load_clients':
     // prepara a query que lista os eventos que são vinculados pelo usuário
     $stmt = $pdo->prepare("SELECT c.id, c.name

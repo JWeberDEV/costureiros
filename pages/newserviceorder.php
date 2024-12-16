@@ -89,7 +89,6 @@
             <div class="card-body px-0 pb-2">
               <div class="container">
                 <form role="form" class="text-start">
-                  <input type="hidden" id="id">
                   <div class="row">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados da Ordem de serviço</div>
                     <div class="col-3">
@@ -123,7 +122,6 @@
                   <hr class="horizontal dark m-0" />
                   <div class="mt-3 row">
                     <div class="p-0">
-                      <input type="hidden" id="id">
                       <table class="table table-responsive align-items-center mb-0">
                         <thead>
                           <tr>
@@ -186,8 +184,10 @@
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get('id');
-      if (!$(`#id`).val()) {
+      if (!id) {
         addRow();
+      } else {
+        listServiceId(id);
       }
 
       let clientSelectize = $(`#client`).selectize({
@@ -335,8 +335,23 @@
             }, 2000);
           }
         });
+    }
 
+    const listServiceId = () => {
+      let data = {
+        action: "list_serviceorder_id",
+        id: args
+      }
 
+      let response = $.post("../php/back_service.php", data)
+        .done(function(response) {
+          response = JSON.parse(response);
+          $("#id").val(response.id);
+          $("#service").val(response.service);
+          $("#price").val(response.price);
+
+          setActive();
+        })
     }
   </script>
   <!-- Github buttons -->
