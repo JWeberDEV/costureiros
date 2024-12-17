@@ -83,16 +83,17 @@
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                <h6 class="text-white text-capitalize ps-3">Ordem de Serviço</h6>
+                <h6 class="text-white text-capitalize ps-3">Ordem de Serviço <span id='os'></span></h6>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
               <div class="container">
                 <form role="form" class="text-start">
+                  <input type="hidden" id="id">
                   <div class="row">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados da Ordem de serviço</div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3 counter">
+                      <div class="input-group input-group-outline my-3 ticket">
                         <label class="form-label">Guichê</label>
                         <input id="ticket" type="text" class="form-control">
                       </div>
@@ -104,9 +105,9 @@
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3 out">
+                      <div class="input-group input-group-outline my-3 exit">
                         <label class="form-label">DT Saída /Horário</label>
-                        <input id="out" type="datetime-local" class="form-control">
+                        <input id="exit" type="datetime-local" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
@@ -166,6 +167,8 @@
   <script src="../assets/libs/daterangepicker/moment.min.js"></script>
   <script src="../assets/libs/daterangepicker/daterangepicker.js"></script>
   <script>
+    let client = "";
+    let service = "";
     const fetchClients = async () => {
       const response = await $.post("../php/back_serviceoder.php", {
         action: 'load_clients'
@@ -198,7 +201,7 @@
         create: false,
       });
 
-      let client = clientSelectize[0].selectize;
+      client = clientSelectize[0].selectize;
 
       fetchClients().then(response => {
         client.addOption(response);
@@ -208,7 +211,7 @@
 
     $(function() {
       $(`.entry`).addClass('is-filled');
-      $(`.out`).addClass('is-filled');
+      $(`.exit`).addClass('is-filled');
     });
 
     const addRow = () => {
@@ -271,7 +274,7 @@
         create: false,
       });
 
-      let service = serviceSelectize[0].selectize;
+      service = serviceSelectize[0].selectize;
 
       fetchServices().then(response => {
         service.addOption(response);
@@ -321,7 +324,7 @@
           client: $('#client').val(),
           ticket: $('#ticket').val(),
           entry: $('#entry').val(),
-          out: $('#out').val(),
+          exit: $('#exit').val(),
           data
         })
         .done(function(response) {
@@ -337,21 +340,94 @@
         });
     }
 
-    const listServiceId = () => {
+    const listServiceId = (arg) => {
       let data = {
         action: "list_serviceorder_id",
-        id: args
+        id: arg
       }
 
-      let response = $.post("../php/back_service.php", data)
+      let response = $.post("../php/back_serviceoder.php", data)
         .done(function(response) {
           response = JSON.parse(response);
-          $("#id").val(response.id);
-          $("#service").val(response.service);
-          $("#price").val(response.price);
+          response.forEach(element => {
+            $("#id").val(element.serviceorder);
+            $("#os").html('Nº ' + element.serviceorder);
+            $("#ticket").val(element.ticket);
+            $("#entry").val(element.sevicentry);
+            $("#exit").val(element.servicexit);
+            setTimeout(() => {
+              client.setValue([element.idclient]);
+            }, 30);
+
+            let row = '';
+            let actual = '';
+
+            $('tr.line').each(function() {
+              actual = $(this).attr('row')
+            });
+
+            if (parseInt($('tr.line').attr('row'), 10) > 0) {
+              row = parseInt($('tr.line').attr('row'), 10) + parseInt(actual, 10);
+            } else {
+              row = 1;
+            }
+            setTimeout(() => {
+              $('.lines').append(`
+              <tr class='line' row='${row}'>
+                <td>
+                  <div class="d-flex px-2 py-1 m-2">
+                    <select class="form-control service${row} is-filled" placeholder="Selecione o Serviço" onchange='setPrice(${row})'>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex px-2 py-1">
+                    <div class="input-group input-group-outline my-3 is-filled price${row}">
+                      <label class="form-label">Preço</label>
+                      <input id="price${row}" type="number" class="form-control">
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex px-2 py-1">
+                    <div class="input-group input-group-outline my-3 is-filled discount${row}">
+                      <label class="form-label">Desconto</label>
+                      <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})'>
+                    </div>
+                  </div>
+                </td>
+                <td colspan='2'>
+                  <div class="d-flex px-2 py-1">
+                    <div class="input-group input-group-outline my-3 is-filled obs${row}">
+                      <label class="form-label">Observações</label>
+                      <input id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})'>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            `);
+              counterSelectorServices(row);
+              // setTimeout(() => {
+              //   service.setValue([element.idservice]);
+              // }, 40);
+              $(`#price${row}`).val(element.price);
+              $(`#discount${row}`).val(element.discount);
+              $(`#obs${row}`).val(element.obs);
+              exit();
+            });
+          }, 40);
 
           setActive();
         })
+    }
+
+    const setActive = () => {
+      let data = ['ticket'];
+
+      data.forEach(element => {
+        if ($(`#${element}`).val()) {
+          $(`.${element}`).addClass('is-filled');
+        }
+      });
     }
   </script>
   <!-- Github buttons -->

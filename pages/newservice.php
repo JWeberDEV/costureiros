@@ -86,6 +86,7 @@
               <hr class="dark horizontal my-0">
               <div class="container">
                 <form role="form" class="text-start">
+                  <input type="hidden" id="id">
                   <div class="row">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados Pessoais</div>
                     <div class="col-3">

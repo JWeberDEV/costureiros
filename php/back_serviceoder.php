@@ -12,7 +12,7 @@ switch ($data->action) {
       $arrayData = [
         'ticket' => $data->ticket,
         'entry' => "$data->entry",
-        'out' => "$data->out",
+        'out' => "$data->exit",
         'client' => "$data->client",
       ];
 
@@ -37,7 +37,7 @@ switch ($data->action) {
     } else {
       $entry = date_create($data->entry);
       $entry = date_format($entry, "Y-m-d H:i:s");
-      $out = date_create($data->out);
+      $out = date_create($data->exit);
       $out = date_format($out, "Y-m-d H:i:s");
 
       $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,ticket,sevicentry,servicexit)
@@ -51,7 +51,8 @@ switch ($data->action) {
 
         foreach ($data->data as $key => $value) {
           $stmt = $pdo->prepare("INSERT INTO orders (idserviceorders, idservice, price, discount, obs)
-          SELECT $lastInsertId, 'service', {$value['price']}, {$value['discount']}, '{$value['obs']}' FROM services WHERE service = '{$value['service']}'");
+          SELECT $lastInsertId, id, {$value['price']}, {$value['discount']}, '{$value['obs']}' FROM services WHERE service = '{$value['service']}'");
+
           $services = $stmt->execute([]);
         }
 
@@ -142,11 +143,46 @@ switch ($data->action) {
     echo json_encode($response);
     break;
   case 'list_serviceorder_id':
-    $stmt = $pdo->prepare("SELECT * FROM serviceordersgit a WHERE id = $data->id");
+    $stmt = $pdo->prepare("SELECT 
+        so.serviceorder,
+        so.ticket,
+        so.idclient,
+        so.sevicentry,
+	      so.servicexit,
+        o.id AS 'idorder',
+        o.idserviceorders,
+        o.idservice,
+        o.price,
+        o.discount,
+        o.obs,
+        s.service 
+      FROM serviceorders so
+      JOIN orders o ON o.idserviceorders = so.id
+      JOIN services s ON s.id = o.idservice
+      WHERE so.id = $data->id"
+    );
     $stmt->execute();
-    $results = $stmt->fetch();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
 
-    print_r(json_encode($results));
+    $response = [];
+    foreach ($results as $key => $value) {
+      $response[] = [
+        'serviceorder' => (integer) $value['serviceorder'],
+        'ticket' => (integer) $value['ticket'],
+        'idclient' => (integer) $value['idclient'],
+        'sevicentry' => $value['sevicentry'],
+        'servicexit' => $value['servicexit'],
+        'idorder' => (integer) $value['idorder'],
+        'idserviceorders' => (integer) $value['idserviceorders'],
+        'idservice' => (integer) $value['idservice'],
+        'price' => (integer) $value['price'],
+        'discount' => (integer) $value['discount'],
+        'obs' => $value['obs'],
+        'service' => $value['service'],
+      ];
+    }
+
+    echo (json_encode($response));
     break;
   case 'load_clients':
     // prepara a query que lista os eventos que são vinculados pelo usuário
