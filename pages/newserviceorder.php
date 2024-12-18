@@ -92,7 +92,7 @@
                   <input type="hidden" id="id">
                   <div class="row">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados da Ordem de serviço</div>
-                    <div class="col-3">
+                    <div class="col-2">
                       <div class="input-group input-group-outline my-3 ticket">
                         <label class="form-label">Guichê</label>
                         <input id="ticket" type="text" class="form-control">
@@ -117,6 +117,11 @@
                           <option value="0" disabled selected>Cliente</option>
                         </select>
                       </div>
+                    </div>
+                    <div class="col-1">
+                      <button type="button" class="btn bg-gradient-info m-0 mt-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="addRow();">
+                        <i class='material-symbols-rounded'>file_export</i>
+                      </button>
                     </div>
                   </div>
                   <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Serviços</div>
@@ -169,6 +174,7 @@
   <script>
     let client = "";
     let service = "";
+    let services = [];
     const fetchClients = async () => {
       const response = await $.post("../php/back_serviceoder.php", {
         action: 'load_clients'
@@ -180,13 +186,15 @@
       const response = await $.post("../php/back_serviceoder.php", {
         action: 'load_services'
       })
-      return JSON.parse(response);
+      services = JSON.parse(response);
     }
 
-    $(document).ready(function() {
+    $(document).ready(async function() {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get('id');
+      await fetchServices();
+
       if (!id) {
         addRow();
       } else {
@@ -264,9 +272,8 @@
       counterSelectorServices(row);
     }
 
-    const counterSelectorServices = (arg) => {
-
-      let serviceSelectize = $(`.service${arg}`).selectize({
+    const counterSelectorServices = (row, value) => {
+      const serviceSelectize = $(`.service${row}`).selectize({
         valueField: 'price',
         labelField: 'service',
         searchField: ['service'],
@@ -276,10 +283,12 @@
 
       service = serviceSelectize[0].selectize;
 
-      fetchServices().then(response => {
-        service.addOption(response);
-        service.refreshOptions(false);
-      });
+      service.addOption(services);
+      service.refreshOptions(false);
+
+      if (value) {
+        service.setValue(value);
+      }
     };
 
     const setPrice = (arg) => {
@@ -371,8 +380,8 @@
             } else {
               row = 1;
             }
-            setTimeout(() => {
-              $('.lines').append(`
+
+            $('.lines').append(`
               <tr class='line' row='${row}'>
                 <td>
                   <div class="d-flex px-2 py-1 m-2">
@@ -405,16 +414,11 @@
                 </td>
               </tr>
             `);
-              counterSelectorServices(row);
-              // setTimeout(() => {
-              //   service.setValue([element.idservice]);
-              // }, 40);
-              $(`#price${row}`).val(element.price);
-              $(`#discount${row}`).val(element.discount);
-              $(`#obs${row}`).val(element.obs);
-              exit();
-            });
-          }, 40);
+            counterSelectorServices(row, element.idservice);
+            $(`#price${row}`).val(element.price);
+            $(`#discount${row}`).val(element.discount);
+            $(`#obs${row}`).val(element.obs);
+          });
 
           setActive();
         })
