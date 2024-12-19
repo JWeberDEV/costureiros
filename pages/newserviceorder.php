@@ -381,11 +381,23 @@
               row = 1;
             }
 
+            const options = $(services).map((index,item) => {
+              console.log(item);
+              
+              return `<option value='${item.price}' ${item.price == element.price ? 'selected' : ''}>${item.service}</option>`;
+            })
+            console.log('services', services);
+            
+            console.log('options', options);
+            
+
             $('.lines').append(`
               <tr class='line' row='${row}'>
                 <td>
                   <div class="d-flex px-2 py-1 m-2">
                     <select class="form-control service${row} is-filled" placeholder="Selecione o Serviço" onchange='setPrice(${row})'>
+                      ${options}
+                    </select>
                   </div>
                 </td>
                 <td>
@@ -414,11 +426,14 @@
                 </td>
               </tr>
             `);
-            counterSelectorServices(row, element.idservice);
+            // counterSelectorServices(row, element.idservice);
             $(`#price${row}`).val(element.price);
             $(`#discount${row}`).val(element.discount);
             $(`#obs${row}`).val(element.obs);
           });
+
+
+          
 
           setActive();
         })
