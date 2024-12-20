@@ -119,7 +119,7 @@
                       </div>
                     </div>
                     <div class="col-1">
-                      <button type="button" class="btn bg-gradient-info m-0 mt-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="addRow();">
+                      <button type="button" class="btn bg-gradient-info m-0 mt-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="exportOs();">
                         <i class='material-symbols-rounded'>file_export</i>
                       </button>
                     </div>
@@ -175,6 +175,7 @@
     let client = "";
     let service = "";
     let services = [];
+    let os = "";
     const fetchClients = async () => {
       const response = await $.post("../php/back_serviceoder.php", {
         action: 'load_clients'
@@ -359,6 +360,7 @@
         .done(function(response) {
           response = JSON.parse(response);
           response.forEach(element => {
+            os = element.serviceorder;
             $("#id").val(element.serviceorder);
             $("#os").html('Nº ' + element.serviceorder);
             $("#ticket").val(element.ticket);
@@ -381,23 +383,11 @@
               row = 1;
             }
 
-            const options = $(services).map((index,item) => {
-              console.log(item);
-              
-              return `<option value='${item.price}' ${item.price == element.price ? 'selected' : ''}>${item.service}</option>`;
-            })
-            console.log('services', services);
-            
-            console.log('options', options);
-            
-
             $('.lines').append(`
               <tr class='line' row='${row}'>
                 <td>
                   <div class="d-flex px-2 py-1 m-2">
-                    <select class="form-control service${row} is-filled" placeholder="Selecione o Serviço" onchange='setPrice(${row})'>
-                      ${options}
-                    </select>
+                    <select id='${element.idservice}' class="form-control service${row} is-filled" placeholder="${element.service}" onchange='setPrice(${row})'></select>
                   </div>
                 </td>
                 <td>
@@ -426,14 +416,21 @@
                 </td>
               </tr>
             `);
-            // counterSelectorServices(row, element.idservice);
+            const serviceSelectize = $(`.service${row}`).selectize({
+              valueField: 'price',
+              labelField: 'service',
+              searchField: ['service'],
+              sortField: 'service',
+              create: false,
+            });
+            service = serviceSelectize[0].selectize;
+            service.addOption(services);
+            service.refreshOptions(false);
+
             $(`#price${row}`).val(element.price);
             $(`#discount${row}`).val(element.discount);
             $(`#obs${row}`).val(element.obs);
           });
-
-
-          
 
           setActive();
         })
@@ -447,6 +444,12 @@
           $(`.${element}`).addClass('is-filled');
         }
       });
+    }
+
+    const exportOs = () => {
+      url = `../php/export_os_pdf.php?id=${encodeURIComponent($('#id').val())}&os=${encodeURIComponent(os)}&entry=${encodeURIComponent($("#entry").val())}&exit=${encodeURIComponent($("#exit").val())}`;
+
+      window.open(url, '_blank');
     }
   </script>
   <!-- Github buttons -->

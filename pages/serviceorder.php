@@ -86,6 +86,16 @@
               </div>
             </div>
             <div class="card-body px-0 pb-2">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="input-group input-group-dynamic mb-4">
+                      <label class="form-label">Label</label>
+                      <input type="text" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <thead>

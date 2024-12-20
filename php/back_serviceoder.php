@@ -72,6 +72,7 @@ switch ($data->action) {
     $stmt = $pdo->prepare("SELECT s.id,s.serviceorder,c.name,s.ticket FROM serviceorders s
       JOIN clients c ON c.id = s.idclient
       WHERE s.`status` = 1
+      ORDER BY s.id
     ");
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
