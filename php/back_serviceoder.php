@@ -156,7 +156,8 @@ switch ($data->action) {
         o.price,
         o.discount,
         o.obs,
-        s.service 
+        (SELECT `name`FROM clients WHERE id = so.idclient) AS 'name',
+        s.service
       FROM serviceorders so
       JOIN orders o ON o.idserviceorders = so.id
       JOIN services s ON s.id = o.idservice
@@ -180,6 +181,7 @@ switch ($data->action) {
         'discount' => (integer) $value['discount'],
         'obs' => $value['obs'],
         'service' => $value['service'],
+        'name' => $value['name'],
       ];
     }
 

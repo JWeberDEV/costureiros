@@ -72,6 +72,41 @@
               <button type="button" class="btn bg-gradient-dark w-100 m-0">Nova OS</button>
             </a>
           </div>
+          <div class="col-12">
+            <button type="button" class="btn bg-gradient-info m-0 mt-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="exportOs();">
+              <i class='material-symbols-rounded'>file_export</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid text-center">
+        <div class="row justify-content-start">
+          <div class="row">
+            <div class="col-3">
+              <div class="input-group input-group-outline my-3 ticket">
+                <label class="form-label">Cliente</label>
+                <input id="ticket" type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group input-group-outline my-3 ticket">
+                <label class="form-label">Total</label>
+                <input id="exit" type="datetime-local" class="form-control">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group input-group-outline my-3 ticket">
+                <label class="form-label">Em a ver</label>
+                <input id="exit" type="datetime-local" class="form-control">
+              </div>
+            </div>
+            <div class="col-2">
+              <Strong class="pt-3">Total: 500</Strong>
+            </div>
+          </div>
         </div>
       </div>
     </nav>

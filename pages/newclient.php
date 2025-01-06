@@ -101,6 +101,12 @@
                         <input id="phone" type="number" class="form-control" maxlength="11">
                       </div>
                     </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 phone">
+                        <label class="form-label">Telefone Complementar</label>
+                        <input id="phoneOption" type="number" class="form-control" maxlength="11">
+                      </div>
+                    </div>
                   </div>
                   <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</div>
                   <div class="row">
@@ -203,6 +209,33 @@
       });
     }
 
+    const saveClient = () => {
+      $.post("../php/back_client.php", {
+          action: 'save_client',
+          id: $('#id').val(),
+          name: $('#name').val(),
+          phone: $('#phone').val(),
+          phoneOption: $('#phoneOption').val(),
+          cep: $('#cep').val(),
+          city: $('#city').val(),
+          neigbouhod: $('#neigbouhod').val(),
+          street: $('#street').val(),
+          obs: $('#obs').val(),
+          number: $('#number').val(),
+        })
+        .done(response => {
+          let data = JSON.parse(response);
+          $('#infoToast').addClass(data.class);
+          $('.html').html(data.message);
+          $('#infoToast').toast('show');
+          if (data.class == 'bg-gradient-success') {
+            setTimeout(() => {
+              window.location = '../pages/clients.php';
+            }, 2000);
+          }
+        });
+    }
+
     const listUserId = (args) => {
       let data = {
         action: "list_user_id",
@@ -215,6 +248,7 @@
           $("#id").val(response.id);
           $("#name").val(response.name);
           $("#phone").val(response.phone);
+          $("#phoneOption").val(response.phoneOption);
           $("#cep").val(response.cep);
           $("#city").val(response.city);
           $("#neigbouhod").val(response.neigbouhod);
@@ -234,32 +268,6 @@
             type: "danger",
             message: error
           });
-        });
-    }
-
-    const saveClient = () => {
-      $.post("../php/back_client.php", {
-          action: 'save_user',
-          id: $('#id').val(),
-          name: $('#name').val(),
-          phone: $('#phone').val(),
-          cep: $('#cep').val(),
-          city: $('#city').val(),
-          neigbouhod: $('#neigbouhod').val(),
-          street: $('#street').val(),
-          obs: $('#obs').val(),
-          number: $('#number').val(),
-        })
-        .done(response => {
-          let data = JSON.parse(response);
-          $('#infoToast').addClass(data.class);
-          $('.html').html(data.message);
-          $('#infoToast').toast('show');
-          if (data.class == 'bg-gradient-success') {
-            setTimeout(() => {
-              window.location = '../pages/clients.php';
-            }, 2000);
-          }
         });
     }
   </script>

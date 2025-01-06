@@ -5,7 +5,7 @@ $data = (object) $_REQUEST;
 $response = (object) [];
 
 switch ($data->action) {
-  case 'save_user':
+  case 'save_client':
     if ($data->id > 0) {
 
       // Decalara os Valores para usar o prepare
@@ -13,6 +13,7 @@ switch ($data->action) {
         'id' => $data->id,
         'name' => "$data->name",
         'phone' => "$data->phone",
+        'phoneOption' => "$data->phoneOption",
         'cep' => "$data->cep",
         'city' => "$data->city",
         'neigbouhod' => "$data->neigbouhod",
@@ -26,6 +27,7 @@ switch ($data->action) {
         "UPDATE clients SET
           name = :name,
           phone = :phone,
+          phoneOption = :phoneOption,
           cep = :cep,
           city = :city,
           neigbouhod = :neigbouhod,
@@ -50,6 +52,7 @@ switch ($data->action) {
       $arrayData = [
         'name' => "$data->name",
         'phone' => "$data->phone",
+        'phoneOption' => "$data->phoneOption",
         'cep' => $data->cep,
         'city' => "$data->city",
         'neigbouhod' => "$data->neigbouhod",
@@ -58,8 +61,8 @@ switch ($data->action) {
         'number' => "$data->number",
       ];
 
-      $stmt = $pdo->prepare("INSERT INTO clients (name,phone,cep,city,neigbouhod,street,obs,number)
-      VALUES (:name, :phone, :cep, :city, :neigbouhod, :street, :obs, :number)");
+      $stmt = $pdo->prepare("INSERT INTO clients (name,phone,phoneOption,cep,city,neigbouhod,street,obs,number)
+      VALUES (:name, :phone, :phoneOption,:cep, :city, :neigbouhod, :street, :obs, :number)");
 
       $execute = $stmt->execute($arrayData);
 

@@ -13,15 +13,15 @@ $pdf->AddPage();
 
 $pdf->Ln(20);
 
-$pdf->Cell(0, 10, "Ficha de ordem de serviço Nº $data->os Entrada: $data->entry Saida: $data->exit", 0, 1, 'C');
+$pdf->Cell(0, 10, "Cliente: $data->name Entrada: $data->entry Saida: $data->exit", 0, 1, 'C');
 
 $pdf->SetFont('helvetica', '', 10);
 $table = '<table border="0" cellpadding="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
   <thead>
     <tr style="background-color:rgb(221, 238, 124); font-weight: bold;">
       <th style="padding: 8px;">OS</th>
-      <th style="padding: 8px;">Cliente</th>
       <th style="padding: 8px;">serviço</th>
+      <th style="padding: 8px;">observação</th>
       <th style="padding: 8px; text-align: right;">preço</th>
       <th style="padding: 8px; text-align: right;">desconto</th>
     </tr>
@@ -30,8 +30,8 @@ $table = '<table border="0" cellpadding="1" cellspacing="0" style="width: 100%; 
 
 $query = "SELECT
   so.serviceorder,
-  (SELECT `name`FROM clients WHERE id = so.idclient) AS 'name',
   s.service,
+  o.obs,
   o.price,
   o.discount
   FROM serviceorders so
@@ -50,8 +50,8 @@ if ($stmt->rowCount() > 0) {
 
     $data[] = [
       $row['serviceorder'],
-      $row['name'],
       $row['service'],
+      $row['obs'],
       (float)$row['price'],
       (float)$row['discount'],
     ];

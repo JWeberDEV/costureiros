@@ -147,6 +147,28 @@
                       </table>
                     </div>
                   </div>
+                  <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Soma</div>
+                  <hr class="horizontal dark m-0" />
+                  <div class="row">
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 ticket">
+                        <label class="form-label">Entrada</label>
+                        <input id="ticket" type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 ticket">
+                        <label class="form-label">Total</label>
+                        <input id="ticket" type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 ticket">
+                        <label class="form-label">Em a ver</label>
+                        <input id="ticket" type="text" class="form-control">
+                      </div>
+                    </div>
+                  </div>
                 </form>
               </div>
             </div>
@@ -176,6 +198,7 @@
     let service = "";
     let services = [];
     let os = "";
+    let name = "";
     const fetchClients = async () => {
       const response = await $.post("../php/back_serviceoder.php", {
         action: 'load_clients'
@@ -361,6 +384,7 @@
           response = JSON.parse(response);
           response.forEach(element => {
             os = element.serviceorder;
+            name = element.name;
             $("#id").val(element.serviceorder);
             $("#os").html('Nº ' + element.serviceorder);
             $("#ticket").val(element.ticket);
@@ -447,8 +471,11 @@
     }
 
     const exportOs = () => {
-      url = `../php/export_os_pdf.php?id=${encodeURIComponent($('#id').val())}&os=${encodeURIComponent(os)}&entry=${encodeURIComponent($("#entry").val())}&exit=${encodeURIComponent($("#exit").val())}`;
-
+      url = `../php/export_os_pdf.php?id=${encodeURIComponent($('#id').val())}&
+      os=${encodeURIComponent(os)}
+      &entry=${encodeURIComponent($("#entry").val())}
+      &exit=${encodeURIComponent($("#exit").val())}
+      &name=${encodeURIComponent(name)}`;
       window.open(url, '_blank');
     }
   </script>
