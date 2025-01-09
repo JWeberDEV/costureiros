@@ -90,7 +90,7 @@
               <div class="container">
                 <form role="form" class="text-start">
                   <input type="hidden" id="id">
-                  <div class="row">
+                  <div class="row" style="position: relative; z-index: 11;">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados da Ordem de serviço</div>
                     <div class="col-2">
                       <div class="input-group input-group-outline my-3 ticket">
@@ -142,7 +142,7 @@
                             </th>
                           </tr>
                         </thead>
-                        <tbody class="lines" style='position: relative; z-index: 50;'>
+                        <tbody class="lines" style='position: relative; z-index: 10;'>
                         </tbody>
                       </table>
                     </div>
@@ -153,19 +153,19 @@
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 ticket">
                         <label class="form-label">Entrada</label>
-                        <input id="ticket" type="text" class="form-control">
+                        <input id="incoming" type="number" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3 ticket">
+                      <div class="input-group input-group-outline my-3 total">
                         <label class="form-label">Total</label>
-                        <input id="ticket" type="text" class="form-control">
+                        <input id="total" type="number" class="form-control" onchange="budget()">
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3 ticket">
+                      <div class="input-group input-group-outline my-3 remainder">
                         <label class="form-label">Em a ver</label>
-                        <input id="ticket" type="text" class="form-control">
+                        <input id="remainder" type="number" class="form-control">
                       </div>
                     </div>
                   </div>
@@ -176,7 +176,7 @@
               <hr class="dark horizontal my-0">
               <div class="container-fluid text-center">
                 <div class="row justify-content-end">
-                  <div class="col-1"><button id="login" type="button" class="btn bg-gradient-dark mt-2" onclick="saveOrderService();">Salvar</button></div>
+                  <div class="col-1"><button type="button" class="btn bg-gradient-dark mt-2" onclick="saveOrderService();">Salvar</button></div>
                 </div>
               </div>
             </div>
@@ -194,24 +194,36 @@
   <script src="../assets/libs/daterangepicker/moment.min.js"></script>
   <script src="../assets/libs/daterangepicker/daterangepicker.js"></script>
   <script>
+    $.fn.toNumber = function() {
+      return parseFloat($(this).val()) || 0;
+    }
+
     let client = "";
     let service = "";
     let services = [];
     let os = "";
     let name = "";
     const fetchClients = async () => {
-      const response = await $.post("../php/back_serviceoder.php", {
+      const response = await $.post("../php/back_serviceorder.php", {
         action: 'load_clients'
       })
       return JSON.parse(response);
     }
 
     const fetchServices = async () => {
-      const response = await $.post("../php/back_serviceoder.php", {
+      const response = await $.post("../php/back_serviceorder.php", {
         action: 'load_services'
       })
       services = JSON.parse(response);
     }
+
+    $('#incoming').on('keyup', function() {
+      budget();
+    });
+
+    $('#total').on('keyup', function() {
+      budget();
+    });
 
     $(document).ready(async function() {
       const queryString = window.location.search;
@@ -246,8 +258,8 @@
       $(`.exit`).addClass('is-filled');
     });
 
-    const addRow = () => {
-      let row = '';
+    const addRow = (args = {}) => {
+      let row = "";
       let actual = '';
 
       $('tr.line').each(function() {
@@ -260,16 +272,26 @@
         row = 1;
       }
 
+      const selectId = args?.element?.idservice ? `${args.element.idservice}` : '';
+      const idOrder = args?.element?.idorder ? `${args.element.idorder}` : '';
+      const service = args?.element?.service ? `placeholder=${args.element.service}` : 'placeholder="Selecione o Serviço"';
+      let id = '';
+      let classstyle = "";
+      if (args.row) {
+        row = args.row;
+        classstyle = "is-filled";
+      }
+      
       $('.lines').append(`
-        <tr class='line' row='${row}'>
+        <tr class='line' row='${row}' idOrder='${idOrder}' idService='${selectId}'>
           <td>
-            <div class="d-flex px-2 py-1 m-2">
-              <select class="form-control service${row} is-filled" placeholder="Selecione o Serviço" onchange='setPrice(${row})'>
+            <div class="d-flex px-2 py-1 m-2 is-filled">
+              <select id='${selectId}' class="form-control service${row}" ${service} onchange='setPrice(${row})'>
             </div>
           </td>
           <td>
             <div class="d-flex px-2 py-1">
-              <div class="input-group input-group-outline my-3 price${row}">
+              <div class="input-group input-group-outline my-3 ${classstyle} price${row}">
                 <label class="form-label">Preço</label>
                 <input id="price${row}" type="number" class="form-control">
               </div>
@@ -277,15 +299,15 @@
           </td>
           <td>
             <div class="d-flex px-2 py-1">
-              <div class="input-group input-group-outline my-3 discount${row}">
+              <div class="input-group input-group-outline my-3 ${classstyle} discount${row}">
                 <label class="form-label">Desconto</label>
-                <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})'>
+                <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})' onblur='calculator()'>
               </div>
             </div>
           </td>
           <td colspan='2'>
             <div class="d-flex px-2 py-1">
-              <div class="input-group input-group-outline my-3 obs${row}">
+              <div class="input-group input-group-outline my-3 ${classstyle} obs${row}">
                 <label class="form-label">Observações</label>
                 <input id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})'>
               </div>
@@ -293,7 +315,11 @@
           </td>
         </tr>
       `);
-      counterSelectorServices(row);
+      if (args.row) {
+        setActive();
+      } else {
+        counterSelectorServices(row);
+      }
     }
 
     const counterSelectorServices = (row, value) => {
@@ -339,25 +365,32 @@
         const selectedValue = serviceSelectize.getValue();
         const selectedOption = serviceSelectize.getOption(selectedValue);
         const service = selectedOption.text();
+        const idService = $(this).attr('idservice');
+        const order = $(this).attr('idorder');
         const priceValue = $(this).find(`#price${row}`).val();
         const discountValue = $(this).find(`#discount${row}`).val();
         const obsValue = $(this).find(`#obs${row}`).val();
 
         data.push({
           service: service || '',
+          idService: idService || '',
+          order: order || '',
           price: parseInt(priceValue) || 0,
           discount: parseInt(discountValue) || 0,
           obs: obsValue || ''
         });
       });
 
-      $.post("../php/back_serviceoder.php", {
+      $.post("../php/back_serviceorder.php", {
           action: 'save_orderservice',
           id: $('#id').val(),
           client: $('#client').val(),
           ticket: $('#ticket').val(),
           entry: $('#entry').val(),
           exit: $('#exit').val(),
+          incoming: $('#incoming').val(),
+          total: $('#total').val(),
+          remainder: $('#remainder').val(),
           data
         })
         .done(function(response) {
@@ -365,11 +398,11 @@
           $('#infoToast').addClass(response.class);
           $('.html').html(response.message);
           $('#infoToast').toast('show');
-          if (response.class == 'bg-gradient-success') {
-            setTimeout(() => {
-              window.location = '../pages/serviceorder.php';
-            }, 2000);
-          }
+          // if (response.class == 'bg-gradient-success') {
+          //   setTimeout(() => {
+          //     window.location = '../pages/serviceorder.php';
+          //   }, 2000);
+          // }
         });
     }
 
@@ -379,7 +412,7 @@
         id: arg
       }
 
-      let response = $.post("../php/back_serviceoder.php", data)
+      let response = $.post("../php/back_serviceorder.php", data)
         .done(function(response) {
           response = JSON.parse(response);
           response.forEach(element => {
@@ -392,7 +425,10 @@
             $("#exit").val(element.servicexit);
             setTimeout(() => {
               client.setValue([element.idclient]);
-            }, 30);
+            }, 100);
+            $("#incoming").val(element.incoming);
+            $("#total").val(element.total);
+            $("#remainder").val(element.remainder);
 
             let row = '';
             let actual = '';
@@ -407,39 +443,11 @@
               row = 1;
             }
 
-            $('.lines').append(`
-              <tr class='line' row='${row}'>
-                <td>
-                  <div class="d-flex px-2 py-1 m-2">
-                    <select id='${element.idservice}' class="form-control service${row} is-filled" placeholder="${element.service}" onchange='setPrice(${row})'></select>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex px-2 py-1">
-                    <div class="input-group input-group-outline my-3 is-filled price${row}">
-                      <label class="form-label">Preço</label>
-                      <input id="price${row}" type="number" class="form-control">
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex px-2 py-1">
-                    <div class="input-group input-group-outline my-3 is-filled discount${row}">
-                      <label class="form-label">Desconto</label>
-                      <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})'>
-                    </div>
-                  </div>
-                </td>
-                <td colspan='2'>
-                  <div class="d-flex px-2 py-1">
-                    <div class="input-group input-group-outline my-3 is-filled obs${row}">
-                      <label class="form-label">Observações</label>
-                      <input id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})'>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            `);
+            addRow({
+              row,
+              element
+            });
+
             const serviceSelectize = $(`.service${row}`).selectize({
               valueField: 'price',
               labelField: 'service',
@@ -454,6 +462,8 @@
             $(`#price${row}`).val(element.price);
             $(`#discount${row}`).val(element.discount);
             $(`#obs${row}`).val(element.obs);
+            $(`.total`).addClass('is-filled');
+            $(`.remainder`).addClass('is-filled');
           });
 
           setActive();
@@ -470,6 +480,28 @@
       });
     }
 
+    const calculator = () => {
+      let value = 0;
+      let discount = 0;
+      $('.line').each(function() {
+        const row = $(this).attr('row');
+        value += $(this).find(`#price${row}`).toNumber();
+        discount += $(this).find(`#discount${row}`).toNumber();
+
+        // const row = $(this).attr('row');
+        // const priceValue = $(this).find(`#price${row}`).val();
+        // const discountValue = $(this).find(`#discount${row}`).val();
+
+        // value += priceValue != "" ? parseFloat(priceValue) : 0;
+        // discount += discountValue != "" ? parseFloat(discountValue) : 0;
+      });
+
+      let result = value - discount;
+      $(`#total`).val(result);
+      $(`.total`).addClass('is-filled');
+
+    }
+
     const exportOs = () => {
       url = `../php/export_os_pdf.php?id=${encodeURIComponent($('#id').val())}&
       os=${encodeURIComponent(os)}
@@ -477,6 +509,12 @@
       &exit=${encodeURIComponent($("#exit").val())}
       &name=${encodeURIComponent(name)}`;
       window.open(url, '_blank');
+    }
+
+    const budget = () => {
+      let result = $(`#total`).toNumber() - $(`#incoming`).toNumber();
+      $(`#remainder`).val(result);
+      $(`.remainder`).addClass('is-filled');
     }
   </script>
   <!-- Github buttons -->

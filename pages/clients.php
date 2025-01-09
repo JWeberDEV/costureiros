@@ -15,7 +15,7 @@
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/libs/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
   <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <!-- CSS Files -->
@@ -147,7 +147,7 @@
       }
 
       let html =
-        `<i style="font-size: 130px; color: #edb72c;" class="fas fa-exclamation-triangle"></i>
+        `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
         </br></br>
         <div class="alert alert-danger" role="alert">
           <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este usuario?</strong></p>

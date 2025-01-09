@@ -4955,7 +4955,7 @@ fieldset:disabled .btn {
 .navbar>.container-lg,
 .navbar>.container-xl,
 .navbar>.container-xxl {
-  display: flex;
+  /* display: flex; */
   flex-wrap: inherit;
   align-items: center;
   justify-content: space-between;

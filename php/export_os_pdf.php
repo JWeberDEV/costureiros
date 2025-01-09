@@ -30,6 +30,9 @@ $table = '<table border="0" cellpadding="1" cellspacing="0" style="width: 100%; 
 
 $query = "SELECT
   so.serviceorder,
+  so.incoming,
+  so.total,
+  so.remainder,
   s.service,
   o.obs,
   o.price,
@@ -54,13 +57,17 @@ if ($stmt->rowCount() > 0) {
       $row['obs'],
       (float)$row['price'],
       (float)$row['discount'],
+      $row['incoming'],
+      $row['total'],
+      $row['remainder'],
     ];
   }
 }
 
 $rowIndex = 0;
-$price = 0;
-$discount = 0;
+$incoming = 0;
+$total = 0;
+$remainder = 0;
 
 foreach ($data as $row) {
   $backgroundColor = ($rowIndex % 2 === 0) ? '#ffffff' : '#eff2d6';
@@ -68,28 +75,32 @@ foreach ($data as $row) {
   $table .= '<tr style="background-color: ' . $backgroundColor . ';">';
 
   foreach ($row as $key => $cell) {
+    if ($key > 4) {
+      continue;
+    }
+
     if ($key > 2) {
       $table .= '<td style="padding: 2px; text-align: right;">' . htmlspecialchars($cell) . '</td>';
     } else {
       $table .= '<td style="padding: 2px;">' . htmlspecialchars($cell) . '</td>';
     }
+
   }
   
   $table .= '</tr>';
   $rowIndex++;
-  $price = $price + $row[3];
-  $discount = $discount + $row[4];
+  $incoming = $row[5];
+  $total = $row[6];
+  $remainder = $row[7];
 }
-
-$total = $price - $discount;
 
 $table .= '
   <tr style="background-color:#e5e5e5;">
+    <td style="padding: 8px;"><strong>Entrada:</strong> <strong> R$: ' . number_format($incoming, 2, '.', ',') . '</strong></td>
+    <td style="padding: 8px;"><strong>Em a ver:</strong> <strong> R$: ' . number_format($remainder, 2, '.', ',') . '</strong></td>
     <td style="padding: 8px;"></td>
     <td style="padding: 8px;"></td>
-    <td style="padding: 8px;"><strong>Total</strong></td>
-    <td style="padding: 8px; text-align: right;"> R$: ' . number_format($total, 2, '.', ',') . '</td>
-    <td style="padding: 8px;"></td>
+    <td style="padding: 8px; text-align: right;"><strong>Total</strong><strong> R$: ' . number_format($total, 2, '.', ',') . '</strong></td>
   </tr>
 ';
 

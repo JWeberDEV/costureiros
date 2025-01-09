@@ -15,7 +15,7 @@
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/libs/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
   <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <!-- CSS Files -->
@@ -63,50 +63,48 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
+    <!-- Filters -->
     <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
-      <div class="container-fluid text-center">
+      <div class="container-fluid">
         <div class="row justify-content-start">
-          <div class="col-12">
-            <a href="../pages/newserviceorder.php">
-              <button type="button" class="btn bg-gradient-dark w-100 m-0">Nova OS</button>
-            </a>
-          </div>
-          <div class="col-12">
-            <button type="button" class="btn bg-gradient-info m-0 mt-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="exportOs();">
-              <i class='material-symbols-rounded'>file_export</i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
-      <div class="container-fluid text-center">
-        <div class="row justify-content-start">
-          <div class="row">
-            <div class="col-3">
-              <div class="input-group input-group-outline my-3 ticket">
-                <label class="form-label">Cliente</label>
-                <input id="ticket" type="text" class="form-control">
-              </div>
+          <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ações</div>
+          <hr class="horizontal dark m-0 mb-2" />
+          <div class="row justify-content-between">
+            <div class="col-1">
+              <a href="../pages/newserviceorder.php">
+                <button type="button" class="btn bg-gradient-dark w-100 m-0">Nova OS</button>
+              </a>
             </div>
-            <div class="col-3">
-              <div class="input-group input-group-outline my-3 ticket">
-                <label class="form-label">Total</label>
-                <input id="exit" type="datetime-local" class="form-control">
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-outline my-3 ticket">
-                <label class="form-label">Em a ver</label>
-                <input id="exit" type="datetime-local" class="form-control">
-              </div>
-            </div>
-            <div class="col-2">
-              <Strong class="pt-3">Total: 500</Strong>
+            <div class="col-2 text-end">
+              <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="exportOs();">
+                <i class='material-symbols-rounded'>file_export</i>
+              </button>
             </div>
           </div>
+          <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Filtros</div>
+          <hr class="horizontal dark m-0" />
+          <div class="col-3">
+            <div class="input-group input-group-outline my-3 ticket">
+              <label class="form-label">Cliente</label>
+              <input id="ticket" type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-outline my-3 entry  ">
+              <label class="form-label">Entrada</label>
+              <input id="entry" type="datetime-local" class="form-control">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-outline my-3 exit">
+              <label class="form-label">Saida</label>
+              <input id="exit" type="datetime-local" class="form-control">
+            </div>
+          </div>
+          <div class="col-2 mt-4">
+            <Strong class="pt-3">Total: 500</Strong>
+          </div>
+
         </div>
       </div>
     </nav>
@@ -161,10 +159,13 @@
   <script>
     $(document).ready(function() {
       listServiccesOrders();
+
+      $(`.entry`).addClass('is-filled');
+      $(`.exit`).addClass('is-filled');
     });
 
     const listServiccesOrders = () => {
-      $.post("../php/back_serviceoder.php", {
+      $.post("../php/back_serviceorder.php", {
           action: "list_serviceorders"
         })
         .done(function(response) {
@@ -179,7 +180,7 @@
       }
 
       let html =
-        `<i style="font-size: 130px; color: #edb72c;" class="fas fa-exclamation-triangle"></i>
+        `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
         </br></br>
         <div class="alert alert-danger" role="alert">
           <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este usuario?</strong></p>
@@ -200,13 +201,13 @@
         },
         width: 500,
         preConfirm: () => {
-          $.post("../php/back_serviceoder.php", data)
+          $.post("../php/back_serviceorder.php", data)
             .done(response => {
               response = JSON.parse(response);
               $('#infoToast').addClass(response.class);
               $('.html').html(response.message);
               $('#infoToast').toast('show');
-              listServicces();
+              listServiccesOrders();
             });
         },
       });
