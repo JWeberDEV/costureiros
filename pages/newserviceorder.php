@@ -11,12 +11,12 @@
     Nova Ordem de Serviço
   </title>
   <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+  <link rel="stylesheet" href="../assets/css/google-fonts.css" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Material Icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="../assets/css/google-icons.css" />
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <!-- Daterangerpicker -->
@@ -203,6 +203,7 @@
     let services = [];
     let os = "";
     let name = "";
+    let id = "";
     const fetchClients = async () => {
       const response = await $.post("../php/back_serviceorder.php", {
         action: 'load_clients'
@@ -228,7 +229,7 @@
     $(document).ready(async function() {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
-      const id = urlParams.get('id');
+      id = urlParams.get('id');
       await fetchServices();
 
       if (!id) {
@@ -398,11 +399,11 @@
           $('#infoToast').addClass(response.class);
           $('.html').html(response.message);
           $('#infoToast').toast('show');
-          // if (response.class == 'bg-gradient-success') {
-          //   setTimeout(() => {
-          //     window.location = '../pages/serviceorder.php';
-          //   }, 2000);
-          // }
+          if (response.class == 'bg-gradient-success') {
+            setTimeout(() => {
+              window.location = '../pages/serviceorder.php';
+            }, 2000);
+          }
         });
     }
 
@@ -503,7 +504,7 @@
     }
 
     const exportOs = () => {
-      url = `../php/export_os_pdf.php?id=${encodeURIComponent($('#id').val())}&
+      url = `../php/export_os_pdf.php?id=${encodeURIComponent(id)}&
       os=${encodeURIComponent(os)}
       &entry=${encodeURIComponent($("#entry").val())}
       &exit=${encodeURIComponent($("#exit").val())}

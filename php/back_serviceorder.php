@@ -39,7 +39,6 @@ switch ($data->action) {
 
       if ($execute) {
         foreach ($data->data as $key => $value) {
-          
 
           $stmt = $pdo->prepare(
             "UPDATE orders SET
@@ -93,17 +92,43 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'list_serviceorders':
-    $stmt = $pdo->prepare("SELECT s.id,s.serviceorder,c.name,s.ticket FROM serviceorders s
+    $entry = date_create($data->entry);
+    $entry = date_format($entry, "Y-m-d H:i:s");
+    $out = date_create($data->exit);
+    $out = date_format($out, "Y-m-d H:i:s");
+
+    $query = "SELECT 
+        s.id,
+        s.serviceorder,
+        s.ticket,
+        s.total,
+        c.name
+      FROM serviceorders s
       JOIN clients c ON c.id = s.idclient
-      WHERE s.`status` = 1
-      ORDER BY s.id
-    ");
+      WHERE s.`status` = 1";
+
+    if ($data->client) {
+      $query .= " AND c.id = $data->client";
+    }
+
+    if ($data->entry) {
+      $query .= " AND s.sevicentry >= '$entry'";
+    }
+
+    if ($data->exit) {
+      $query .= " AND s.servicexit >= '$out'";
+    }
+
+    $query .= " ORDER BY s.id";
+
+    $stmt = $pdo->prepare($query);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $list = '';
+    $total = 0;
     foreach ($results as $key => $value) {
-      print_r($value);
       if ($value) {
+        $total += $value['total'];
         $list .= "<tr>
             <td class='ps-3'>
               <div class='d-flex px-2 py-1'>
@@ -127,26 +152,30 @@ switch ($data->action) {
               </div>
             </td>
             <td class='text-end'>
-              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' href=\"../pages/newserviceorder.php?id='" . $value['id'] . "'\">
+              <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href=\"../pages/newserviceorder.php?id='" . $value['id'] . "'\">
                 <i class='material-symbols-rounded opacity-5'>edit</i>
               </a>
-              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick=\"deleteServiceOrder('" . $value['id'] . "')\">
+              <button type='button' class='btn bg-gradient-danger m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Excluir' onclick=\"deleteServiceOrder('" . $value['id'] . "')\">
                 <i class='material-symbols-rounded opacity-5'>delete</i>
               </button>
             </td>
           </tr>
         ";
-      } else {
-        $list =
-          "<tr>
-            <td style='padding:10px;' colspan='8'>
-              <a href='#' style='color:#ED6663;font-style:italic;'><i class='fas fa-info-circle'></i> Nenhum registro encontrado!</a>
-            </td>
-          </tr>
+        $total += $value['total'];
+      }
+
+      if (empty($results)) {
+        $list = "
+            <tr>
+                <td style='padding:10px;' colspan='8'>
+                    <a href='#' style='color:#ED6663;font-style:italic;'><i class='fas fa-info-circle'></i> Nenhum registro encontrado!</a>
+                </td>
+            </tr>
         ";
       }
     }
-
+    $total = $total /2;
+    echo "<input type='hidden' id='sumTotal' value='" . $total . "'>";
     echo $list;
     break;
   case 'delete_serviceorder':
@@ -191,7 +220,7 @@ switch ($data->action) {
       JOIN services s ON s.id = o.idservice
       WHERE so.id = $data->id"
     );
-    
+
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
 

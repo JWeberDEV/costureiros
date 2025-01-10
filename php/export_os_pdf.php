@@ -13,7 +13,7 @@ $pdf->AddPage();
 
 $pdf->Ln(20);
 
-$pdf->Cell(0, 10, "Cliente: $data->name Entrada: $data->entry Saida: $data->exit", 0, 1, 'C');
+$pdf->Cell(0, 10, "Cliente: $data->name  Entrada: $data->entry Saida: $data->exit", 0, 1, 'C');
 
 $pdf->SetFont('helvetica', '', 10);
 $table = '<table border="0" cellpadding="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">

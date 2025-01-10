@@ -9,21 +9,24 @@
   <title>
     Ordens de Serviço
   </title>
-  <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+  <!-- Fonts and icons -->
+  <link rel="stylesheet" href="../assets/css/google-fonts.css" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <link href="../assets/libs/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
   <!-- Material Icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="../assets/css/google-icons.css" />
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <!-- JQuery -->
   <script src="../assets/js/jquery.js"></script>
   <!-- swall -->
   <link rel="stylesheet" href="../assets/libs/sweetalert/dist/sweetalert2.min.css">
+  <!-- Selectize -->
+  <link rel="stylesheet" href="../assets/libs/selectize/selectize.css" />
+  <script src="../assets/libs/selectize/selectize.js"></script>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -72,21 +75,23 @@
           <div class="row justify-content-between">
             <div class="col-1">
               <a href="../pages/newserviceorder.php">
-                <button type="button" class="btn bg-gradient-dark w-100 m-0">Nova OS</button>
+                <button type="button" class="btn bg-gradient-dark w-100 m-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Nova Ordem de Serviço">Nova OS</button>
               </a>
             </div>
             <div class="col-2 text-end">
-              <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="exportOs();">
+              <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar Balanço" onClick="exportOs();">
                 <i class='material-symbols-rounded'>file_export</i>
               </button>
             </div>
           </div>
           <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Filtros</div>
           <hr class="horizontal dark m-0" />
-          <div class="col-3">
-            <div class="input-group input-group-outline my-3 ticket">
+          <div class="col-3 ">
+            <div class="input-group input-group-outline my-3">
               <label class="form-label">Cliente</label>
-              <input id="ticket" type="text" class="form-control">
+              <select id="client" class="form-select">
+                <option value="0" disabled selected>Cliente</option>
+              </select>
             </div>
           </div>
           <div class="col-3">
@@ -102,9 +107,13 @@
             </div>
           </div>
           <div class="col-2 mt-4">
-            <Strong class="pt-3">Total: 500</Strong>
+            <Strong class="pt-3" id='labelTotal'></Strong>
           </div>
-
+          <div class="col-1 text-center mt-3 ps-4">
+            <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listServiccesOrders();">
+              <i class='material-symbols-rounded'>search</i>
+            </button>
+          </div>
         </div>
       </div>
     </nav>
@@ -113,22 +122,12 @@
       <div class="row">
         <div class="col-12">
           <div class="card my-4">
-            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="card-header p-0 position-relative mt-n4 mx-3">
               <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                <h6 class="text-white text-capitalize ps-3">Cadastro de OS</h6>
+                <h6 class="text-white text-capitalize ps-3">Cadastro de Ordem de Serviço</h6>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-12">
-                    <div class="input-group input-group-dynamic mb-4">
-                      <label class="form-label">Label</label>
-                      <input type="text" class="form-control">
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <thead>
@@ -157,20 +156,51 @@
   <script src="../assets/js/plugins/chartjs.min.js"></script>
   <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
   <script>
+    let client = "";
+
+    const fetchClients = async () => {
+      const response = await $.post("../php/back_serviceorder.php", {
+        action: 'load_clients'
+      })
+      return JSON.parse(response);
+    }
+
     $(document).ready(function() {
       listServiccesOrders();
 
       $(`.entry`).addClass('is-filled');
       $(`.exit`).addClass('is-filled');
+
+      let clientSelectize = $(`#client`).selectize({
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ['name'],
+        sortField: 'name',
+        create: false,
+      });
+
+      client = clientSelectize[0].selectize;
+
+      fetchClients().then(response => {
+        client.addOption(response);
+        client.refreshOptions(false);
+      });
     });
 
     const listServiccesOrders = () => {
       $.post("../php/back_serviceorder.php", {
-          action: "list_serviceorders"
+          action: "list_serviceorders",
+          client: $('#client').val(),
+          entry: $('#entry').val(),
+          exit: $('#exit').val(),
         })
         .done(function(response) {
           $(".list").html(response);
         });
+      
+        setTimeout(() => {
+          $('#labelTotal').html('Total: ' + $('#sumTotal').val());
+        }, 100);
     }
 
     const deleteServiceOrder = (args) => {
@@ -183,7 +213,7 @@
         `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
         </br></br>
         <div class="alert alert-danger" role="alert">
-          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este usuario?</strong></p>
+          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir esta Ordem de Serviço?</strong></p>
         </div>
       `;
 
