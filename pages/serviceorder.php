@@ -79,7 +79,7 @@
               </a>
             </div>
             <div class="col-2 text-end">
-              <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar Balanço" onClick="exportOs();">
+              <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar Balanço" onClick="exportBalance();">
                 <i class='material-symbols-rounded'>file_export</i>
               </button>
             </div>
@@ -197,10 +197,10 @@
         .done(function(response) {
           $(".list").html(response);
         });
-      
-        setTimeout(() => {
-          $('#labelTotal').html('Total: ' + $('#sumTotal').val());
-        }, 100);
+
+      setTimeout(() => {
+        $('#labelTotal').html('Total: ' + $('#sumTotal').val());
+      }, 100);
     }
 
     const deleteServiceOrder = (args) => {
@@ -241,6 +241,18 @@
             });
         },
       });
+    }
+
+    const exportBalance = () => {
+      let entry = $('#entry').val() || 0;
+      let exit = $('#entry').val() || 0;
+      let url;
+
+      url = `../php/export_balance_excel.php?exit=${encodeURIComponent(entry)}
+      &entry=${encodeURIComponent(exit)}
+      &client=${encodeURIComponent($('#client').val())}`;
+
+      window.open(url, '_blank');
     }
   </script>
   <!-- Github buttons -->

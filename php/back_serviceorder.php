@@ -128,7 +128,6 @@ switch ($data->action) {
     $total = 0;
     foreach ($results as $key => $value) {
       if ($value) {
-        $total += $value['total'];
         $list .= "<tr>
             <td class='ps-3'>
               <div class='d-flex px-2 py-1'>
@@ -174,7 +173,7 @@ switch ($data->action) {
         ";
       }
     }
-    $total = $total /2;
+
     echo "<input type='hidden' id='sumTotal' value='" . $total . "'>";
     echo $list;
     break;
