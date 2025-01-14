@@ -44,7 +44,7 @@
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
+      <a class="navbar-brand px-4 py-3 m-0" href="#" target="_blank">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm text-dark">Costureiros</span>
       </a>
@@ -135,6 +135,7 @@
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Preço</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Desconto</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Observação</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3"></th>
                             <th class="text-end">
                               <button type="button" class="btn bg-gradient-info m-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Adicionar Serviço" onClick="addRow();">
                                 <i class='material-symbols-rounded'>add</i>
@@ -282,7 +283,7 @@
         row = args.row;
         classstyle = "is-filled";
       }
-      
+
       $('.lines').append(`
         <tr class='line' row='${row}' idOrder='${idOrder}' idService='${selectId}'>
           <td>
@@ -314,6 +315,9 @@
               </div>
             </div>
           </td>
+          <td class="text-center ps-0">
+            <button type="button" class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
+          </td>
         </tr>
       `);
       if (args.row) {
@@ -323,9 +327,13 @@
       }
     }
 
+    function removeRow(row) {
+      $(`tr[row='${row}']`).remove();
+    }
+
     const counterSelectorServices = (row, value) => {
       const serviceSelectize = $(`.service${row}`).selectize({
-        valueField: 'price',
+        valueField: 'id',
         labelField: 'service',
         searchField: ['service'],
         sortField: 'service',
@@ -343,7 +351,9 @@
     };
 
     const setPrice = (arg) => {
-      $(`#price${arg}`).val($(`.service${arg}`).val());
+      const serviceId = $(`.service${arg}`).val();
+      const price = services.find(service => service.id === serviceId).price;
+      $(`#price${arg}`).val(price);
       $(`.price${arg}`).addClass('is-filled');
     }
 
@@ -362,18 +372,13 @@
 
       $('.line').each(function() {
         const row = $(this).attr('row');
-        const serviceSelectize = $(this).find(`.service${row}`).selectize()[0].selectize;
-        const selectedValue = serviceSelectize.getValue();
-        const selectedOption = serviceSelectize.getOption(selectedValue);
-        const service = selectedOption.text();
-        const idService = $(this).attr('idservice');
+        const idService = $(`.service${row}`).val();
         const order = $(this).attr('idorder');
         const priceValue = $(this).find(`#price${row}`).val();
         const discountValue = $(this).find(`#discount${row}`).val();
         const obsValue = $(this).find(`#obs${row}`).val();
 
         data.push({
-          service: service || '',
           idService: idService || '',
           order: order || '',
           price: parseInt(priceValue) || 0,
@@ -450,7 +455,7 @@
             });
 
             const serviceSelectize = $(`.service${row}`).selectize({
-              valueField: 'price',
+              valueField: 'id',
               labelField: 'service',
               searchField: ['service'],
               sortField: 'service',
@@ -458,7 +463,8 @@
             });
             service = serviceSelectize[0].selectize;
             service.addOption(services);
-            service.refreshOptions(false);
+
+            service.setValue(element.idservice)
 
             $(`#price${row}`).val(element.price);
             $(`#discount${row}`).val(element.discount);

@@ -3,7 +3,8 @@ require_once(__DIR__ . '/../assets/libs/tecnickcom/tcpdf/tcpdf.php');
 require_once(__DIR__ . "/_db.php");
 
 $data = (object) $_REQUEST;
-
+$data->entry = date_format(new DateTime($data->entry), 'd/m/Y');
+$data->exit = date_format(new DateTime($data->exit), 'd/m/Y');
 $pdf = new TCPDF();
 
 $pdf->SetCreator('Vitor');
@@ -20,10 +21,10 @@ $table = '<table border="0" cellpadding="1" cellspacing="0" style="width: 100%; 
   <thead>
     <tr style="background-color:rgb(221, 238, 124); font-weight: bold;">
       <th style="padding: 8px;">OS</th>
-      <th style="padding: 8px;">serviço</th>
-      <th style="padding: 8px;">observação</th>
-      <th style="padding: 8px; text-align: right;">preço</th>
-      <th style="padding: 8px; text-align: right;">desconto</th>
+      <th style="padding: 8px;">Serviço</th>
+      <th style="padding: 8px;">Observação</th>
+      <th style="padding: 8px; text-align: right;">Preço</th>
+      <th style="padding: 8px; text-align: right;">Desconto</th>
     </tr>
   </thead>
   <tbody>';

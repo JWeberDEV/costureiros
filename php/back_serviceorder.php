@@ -74,7 +74,7 @@ switch ($data->action) {
 
         foreach ($data->data as $key => $value) {
           $stmt = $pdo->prepare("INSERT INTO orders (idserviceorders, idservice, price, discount, obs)
-          SELECT $lastInsertId, id, {$value['price']}, {$value['discount']}, '{$value['obs']}' FROM services WHERE service = '{$value['service']}'");
+          VALUES($lastInsertId, {$value['idservice']}, {$value['price']}, {$value['discount']}, '{$value['obs']}')");
 
           $services = $stmt->execute([]);
         }
@@ -116,7 +116,7 @@ switch ($data->action) {
     }
 
     if ($data->exit) {
-      $query .= " AND s.servicexit >= '$out'";
+      $query .= " AND s.servicexit <= '$out'";
     }
 
     $query .= " ORDER BY s.id";
@@ -251,6 +251,7 @@ switch ($data->action) {
     // prepara a query que lista os eventos que são vinculados pelo usuário
     $stmt = $pdo->prepare("SELECT c.id, c.name
       FROM clients c
+      WHERE c.status = 1
       ORDER BY c.name
     ");
     // executa a query
@@ -271,6 +272,7 @@ switch ($data->action) {
     // prepara a query que lista os eventos que são vinculados pelo usuário
     $stmt = $pdo->prepare("SELECT s.id, s.service, s.price
         FROM services s
+        WHERE s.status = 1
         ORDER BY s.service
       ");
     // executa a query
