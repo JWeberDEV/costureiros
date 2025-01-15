@@ -17,6 +17,8 @@
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Material Icons -->
   <link rel="stylesheet" href="../assets/css/google-icons.css" />
+  <!-- Font Awesome Icons -->
+  <link href="../assets/libs/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <!-- Daterangerpicker -->
@@ -26,6 +28,8 @@
   <!-- Selectize -->
   <link rel="stylesheet" href="../assets/libs/selectize/selectize.css" />
   <script src="../assets/libs/selectize/selectize.js"></script>
+  <!-- swall -->
+  <link rel="stylesheet" href="../assets/libs/sweetalert/dist/sweetalert2.min.css">
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -88,6 +92,9 @@
             </div>
             <div class="card-body px-0 pb-2">
               <div class="container">
+                <div class="pb-2 pt-1">
+                  <button type="button" class="btn osStatus" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clique para encerrar a OS" onclick="finishOs()"></button>
+                </div>
                 <form role="form" class="text-start">
                   <input type="hidden" id="id">
                   <div class="row" style="position: relative; z-index: 11;">
@@ -177,7 +184,7 @@
               <hr class="dark horizontal my-0">
               <div class="container-fluid text-center">
                 <div class="row justify-content-end">
-                  <div class="col-1"><button type="button" class="btn bg-gradient-dark mt-2" onclick="saveOrderService();">Salvar</button></div>
+                  <div class="col-1"><button type="button" id='save' class="btn bg-gradient-dark mt-2" onclick="saveOrderService();">Salvar</button></div>
                 </div>
               </div>
             </div>
@@ -194,6 +201,7 @@
   <script src="../assets/js/plugins/chartjs.min.js"></script>
   <script src="../assets/libs/daterangepicker/moment.min.js"></script>
   <script src="../assets/libs/daterangepicker/daterangepicker.js"></script>
+  <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
   <script>
     $.fn.toNumber = function() {
       return parseFloat($(this).val()) || 0;
@@ -205,6 +213,7 @@
     let os = "";
     let name = "";
     let id = "";
+    let statusOs = "";
     const fetchClients = async () => {
       const response = await $.post("../php/back_serviceorder.php", {
         action: 'load_clients'
@@ -232,11 +241,10 @@
       const urlParams = new URLSearchParams(queryString);
       id = urlParams.get('id');
       await fetchServices();
-
       if (!id) {
         addRow();
       } else {
-        listServiceId(id);
+        await listServiceId(id);
       }
 
       let clientSelectize = $(`#client`).selectize({
@@ -253,6 +261,10 @@
         client.addOption(response);
         client.refreshOptions(false);
       });
+
+      if (statusOs == 1) {
+        $('#save').attr('disabled', true);
+      }
     });
 
     $(function() {
@@ -316,7 +328,7 @@
             </div>
           </td>
           <td class="text-center ps-0">
-            <button type="button" class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
+            <button type="button" class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row},${idOrder})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
           </td>
         </tr>
       `);
@@ -327,8 +339,45 @@
       }
     }
 
-    function removeRow(row) {
-      $(`tr[row='${row}']`).remove();
+    function removeRow(row, idOrder) {
+      if (id) {
+        let html =
+          `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+          </br></br>
+          <div class="alert alert-danger" role="alert">
+            <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este Serviço?</strong></p>
+          </div>
+        `;
+
+        Swal.fire({
+          html: html,
+          customClass: 'swal-height',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Confirmar',
+          showCancelButton: true,
+          allowEnterKey: true,
+          confirmButtonColor: "#43a047",
+          customClass: {
+            confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+            cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+          },
+          width: 500,
+          preConfirm: () => {
+            $.post("../php/back_serviceorder.php", {
+                action: 'delete_service',
+                idOrder
+              })
+              .done(function(response) {
+                response = JSON.parse(response);
+                if (response.code == 1) {
+                  $(`tr[row='${row}']`).remove();
+                }
+              });
+          },
+        });
+      } else {
+        $(`tr[row='${row}']`).remove();
+      }
     }
 
     const counterSelectorServices = (row, value) => {
@@ -412,18 +461,19 @@
         });
     }
 
-    const listServiceId = (arg) => {
+    const listServiceId = async (arg) => {
       let data = {
         action: "list_serviceorder_id",
         id: arg
       }
 
-      let response = $.post("../php/back_serviceorder.php", data)
+      let response = await $.post("../php/back_serviceorder.php", data)
         .done(function(response) {
           response = JSON.parse(response);
           response.forEach(element => {
             os = element.serviceorder;
             name = element.name;
+            statusOs = element.servicestatus;
             $("#id").val(element.serviceorder);
             $("#os").html('Nº ' + element.serviceorder);
             $("#ticket").val(element.ticket);
@@ -435,6 +485,14 @@
             $("#incoming").val(element.incoming);
             $("#total").val(element.total);
             $("#remainder").val(element.remainder);
+
+            if (element.servicestatus == 1) {
+              $('.osStatus').addClass('bg-gradient-success');
+              $('.osStatus').text('Encerrada');
+            } else {
+              $('.osStatus').addClass('bg-gradient-warning');
+              $('.osStatus').text('Em andamento');
+            }
 
             let row = '';
             let actual = '';
@@ -494,19 +552,21 @@
         const row = $(this).attr('row');
         value += $(this).find(`#price${row}`).toNumber();
         discount += $(this).find(`#discount${row}`).toNumber();
-
-        // const row = $(this).attr('row');
-        // const priceValue = $(this).find(`#price${row}`).val();
-        // const discountValue = $(this).find(`#discount${row}`).val();
-
-        // value += priceValue != "" ? parseFloat(priceValue) : 0;
-        // discount += discountValue != "" ? parseFloat(discountValue) : 0;
       });
 
       let result = value - discount;
       $(`#total`).val(result);
       $(`.total`).addClass('is-filled');
+      
+      if ($(`#total`).val() && $(`#incoming`).val()) {
+        budget();
+      }
+    }
 
+    const budget = () => {
+      let result = $(`#total`).toNumber() - $(`#incoming`).toNumber();
+      $(`#remainder`).val(result);
+      $(`.remainder`).addClass('is-filled');
     }
 
     const exportOs = () => {
@@ -518,10 +578,57 @@
       window.open(url, '_blank');
     }
 
-    const budget = () => {
-      let result = $(`#total`).toNumber() - $(`#incoming`).toNumber();
-      $(`#remainder`).val(result);
-      $(`.remainder`).addClass('is-filled');
+    const finishOs = () => {
+      let html = "";
+      if (statusOs == 1) {
+        html =
+          `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+          </br></br>
+          <div class="alert alert-danger" role="alert">
+            <p style="color:#fff;"><strong>Tem Certeza de que deseja Reabrir a Ordem de Serviço?</strong></p>
+          </div>
+        `;
+      } else {
+        html =
+          `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+          </br></br>
+          <div class="alert alert-danger" role="alert">
+            <p style="color:#fff;"><strong>Tem Certeza de que deseja encerrar esta Ordem de Serviço?</strong></p>
+          </div>
+        `;
+      }
+
+      Swal.fire({
+        html: html,
+        customClass: 'swal-height',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        showCancelButton: true,
+        allowEnterKey: true,
+        confirmButtonColor: "#43a047",
+        customClass: {
+          confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+          cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+        },
+        width: 500,
+        preConfirm: () => {
+          $.post("../php/back_serviceorder.php", {
+              action: 'set_os_status',
+              id
+            })
+            .done(function(response) {
+              response = JSON.parse(response);
+              $('#infoToast').addClass(response.class);
+              $('.html').html(response.message);
+              $('#infoToast').toast('show');
+              if (response.class == 'bg-gradient-success') {
+                $('.osStatus').removeClass('bg-gradient-warning');
+                $('.osStatus').addClass('bg-gradient-success');
+                $('.osStatus').text('Encerrada');
+              }
+            });
+        },
+      });
     }
   </script>
   <!-- Github buttons -->

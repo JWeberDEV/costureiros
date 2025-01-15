@@ -102,6 +102,7 @@ switch ($data->action) {
         s.serviceorder,
         s.ticket,
         s.total,
+        s.servicestatus,
         c.name
       FROM serviceorders s
       JOIN clients c ON c.id = s.idclient
@@ -129,6 +130,9 @@ switch ($data->action) {
     foreach ($results as $key => $value) {
       if ($value) {
         $list .= "<tr>
+            <td class='ps-4' style='width: 10px'>
+              <i class='fa-solid fa-circle " . ($value['servicestatus'] == 1 ? 'text-success' : 'text-warning') . "' data-bs-toggle='tooltip' data-bs-placement='bottom' title='" . ($value['servicestatus'] == 1 ? 'OS Encerrada' : 'OS Em andamento') . "'></i>
+            </td>
             <td class='ps-3'>
               <div class='d-flex px-2 py-1'>
                 <div class='d-flex flex-column justify-content-center'>
@@ -206,6 +210,7 @@ switch ($data->action) {
         so.incoming,
         so.total,
         so.remainder,
+        so.servicestatus,
         o.id AS 'idorder',
         o.idserviceorders,
         o.idservice,
@@ -242,6 +247,7 @@ switch ($data->action) {
         'obs' => $value['obs'],
         'service' => $value['service'],
         'name' => $value['name'],
+        'servicestatus' => $value['servicestatus'],
       ];
     }
 
@@ -289,5 +295,31 @@ switch ($data->action) {
     }
 
     echo (json_encode($response));
+    break;
+  case 'set_os_status':
+    $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = 1 WHERE id = $data->id");
+    $execute = $stmt->execute();
+
+    if ($execute) {
+      $response->class = 'bg-gradient-success';
+      $response->message = "Oredem de serviço finalizada com sucesso!";
+    } else {
+      $response->class = 'bg-gradient-danger';
+      $response->message = "Erro ao finalizar Ordem de Serviço!";
+    }
+
+    echo json_encode($response);
+    break;
+  case 'delete_service':
+    $stmt = $pdo->prepare("DELETE FROM orders WHERE id = $data->idOrder");
+    $execute = $stmt->execute();
+
+    if ($execute) {
+      $response->code = 1;
+    } else {
+      $response->code = 0;
+    }
+
+    echo json_encode($response);
     break;
 }

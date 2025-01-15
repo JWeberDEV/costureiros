@@ -150,7 +150,7 @@
         `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
         </br></br>
         <div class="alert alert-danger" role="alert">
-          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este usuario?</strong></p>
+          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este Cliente?</strong></p>
         </div>
       `;
 
