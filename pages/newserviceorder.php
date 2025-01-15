@@ -88,6 +88,9 @@
             </div>
             <div class="card-body px-0 pb-2">
               <div class="container">
+                <div class="pb-2 pt-1">
+                  <button type="button" class="btn osStatus" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clique para encerrar a OS" onclick="finishOs()"></button>
+                </div>
                 <form role="form" class="text-start">
                   <input type="hidden" id="id">
                   <div class="row" style="position: relative; z-index: 11;">
@@ -316,7 +319,7 @@
             </div>
           </td>
           <td class="text-center ps-0">
-            <button type="button" class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
+            <button type="button" class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row},${idOrder})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
           </td>
         </tr>
       `);
@@ -327,8 +330,18 @@
       }
     }
 
-    function removeRow(row) {
-      $(`tr[row='${row}']`).remove();
+    function removeRow(row,idOrder) {
+      if (id) {
+        $.post("../php/back_serviceorder.php", {
+          action: 'delete_service',
+          idOrder
+        })
+        .done(function(response) {
+          response = JSON.parse(response);
+        });
+      }else{
+        $(`tr[row='${row}']`).remove();
+      }
     }
 
     const counterSelectorServices = (row, value) => {
@@ -352,7 +365,7 @@
 
     const setPrice = (arg) => {
       const serviceId = $(`.service${arg}`).val();
-      const price = services.find(service => service.id === serviceId).price;
+      const price = services.find(service => service.id == serviceId).price;
       $(`#price${arg}`).val(price);
       $(`.price${arg}`).addClass('is-filled');
     }
@@ -435,7 +448,13 @@
             $("#incoming").val(element.incoming);
             $("#total").val(element.total);
             $("#remainder").val(element.remainder);
-
+            if (element.servicestatus == 1) {
+              $('.osStatus').addClass('bg-gradient-success');
+              $('.osStatus').text('Encerrada');
+            }else{
+              $('.osStatus').addClass('bg-gradient-warning');
+              $('.osStatus').text('Em andamento');
+            }
             let row = '';
             let actual = '';
 
@@ -522,6 +541,24 @@
       let result = $(`#total`).toNumber() - $(`#incoming`).toNumber();
       $(`#remainder`).val(result);
       $(`.remainder`).addClass('is-filled');
+    }
+
+    const finishOs = () => {
+      $.post("../php/back_serviceorder.php", {
+          action: 'set_os_status',
+          id
+        })
+        .done(function(response) {
+          response = JSON.parse(response);
+          $('#infoToast').addClass(response.class);
+          $('.html').html(response.message);
+          $('#infoToast').toast('show');
+          if (response.class == 'bg-gradient-success') {
+            $('.osStatus').removeClass('bg-gradient-warning');
+            $('.osStatus').addClass('bg-gradient-success');
+            $('.osStatus').text('Encerrada');
+          }
+        });
     }
   </script>
   <!-- Github buttons -->
