@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="utf-8" />
@@ -24,6 +24,8 @@
   <script src="../assets/js/jquery.js"></script>
   <!-- swall -->
   <link rel="stylesheet" href="../assets/libs/sweetalert/dist/sweetalert2.min.css">
+  <!-- Datatable -->
+  <link rel="stylesheet" href="../assets/libs/datatable/datatable.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -98,20 +100,8 @@
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Telefone</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ponto de referência</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-boldery opacity-7"></th>
-                    </tr>
-                  </thead>
-                  <tbody class="list">
-                  </tbody>
-                </table>
+              <div class="table-responsive data m-2 p-0">
+
               </div>
             </div>
           </div>
@@ -126,6 +116,7 @@
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
   <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
+  <script src="../assets/libs/datatable/datatable.js"></script>
   <script>
     $(document).ready(function() {
       listClients();
@@ -136,7 +127,94 @@
           action: "list_clients"
         })
         .done(function(response) {
-          $(".list").html(response);
+          response = JSON.parse(response);
+          let lines = "";
+
+          response.forEach(item => {
+            lines += `
+          <tr>
+            <td>
+              <div class='d-flex px-2 py-1'>
+                <div class='d-flex flex-column justify-content-center'>
+                  <h6 class='mb-0 text-sm'>${item.name}</h6>
+                </div>
+              </div>
+            </td>
+            <td class='align-middle text-center'>
+              <div class='d-flex px-2 py-1'>
+                <div class='d-flex flex-column justify-content-center'>
+                  <h6 class='mb-0 text-sm'>${item.phone}</h6>
+                </div>
+              </div>
+            </td>
+            <td class='align-middle text-center'>
+              <div class='d-flex px-2 py-1'>
+                <div class='d-flex flex-column justify-content-center'>
+                  <h6 class='mb-0 text-sm'>${item.street} - ${item.number}</h6>
+                </div>
+              </div>
+            </td>
+            <td class='align-middle text-center'>
+              <div class='d-flex px-2 py-1'>
+                <div class='d-flex flex-column justify-content-center'>
+                  <h6 class='mb-0 text-sm'>${item.obs}</h6>
+                </div>
+              </div>
+            </td>
+            <td class='text-end'>
+              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' href="../pages/newclient.php?id='${item.id}'">
+                <i class='material-symbols-rounded opacity-5'>edit</i>
+              </a>
+              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick="deleteClient('${item.id}')">
+                <i class='material-symbols-rounded opacity-5'>delete</i>
+              </button>
+            </td>
+          </tr>
+          `;
+                    });
+
+                    let html = `
+          <table id='table' class="table table-striped table-hover" style="width:100%">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Telefone</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ponto de referência</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+              </tr>
+            </thead>
+            <tbody class="list">
+              ${lines}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Telefone</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ponto de referência</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolde opacity-7"></th>
+              </tr>
+            </tfoot>
+          </table>
+          `;
+
+          $('.data').html(html);
+
+          // Initialize DataTable after updating the table
+          $('#table').DataTable({
+            layout: {
+              topStart: null,
+              bottom: null,
+              bottomStart: 'info',
+              bottomEnd: 'paging'
+            },
+            language: {
+              url: "../assets/libs/datatable/pt-br.json"
+            },
+            searching: false,
+            pagingType: false
+          });
         });
     }
 

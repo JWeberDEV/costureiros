@@ -127,6 +127,7 @@ switch ($data->action) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $list = '';
     $total = 0;
+    $response = [];
     foreach ($results as $key => $value) {
       if ($value) {
         $list .= "<tr>

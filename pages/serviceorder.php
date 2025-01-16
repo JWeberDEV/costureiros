@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-br">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,6 +26,8 @@
   <!-- Selectize -->
   <link rel="stylesheet" href="../assets/libs/selectize/selectize.css" />
   <script src="../assets/libs/selectize/selectize.js"></script>
+  <!-- Datatable -->
+  <link rel="stylesheet" href="../assets/libs/datatable/datatable.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -156,6 +157,7 @@
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
   <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
+  <script src="../assets/libs/datatable/datatable.js"></script>
   <script>
     let client = "";
 

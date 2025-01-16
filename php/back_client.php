@@ -82,59 +82,19 @@ switch ($data->action) {
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $list = '';
+    $response = [];
     foreach ($results as $key => $value) {
-      print_r($value);
-      if ($value) {
-        $list .= "<tr>
-            <td>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['name'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td class='align-middle text-center'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['phone'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td class='align-middle text-center'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['street'] . " - " . $value['number'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td class='align-middle text-center'><div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['obs'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td class='text-end'>
-              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' href=\"../pages/newclient.php?id='" . $value['id'] . "'\">
-                <i class='material-symbols-rounded opacity-5'>edit</i>
-              </a>
-              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick=\"deleteClient('" . $value['id'] . "')\">
-                <i class='material-symbols-rounded opacity-5'>delete</i>
-              </button>
-            </td>
-          </tr>
-        ";
-      } else {
-        $list =
-          "<tr>
-            <td style='padding:10px;' colspan='8'>
-              <a href='#' style='color:#ED6663;font-style:italic;'><i class='fas fa-info-circle'></i> Nenhum registro encontrado!</a>
-            </td>
-          </tr>
-        ";
-      }
+      $response[] = [
+        'id' => $value['id'],
+        'name' => $value['name'],
+        'phone' => $value['phone'],
+        'street' => $value['street'],
+        'number' => $value['number'],
+        'obs' => $value['obs'],
+      ];
     }
 
-    echo $list;
+    echo (json_encode($response));
     break;
   case 'delete_client':
     $arrayData = [
