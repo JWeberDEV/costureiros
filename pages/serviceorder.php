@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -129,20 +130,7 @@
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">OS</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Cliente</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1">Guichê</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-1"></th>
-                    </tr>
-                  </thead>
-                  <tbody class="list">
-                  </tbody>
-                </table>
+              <div class="table-responsive data p-0">
               </div>
             </div>
           </div>
@@ -198,12 +186,88 @@
           exit: $('#exit').val(),
         })
         .done(function(response) {
-          $(".list").html(response);
-        });
+          response = JSON.parse(response);
+          let lines = "";
 
-      setTimeout(() => {
-        $('#labelTotal').html('Total: ' + $('#sumTotal').val());
-      }, 100);
+          response.forEach(item => {
+            let itemStatus = item.servicestatus == 1 ? 'text-success' : 'text-warning'
+            let textStatus = item.servicestatus == 1 ? 'OS Encerrada' : 'OS Em andamento'
+            $('#labelTotal').html('Total: ' + item.sum);
+            lines += `
+            <tr>
+              <td class='ps-4' style='width: 10px'>
+                <i class='fa-solid fa-circle ${itemStatus}' data-bs-toggle='tooltip' data-bs-placement='bottom' title='${textStatus}'></i>
+                  </td>
+                  <td class='ps-3'>
+                    <div class='d-flex px-2 py-1'>
+                      <div class='d-flex flex-column justify-content-center'>
+                        <h6 class='mb-0 text-sm'>${item.serviceorder}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td class='ps-0'>
+                    <div class='d-flex px-2 py-1'>
+                      <div class='d-flex flex-column justify-content-center'>
+                        <h6 class='mb-0 text-sm'>${item.name}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td cclass='ps-3'>
+                    <div class='d-flex px-2 py-1'>
+                      <div class='d-flex flex-column justify-content-center'>
+                        <h6 class='mb-0 text-sm'>${item.ticket}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td class='text-end'>
+                    <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}'>
+                  <i class='material-symbols-rounded opacity-5'>edit</i>
+                  </a>
+                  <button type='button' class='btn bg-gradient-danger m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Excluir' onclick='deleteServiceOrder(${item.id})'>
+                    <i class='material-symbols-rounded opacity-5'>delete</i>
+                  </button>
+              </td>
+            </tr>
+            `;
+          });
+
+          let html = `
+            <table id='table' class="table table-striped table-hover" style="width:100%">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">OS</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cliente</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Guichê</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+                </tr>
+              </thead>
+              <tbody class="list">
+              ${lines}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">OS</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cliente</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Guichê</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+                </tr>
+              </tfoot>
+            </table>
+          `;
+
+          $('.data').html(html);
+
+          // Initialize DataTable after updating the table
+          $('#table').DataTable({
+            language: {
+              url: "../assets/libs/datatable/pt-br.json"
+            },
+            searching: false,
+            pagingType: false
+          });
+        });
     }
 
     const deleteServiceOrder = (args) => {

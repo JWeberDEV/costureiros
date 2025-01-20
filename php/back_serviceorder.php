@@ -102,6 +102,7 @@ switch ($data->action) {
         s.serviceorder,
         s.ticket,
         s.total,
+        SUM(s.total) OVER() AS sum,
         s.servicestatus,
         c.name
       FROM serviceorders s
@@ -129,58 +130,18 @@ switch ($data->action) {
     $total = 0;
     $response = [];
     foreach ($results as $key => $value) {
-      if ($value) {
-        $list .= "<tr>
-            <td class='ps-4' style='width: 10px'>
-              <i class='fa-solid fa-circle " . ($value['servicestatus'] == 1 ? 'text-success' : 'text-warning') . "' data-bs-toggle='tooltip' data-bs-placement='bottom' title='" . ($value['servicestatus'] == 1 ? 'OS Encerrada' : 'OS Em andamento') . "'></i>
-            </td>
-            <td class='ps-3'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['serviceorder'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td class='ps-0'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['name'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td cclass='ps-3'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>" . $value['ticket'] . "</h6>
-                </div>
-              </div>
-            </td>
-            <td class='text-end'>
-              <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href=\"../pages/newserviceorder.php?id='" . $value['id'] . "'\">
-                <i class='material-symbols-rounded opacity-5'>edit</i>
-              </a>
-              <button type='button' class='btn bg-gradient-danger m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Excluir' onclick=\"deleteServiceOrder('" . $value['id'] . "')\">
-                <i class='material-symbols-rounded opacity-5'>delete</i>
-              </button>
-            </td>
-          </tr>
-        ";
-        $total += $value['total'];
-      }
-
-      if (empty($results)) {
-        $list = "
-            <tr>
-                <td style='padding:10px;' colspan='8'>
-                    <a href='#' style='color:#ED6663;font-style:italic;'><i class='fas fa-info-circle'></i> Nenhum registro encontrado!</a>
-                </td>
-            </tr>
-        ";
-      }
+      $response[] = [
+        'id' => $value['id'],
+        'serviceorder' => $value['serviceorder'],
+        'ticket' => $value['ticket'],
+        'total' => $value['total'],
+        'sum' => $value['sum'],
+        'servicestatus' => $value['servicestatus'],
+        'name' => $value['name'],
+      ];
     }
 
-    echo "<input type='hidden' id='sumTotal' value='" . $total . "'>";
-    echo $list;
+    echo (json_encode($response));
     break;
   case 'delete_serviceorder':
     $arrayData = [
@@ -298,15 +259,26 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'set_os_status':
-    $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = 1 WHERE id = $data->id");
+    $val = "";
+    $message ="";
+    if ($data->statusOs == 1) {
+      $val = 0;
+      $message ="Oredem de serviço Re aberta com sucesso!";
+    }else{
+      $val = 1;
+      $message ="Oredem de serviço finalizada com sucesso!";
+    }
+    $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = $val WHERE id = $data->id");
     $execute = $stmt->execute();
 
     if ($execute) {
       $response->class = 'bg-gradient-success';
-      $response->message = "Oredem de serviço finalizada com sucesso!";
+      $response->message = $message;
+      $response->status = $val;
     } else {
       $response->class = 'bg-gradient-danger';
       $response->message = "Erro ao finalizar Ordem de Serviço!";
+      $response->status = $val;
     }
 
     echo json_encode($response);

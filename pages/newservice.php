@@ -125,8 +125,10 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <script src="../assets/libs/jQueryMask/dist/jquery.mask.js"></script>
   <script>
     $(document).ready(function() {
+      $('#price').mask("###.###.00", {reverse: true});
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get('id');

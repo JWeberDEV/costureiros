@@ -203,12 +203,6 @@
 
           // Initialize DataTable after updating the table
           $('#table').DataTable({
-            layout: {
-              topStart: null,
-              bottom: null,
-              bottomStart: 'info',
-              bottomEnd: 'paging'
-            },
             language: {
               url: "../assets/libs/datatable/pt-br.json"
             },

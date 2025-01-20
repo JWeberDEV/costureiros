@@ -200,6 +200,7 @@
   <script src="../assets/libs/daterangepicker/moment.min.js"></script>
   <script src="../assets/libs/daterangepicker/daterangepicker.js"></script>
   <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
+  <script src="../assets/libs/jQueryMask/dist/jquery.mask.js"></script>
   <script>
     $.fn.toNumber = function() {
       return parseFloat($(this).val()) || 0;
@@ -235,6 +236,9 @@
     });
 
     $(document).ready(async function() {
+      $('#incoming').mask("###.###.00", {reverse: true});
+      $('#total').mask("###.###.00", {reverse: true});
+      $('#remainder').mask("###.###.00", {reverse: true});
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       id = urlParams.get('id');
@@ -330,6 +334,8 @@
           </td>
         </tr>
       `);
+      $(`#price${row}`).mask("###.###.00", {reverse: true});
+      $(`#discount${row}`).mask("###.###.00", {reverse: true});
       if (args.row) {
         setActive();
       } else {
@@ -479,7 +485,7 @@
             $("#exit").val(element.servicexit);
             setTimeout(() => {
               client.setValue([element.idclient]);
-            }, 100);
+            }, 300);
             $("#incoming").val(element.incoming);
             $("#total").val(element.total);
             $("#remainder").val(element.remainder);
@@ -553,7 +559,8 @@
       });
 
       let result = value - discount;
-      $(`#total`).val(result);
+      let formattedResult = result.toFixed(2);
+      $('#total').val(formattedResult).trigger('input');
       $(`.total`).addClass('is-filled');
       
       if ($(`#total`).val() && $(`#incoming`).val()) {
@@ -563,7 +570,8 @@
 
     const budget = () => {
       let result = $(`#total`).toNumber() - $(`#incoming`).toNumber();
-      $(`#remainder`).val(result);
+      let formattedResult = result.toFixed(2);
+      $(`#remainder`).val(formattedResult).trigger('input');
       $(`.remainder`).addClass('is-filled');
     }
 
@@ -612,17 +620,24 @@
         preConfirm: () => {
           $.post("../php/back_serviceorder.php", {
               action: 'set_os_status',
-              id
+              id,
+              statusOs
             })
             .done(function(response) {
               response = JSON.parse(response);
               $('#infoToast').addClass(response.class);
               $('.html').html(response.message);
               $('#infoToast').toast('show');
-              if (response.class == 'bg-gradient-success') {
+              if (response.status == 1) {
                 $('.osStatus').removeClass('bg-gradient-warning');
                 $('.osStatus').addClass('bg-gradient-success');
                 $('.osStatus').text('Encerrada');
+                $('#save').attr('disabled', true);
+              } else {
+                $('.osStatus').removeClass('bg-gradient-success');
+                $('.osStatus').addClass('bg-gradient-warning');
+                $('.osStatus').text('Em andamento');
+                $('#save').attr('disabled', false);
               }
             });
         },
