@@ -92,13 +92,13 @@
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 service">
                         <label class="form-label">Serviço</label>
-                        <input id="service" type="user" class="form-control">
+                        <input id="service" type="user" class="form-control" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 price">
                         <label class="form-label">Preço</label>
-                        <input id="price" type="number" class="form-control">
+                        <input id="price" type="number" class="form-control" autocomplete="off">
                       </div>
                     </div>
                   </div>

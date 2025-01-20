@@ -92,19 +92,19 @@
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 name">
                         <label class="form-label">Nome</label>
-                        <input id="name" type="user" class="form-control">
+                        <input id="name" type="user" class="form-control" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 phone">
                         <label class="form-label">Telefone</label>
-                        <input id="phone" type="number" class="form-control" maxlength="11">
+                        <input id="phone" type="text" class="form-control" maxlength="11" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 phone">
                         <label class="form-label">Telefone Complementar</label>
-                        <input id="phoneOption" type="number" class="form-control" maxlength="11">
+                        <input id="phoneOption" type="text" class="form-control" maxlength="11" autocomplete="off">
                       </div>
                     </div>
                   </div>
@@ -113,37 +113,37 @@
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 cep">
                         <label class="form-label">Cep</label>
-                        <input id="cep" type="number" class="form-control" onChange="searchCep()" maxlength="8">
+                        <input id="cep" type="text" class="form-control" onChange="searchCep()" maxlength="8" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 city">
                         <label class="form-label">Cidade</label>
-                        <input id="city" type="text" class="form-control">
+                        <input id="city" type="text" class="form-control" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 neigbouhod">
                         <label class="form-label">Bairro</label>
-                        <input id="neigbouhod" type="text" class="form-control">
+                        <input id="neigbouhod" type="text" class="form-control" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 street">
                         <label class="form-label">Rua</label>
-                        <input id="street" type="text" class="form-control">
-                      </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 obs">
-                        <label class="form-label">Complemento</label>
-                        <input id="obs" type="text" class="form-control">
+                        <input id="street" type="text" class="form-control" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 obs">
                         <label class="form-label">Numero</label>
-                        <input id="number" type="number" class="form-control">
+                        <input id="number" type="number" class="form-control" autocomplete="off">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 obs">
+                        <label class="form-label">Complemento</label>
+                        <input id="obs" type="text" class="form-control" autocomplete="off">
                       </div>
                     </div>
                   </div>
@@ -170,8 +170,12 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <script src="../assets/libs/jQueryMask/dist/jquery.mask.js"></script>
   <script>
     $(document).ready(function() {
+      $('#phone').mask('(00) 00000-0000');
+      $('#phoneOption').mask('(00) 00000-0000');
+      $('#cep').mask('00000-000');
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get('id');

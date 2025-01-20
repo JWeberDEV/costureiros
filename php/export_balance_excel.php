@@ -73,8 +73,8 @@ $query = "SELECT
       s.incoming,
       s.total,
       s.remainder,
-      s.sevicentry,
-      s.servicexit,
+      DATE_FORMAT(s.sevicentry, '%d/%m/%Y') AS servicentry,
+      DATE_FORMAT(s.servicexit, '%d/%m/%Y') AS servicexit,
       c.name
     FROM serviceorders s
     JOIN clients c ON c.id = s.idclient

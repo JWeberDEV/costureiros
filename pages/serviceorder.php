@@ -88,27 +88,33 @@
           </div>
           <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Filtros</div>
           <hr class="horizontal dark m-0" />
-          <div class="col-3 ">
+          <div class="col-2 ">
             <div class="input-group input-group-outline my-3">
               <label class="form-label">Cliente</label>
-              <select id="client" class="form-select">
-                <option value="0" disabled selected>Cliente</option>
+              <select id="client" class="form-select" placeholder="Cliente">
               </select>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-2 ">
+            <div class="input-group input-group-outline my-3">
+              <label class="form-label">Status</label>
+              <select id="status" class="form-select" placeholder="Status">
+              </select>
+            </div>
+          </div>
+          <div class="col-2">
             <div class="input-group input-group-outline my-3 entry  ">
               <label class="form-label">Entrada</label>
-              <input id="entry" type="datetime-local" class="form-control">
+              <input id="entry" type="date" class="form-control">
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-2">
             <div class="input-group input-group-outline my-3 exit">
               <label class="form-label">Saida</label>
-              <input id="exit" type="datetime-local" class="form-control">
+              <input id="exit" type="date" class="form-control">
             </div>
           </div>
-          <div class="col-2 mt-4">
+          <div class="col-3 mt-4">
             <Strong class="pt-3" id='labelTotal'></Strong>
           </div>
           <div class="col-1 text-center mt-3 ps-4">
@@ -148,6 +154,7 @@
   <script src="../assets/libs/datatable/datatable.js"></script>
   <script>
     let client = "";
+    let statusService = "";
 
     const fetchClients = async () => {
       const response = await $.post("../php/back_serviceorder.php", {
@@ -176,6 +183,27 @@
         client.addOption(response);
         client.refreshOptions(false);
       });
+
+      let statusServiceSelectize = $(`#status`).selectize({
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ['name'],
+        sortField: 'name',
+        create: false,
+        options: [
+            
+            { id: 1, name: 'Em andamento' },
+            { id: 2, name: 'Encerrada' },
+            { id: 3, name: 'Todas' }
+        ],
+        onInitialize: function() {
+            this.setValue(0);
+        }
+      });
+
+      let statusService = statusServiceSelectize[0].selectize;
+
+      statusService.disableOption(0);
     });
 
     const listServiccesOrders = () => {
@@ -219,6 +247,13 @@
                       </div>
                     </div>
                   </td>
+                  <td cclass='ps-3'>
+                    <div class='d-flex px-2 py-1'>
+                      <div class='d-flex flex-column justify-content-center'>
+                        <h6 class='mb-0 text-sm'>${item.total}</h6>
+                      </div>
+                    </div>
+                  </td>
                   <td class='text-end'>
                     <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}'>
                   <i class='material-symbols-rounded opacity-5'>edit</i>
@@ -239,6 +274,7 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">OS</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cliente</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Guichê</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Total</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                 </tr>
               </thead>
@@ -251,6 +287,7 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">OS</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cliente</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Guichê</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Total</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                 </tr>
               </tfoot>

@@ -100,19 +100,19 @@
                     <div class="col-2">
                       <div class="input-group input-group-outline my-3 ticket">
                         <label class="form-label">Guichê</label>
-                        <input id="ticket" type="text" class="form-control">
+                        <input id="ticket" type="text" class="form-control" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 entry">
-                        <label class="form-label">DT Entrada /Horário</label>
-                        <input id="entry" type="datetime-local" class="form-control">
+                        <label class="form-label">DT Entrada</label>
+                        <input id="entry" type="date" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 exit">
-                        <label class="form-label">DT Saída /Horário</label>
-                        <input id="exit" type="datetime-local" class="form-control">
+                        <label class="form-label">DT Saída</label>
+                        <input id="exit" type="date" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
@@ -309,7 +309,7 @@
             <div class="d-flex px-2 py-1">
               <div class="input-group input-group-outline my-3 ${classstyle} price${row}">
                 <label class="form-label">Preço</label>
-                <input id="price${row}" type="number" class="form-control">
+                <input id="price${row}" type="number" class="form-control" autocomplete="off">
               </div>
             </div>
           </td>
@@ -317,7 +317,7 @@
             <div class="d-flex px-2 py-1">
               <div class="input-group input-group-outline my-3 ${classstyle} discount${row}">
                 <label class="form-label">Desconto</label>
-                <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})' onblur='calculator()'>
+                <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})' onblur='calculator()' autocomplete="off">
               </div>
             </div>
           </td>
@@ -325,7 +325,7 @@
             <div class="d-flex px-2 py-1">
               <div class="input-group input-group-outline my-3 ${classstyle} obs${row}">
                 <label class="form-label">Observações</label>
-                <input id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})'>
+                <input id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})' autocomplete="off">
               </div>
             </div>
           </td>
@@ -375,6 +375,7 @@
                 response = JSON.parse(response);
                 if (response.code == 1) {
                   $(`tr[row='${row}']`).remove();
+                  calculator();
                 }
               });
           },
