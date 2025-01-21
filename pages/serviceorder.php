@@ -174,6 +174,7 @@
       $(`.exit`).addClass('is-filled');
 
       let clientSelectize = $(`#client`).selectize({
+        plugins: ["clear_button"],
         valueField: 'id',
         labelField: 'name',
         searchField: ['name'],
@@ -189,6 +190,7 @@
       });
 
       let statusServiceSelectize = $(`#status`).selectize({
+        plugins: ["clear_button"],
         valueField: 'id',
         labelField: 'name',
         searchField: ['name'],

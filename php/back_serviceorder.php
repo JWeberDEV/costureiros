@@ -12,30 +12,19 @@ switch ($data->action) {
     $out = date_format($out, "Y-m-d");
 
     if ($data->id > 0) {
-
-      // Decalara os Valores para usar o prepare
-      $arrayData = [
-        'id' => $data->id,
-        'idclient' => $data->client,
-        'incoming' => "$data->incoming",
-        'total' => "$data->total",
-        'remainder' => $data->remainder,
-        'sevicentry' => $entry,
-        'servicexit' => $out,
-      ];
-
+      
       $stmt = $pdo->prepare(
         "UPDATE serviceorders SET
-          idclient = :idclient,
-          incoming = :incoming,
-          total = :total,
-          remainder = :remainder,
-          sevicentry = :sevicentry,
-          servicexit = :servicexit
-        WHERE id = :id"
+          idclient = $data->client,
+          incoming = $data->incoming,
+          total = $data->total,
+          remainder = $data->remainder,
+          sevicentry = '$entry',
+          servicexit = '$out'
+        WHERE id = $data->id"
       );
 
-      $execute = $stmt->execute($arrayData);
+      $execute = $stmt->execute();
 
       if ($execute) {
         foreach ($data->data as $key => $value) {
@@ -49,7 +38,7 @@ switch ($data->action) {
               WHERE id = {$value['order']}"
           );
 
-          $update = $stmt->execute($arrayData);
+          $update = $stmt->execute();
         }
 
         if ($update) {
@@ -170,18 +159,18 @@ switch ($data->action) {
         so.ticket,
         so.idclient,
         so.sevicentry,
-	      so.servicexit,
-        so.incoming,
-        so.total,
-        so.remainder,
+        so.servicexit,
+        FORMAT(so.incoming, 2) AS incoming,
+        FORMAT(so.total, 2) AS total,
+        FORMAT(so.remainder, 2) AS remainder,
         so.servicestatus,
         o.id AS 'idorder',
         o.idserviceorders,
         o.idservice,
-        o.price,
-        o.discount,
+        FORMAT(o.price, 2) AS price,
+        FORMAT(o.discount, 2) AS discount,
         o.obs,
-        (SELECT `name`FROM clients WHERE id = so.idclient) AS 'name',
+        (SELECT `name` FROM clients WHERE id = so.idclient) AS 'name',
         s.service
       FROM serviceorders so
       JOIN orders o ON o.idserviceorders = so.id
@@ -206,8 +195,8 @@ switch ($data->action) {
         'idorder' => (int) $value['idorder'],
         'idserviceorders' => (int) $value['idserviceorders'],
         'idservice' => (int) $value['idservice'],
-        'price' => (int) $value['price'],
-        'discount' => (int) $value['discount'],
+        'price' => $value['price'],
+        'discount' => $value['discount'],
         'obs' => $value['obs'],
         'service' => $value['service'],
         'name' => $value['name'],
@@ -262,13 +251,13 @@ switch ($data->action) {
     break;
   case 'set_os_status':
     $val = "";
-    $message ="";
+    $message = "";
     if ($data->statusOs == 1) {
       $val = 0;
-      $message ="Oredem de serviço Re aberta com sucesso!";
-    }else{
+      $message = "Oredem de serviço Re aberta com sucesso!";
+    } else {
       $val = 1;
-      $message ="Oredem de serviço finalizada com sucesso!";
+      $message = "Oredem de serviço finalizada com sucesso!";
     }
     $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = $val WHERE id = $data->id");
     $execute = $stmt->execute();

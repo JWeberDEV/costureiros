@@ -101,7 +101,7 @@
                     <div class="col-2">
                       <div class="input-group input-group-outline my-3 ticket">
                         <label class="form-label">Guichê</label>
-                        <input id="ticket" type="text" class="form-control" autocomplete="off">
+                        <input id="ticket" type="number" class="form-control" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
@@ -324,7 +324,7 @@
             <div class="d-flex px-2 py-1">
               <div class="input-group input-group-outline my-3 ${classstyle} discount${row}">
                 <label class="form-label">Desconto</label>
-                <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})' onblur='calculator()' autocomplete="off">
+                <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})' onblur='format(${row});calculator()' autocomplete="off">
               </div>
             </div>
           </td>
@@ -396,6 +396,12 @@
       }
     }
 
+    const format = (arg) => {
+      let val = parseFloat($(`#discount${arg}`).val());
+      let formattedVal = val.toFixed(2);
+      $(`#discount${arg}`).val(formattedVal).trigger('input');
+    }
+
     const counterSelectorServices = (row, value) => {
       const serviceSelectize = $(`.service${row}`).selectize({
         valueField: 'id',
@@ -435,7 +441,7 @@
     const saveOrderService = () => {
       let data = [];
 
-      if ($('#ticket').val() || $('#client').val() || $('#entry').val() || $('#exit').val()) {
+      if (!$('#ticket').val() || !$('#client').val() || !$('#entry').val() || !$('#exit').val()) {
         $('#infoToast').addClass('bg-gradient-warning');
         $('.html').html('Verifique os campos que precisam ser preenchidos ');
         $('#infoToast').toast('show');
@@ -453,15 +459,15 @@
         data.push({
           idService: idService || '',
           order: order || '',
-          price: parseInt(priceValue) || 0,
-          discount: parseInt(discountValue) || 0,
+          price: parseFloat(priceValue) || 0,
+          discount: parseFloat(discountValue) || 0,
           obs: obsValue || ''
         });
       });
 
       $.post("../php/back_serviceorder.php", {
           action: 'save_orderservice',
-          id: $('#id').val(),
+          id,
           client: $('#client').val(),
           ticket: $('#ticket').val(),
           entry: $('#entry').val(),
@@ -504,7 +510,7 @@
             $("#exit").val(element.servicexit);
             setTimeout(() => {
               client.setValue([element.idclient]);
-            }, 300);
+            }, 500);
             $("#incoming").val(element.incoming);
             $("#total").val(element.total);
             $("#remainder").val(element.remainder);
