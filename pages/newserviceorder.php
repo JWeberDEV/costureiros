@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -236,9 +237,15 @@
     });
 
     $(document).ready(async function() {
-      $('#incoming').mask("###.###.00", {reverse: true});
-      $('#total').mask("###.###.00", {reverse: true});
-      $('#remainder').mask("###.###.00", {reverse: true});
+      $('#incoming').mask("###.###.00", {
+        reverse: true
+      });
+      $('#total').mask("###.###.00", {
+        reverse: true
+      });
+      $('#remainder').mask("###.###.00", {
+        reverse: true
+      });
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       id = urlParams.get('id');
@@ -334,8 +341,12 @@
           </td>
         </tr>
       `);
-      $(`#price${row}`).mask("###.###.00", {reverse: true});
-      $(`#discount${row}`).mask("###.###.00", {reverse: true});
+      $(`#price${row}`).mask("###.###.00", {
+        reverse: true
+      });
+      $(`#discount${row}`).mask("###.###.00", {
+        reverse: true
+      });
       if (args.row) {
         setActive();
       } else {
@@ -424,6 +435,13 @@
     const saveOrderService = () => {
       let data = [];
 
+      if ($('#ticket').val() || $('#client').val() || $('#entry').val() || $('#exit').val()) {
+        $('#infoToast').addClass('bg-gradient-warning');
+        $('.html').html('Verifique os campos que precisam ser preenchidos ');
+        $('#infoToast').toast('show');
+        return;
+      }
+
       $('.line').each(function() {
         const row = $(this).attr('row');
         const idService = $(`.service${row}`).val();
@@ -465,7 +483,7 @@
           }
         });
     }
-    
+
     const listServiceId = async (arg) => {
       let data = {
         action: "list_serviceorder_id",
@@ -563,7 +581,7 @@
       let formattedResult = result.toFixed(2);
       $('#total').val(formattedResult).trigger('input');
       $(`.total`).addClass('is-filled');
-      
+
       if ($(`#total`).val() && $(`#incoming`).val()) {
         budget();
       }
@@ -624,7 +642,7 @@
               id,
               statusOs
             })
-            .done(function(response) {
+            .done(async function(response) {
               response = JSON.parse(response);
               $('#infoToast').addClass(response.class);
               $('.html').html(response.message);
@@ -634,11 +652,13 @@
                 $('.osStatus').addClass('bg-gradient-success');
                 $('.osStatus').text('Encerrada');
                 $('#save').attr('disabled', true);
+                statusOs = response.status;
               } else {
                 $('.osStatus').removeClass('bg-gradient-success');
                 $('.osStatus').addClass('bg-gradient-warning');
                 $('.osStatus').text('Em andamento');
                 $('#save').attr('disabled', false);
+                statusOs = response.status;
               }
             });
         },

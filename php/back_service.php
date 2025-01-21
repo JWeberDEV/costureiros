@@ -56,8 +56,14 @@ switch ($data->action) {
 
     echo (json_encode($response));
     break;
-  case 'list_clients':
-    $stmt = $pdo->prepare("SELECT id,service,price FROM services where status = 1");
+  case 'list_services':
+    $query = "SELECT id,service,price FROM services where status = 1";
+
+    if ($data->service) {
+      $query .= " AND service LIKE '%$data->service%'";
+    }
+
+    $stmt = $pdo->prepare($query);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $list = '';

@@ -4,7 +4,7 @@ $data = (object) $_REQUEST;
 $curl = curl_init();
 
 curl_setopt_array($curl, [
-  CURLOPT_URL => "https://viacep.com.br/ws/".$data->cep."/json/",
+  CURLOPT_URL => "$data->url",
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => "",
   CURLOPT_MAXREDIRS => 10,

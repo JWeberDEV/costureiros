@@ -75,6 +75,19 @@
             </a>
           </div>
         </div>
+        <div class="row justify-content-start">
+          <div class="col-11 pt-3 pe-2 pb-0">
+            <div class="input-group input-group-outline">
+              <label class="form-label">Buscar Serviço</label>
+              <input id='service' type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-1 text-end pt-3 ps-5">
+            <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listServicces();">
+              <i class='material-symbols-rounded'>search</i>
+            </button>
+          </div>
+        </div>
       </div>
     </nav>
     <!-- End Navbar -->
@@ -111,7 +124,8 @@
 
     const listServicces = () => {
       $.post("../php/back_service.php", {
-          action: "list_clients"
+          action: "list_services",
+          service: $('#service').val()
         })
         .done(function(response) {
           response = JSON.parse(response);

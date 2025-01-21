@@ -114,12 +114,15 @@
               <input id="exit" type="date" class="form-control">
             </div>
           </div>
-          <div class="col-3 mt-4">
+          <div class="col-2 mt-4">
             <Strong class="pt-3" id='labelTotal'></Strong>
           </div>
-          <div class="col-1 text-center mt-3 ps-4">
+          <div class="col-2 text-end mt-3 pe-4">
             <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listServiccesOrders();">
               <i class='material-symbols-rounded'>search</i>
+            </button>
+            <button type="button" class="btn bg-gradient-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Limpar Filtros" onClick="clearfilters();">
+              <i class='material-symbols-rounded'>clear_all</i>
             </button>
           </div>
         </div>
@@ -136,7 +139,7 @@
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive data p-0">
+              <div class="table-responsive data p-0 m-2">
               </div>
             </div>
           </div>
@@ -164,8 +167,9 @@
     }
 
     $(document).ready(function() {
-      listServiccesOrders();
-
+      setTimeout(() => {
+        listServiccesOrders();
+      }, 10);
       $(`.entry`).addClass('is-filled');
       $(`.exit`).addClass('is-filled');
 
@@ -191,25 +195,39 @@
         sortField: 'name',
         create: false,
         options: [
-            
-            { id: 1, name: 'Em andamento' },
-            { id: 2, name: 'Encerrada' },
-            { id: 3, name: 'Todas' }
+
+          {
+            id: 0,
+            name: 'Em andamento'
+          },
+          {
+            id: 1,
+            name: 'Encerrada'
+          },
+          {
+            id: 2,
+            name: 'Todas'
+          }
         ],
-        onInitialize: function() {
-            this.setValue(0);
-        }
+
       });
 
-      let statusService = statusServiceSelectize[0].selectize;
+      statusService = statusServiceSelectize[0].selectize;
 
-      statusService.disableOption(0);
     });
+
+    const clearfilters = () => {
+      client.clear();
+      statusService.clear();
+      $('#entry').val('');
+      $('#exit').val('');
+    }
 
     const listServiccesOrders = () => {
       $.post("../php/back_serviceorder.php", {
           action: "list_serviceorders",
           client: $('#client').val(),
+          status: $('#status').val() != '' ? $('#status').val() : 2,
           entry: $('#entry').val(),
           exit: $('#exit').val(),
         })

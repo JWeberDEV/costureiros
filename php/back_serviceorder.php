@@ -7,9 +7,9 @@ $response = (object) [];
 switch ($data->action) {
   case 'save_orderservice':
     $entry = date_create($data->entry);
-    $entry = date_format($entry, "Y-m-d H:i:s");
+    $entry = date_format($entry, "Y-m-d");
     $out = date_create($data->exit);
-    $out = date_format($out, "Y-m-d H:i:s");
+    $out = date_format($out, "Y-m-d");
 
     if ($data->id > 0) {
 
@@ -52,7 +52,6 @@ switch ($data->action) {
           $update = $stmt->execute($arrayData);
         }
 
-
         if ($update) {
           $response->class = 'bg-gradient-success';
           $response->message = "Registro editado com sucesso!";
@@ -74,8 +73,7 @@ switch ($data->action) {
 
         foreach ($data->data as $key => $value) {
           $stmt = $pdo->prepare("INSERT INTO orders (idserviceorders, idservice, price, discount, obs)
-          VALUES($lastInsertId, {$value['idservice']}, {$value['price']}, {$value['discount']}, '{$value['obs']}')");
-
+          VALUES($lastInsertId, {$value['idService']}, {$value['price']}, {$value['discount']}, '{$value['obs']}')");
           $services = $stmt->execute([]);
         }
 
@@ -93,9 +91,9 @@ switch ($data->action) {
     break;
   case 'list_serviceorders':
     $entry = date_create($data->entry);
-    $entry = date_format($entry, "Y-m-d H:i:s");
+    $entry = date_format($entry, "Y-m-d");
     $out = date_create($data->exit);
-    $out = date_format($out, "Y-m-d H:i:s");
+    $out = date_format($out, "Y-m-d");
 
     $query = "SELECT 
         s.id,
@@ -111,6 +109,10 @@ switch ($data->action) {
 
     if ($data->client) {
       $query .= " AND c.id = $data->client";
+    }
+
+    if (isset($data->status) && $data->status != 2) {
+      $query .= " AND s.servicestatus = $data->status";
     }
 
     if ($data->entry) {

@@ -131,7 +131,7 @@
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 street">
                         <label class="form-label">Rua</label>
-                        <input id="street" type="text" class="form-control" autocomplete="off">
+                        <input id="street" type="text" class="form-control" onChange="searchCep()" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
@@ -185,18 +185,39 @@
     });
 
     const searchCep = () => {
+      if ($('#cep').val() && $('#city').val() && $('#street').val()) {
+        return;
+      }
+
+      let url = "";
+      if (!$('#cep').val()) {
+        url = `https://viacep.com.br/ws/RS/${encodeURIComponent($('#city').val())}/${encodeURIComponent($('#street').val())}/json/`;
+      } else {
+        url = `https://viacep.com.br/ws/${$('#cep').val()}/json/`;
+      }
+
       $.post("../php/cepApi.php", {
-          cep: $('#cep').val(),
+          url
         })
         .done(response => {
           let data = JSON.parse(response);
           if (data.erro == 'true') {
+            $('#infoToast').addClass('bg-gradient-warning');
+            $('.html').html('Cep Não encontrado');
             $('#infoToast').toast('show');
           } else {
-            $('#city').val(data.localidade);
-            $('#neigbouhod').val(data.bairro);
-            $('#street').val(data.logradouro);
-            $('#obs').val(data.complemento);
+            if (!$('#cep').val()) {
+              data.forEach(element => {
+                $('#cep').val(element.cep);
+                $('#neigbouhod').val(element.bairro);
+                $('#obs').val(element.complemento);
+              });
+            } else {
+              $('#city').val(data.localidade);
+              $('#neigbouhod').val(data.bairro);
+              $('#street').val(data.logradouro);
+              $('#obs').val(data.complemento);
+            }
 
             setActive();
           }
@@ -204,7 +225,7 @@
     }
 
     const setActive = () => {
-      let data = ['city', 'neigbouhod', 'street', 'obs'];
+      let data = ['cep', 'city', 'neigbouhod', 'street', 'obs'];
 
       data.forEach(element => {
         if ($(`#${element}`).val()) {
