@@ -21,7 +21,7 @@ $bottom = __DIR__ . '/../assets/img/qrcode.png';
 
 // Position at (X = 15mm, Y = 140mm), width = 50mm, height = auto
 $pdf->Image($top, 10, 15, 25, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
-$pdf->Image($bottom, 4, 150, 70, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
+$pdf->Image($bottom, 168, 110, 35, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
 
 $table = '
   <div style="text-align: center">
@@ -29,7 +29,7 @@ $table = '
   </div>
   <table border="0" cellpadding="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
     <thead>
-      <tr style="background-color:rgb(221, 238, 124); font-weight: bold;">
+      <tr style="background-color:#aeabab; font-weight: bold;">
         <th style="padding: 8px;">OS</th>
         <th style="padding: 8px;">Serviço</th>
         <th style="padding: 8px;">Observação</th>
@@ -81,7 +81,7 @@ $total = 0;
 $remainder = 0;
 
 foreach ($data as $row) {
-  $backgroundColor = ($rowIndex % 2 === 0) ? '#ffffff' : '#eff2d6';
+  $backgroundColor = ($rowIndex % 2 === 0) ? '#ffffff' : '#e5e5e5';
 
   $table .= '<tr style="background-color: ' . $backgroundColor . ';">';
 
@@ -105,7 +105,7 @@ foreach ($data as $row) {
 }
 
 $table .= '
-  <tr style="background-color:#e5e5e5;">
+  <tr style="background-color:#aeabab;"> 
     <td style="padding: 8px;"><strong>Entrada:</strong> <strong> R$: ' . number_format($incoming, 2, '.', ',') . '</strong></td>
     <td style="padding: 8px;"><strong>Em a ver:</strong> <strong> R$: ' . number_format($remainder, 2, '.', ',') . '</strong></td>
     <td style="padding: 8px;"></td>
