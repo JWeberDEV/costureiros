@@ -21,7 +21,7 @@ $bottom = __DIR__ . '/../assets/img/chave.jpg';
 
 // Position at (X = 15mm, Y = 140mm), width = 50mm, height = auto
 $pdf->Image($top, 10, 11, 25, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
-$pdf->Image($bottom, 10, 145, 35, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false);
+$pdf->Image($bottom, 10, 150, 35, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false);
 
 $table = '
   <table border="0" cellpadding="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
