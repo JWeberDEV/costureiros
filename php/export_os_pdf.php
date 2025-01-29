@@ -128,4 +128,4 @@ $table .= '</tbody></table>
 
 $pdf->writeHTML($table);
 
-$pdf->Output('Relatorio.pdf', 'I');
+$pdf->Output('Ordem de Serviço.pdf', 'I');
