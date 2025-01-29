@@ -431,7 +431,7 @@
 
     const setPrice = (arg) => {
       const serviceId = $(`.service${arg}`).val();
-      const price = services.find(service => service.id === serviceId).price;
+      const price = services.find(service => service.id == serviceId).price;
       $(`#price${arg}`).val(price);
       $(`.price${arg}`).addClass('is-filled');
     }
