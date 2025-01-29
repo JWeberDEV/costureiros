@@ -21,7 +21,7 @@ $bottom = __DIR__ . '/../assets/img/qrcode.png';
 
 // Position at (X = 15mm, Y = 140mm), width = 50mm, height = auto
 $pdf->Image($top, 10, 15, 25, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
-$pdf->Image($bottom, 4, 90, 70, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
+$pdf->Image($bottom, 4, 150, 70, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
 
 $table = '
   <div style="text-align: center">
