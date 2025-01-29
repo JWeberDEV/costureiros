@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="icon" type="image/png" href="../assets/img/walpaper.png">
   <title>
     Clientes
   </title>
@@ -35,7 +35,7 @@
     aria-live="assertive"
     id="infoToast"
     aria-atomic="true"
-    style="z-index: 5; position: fixed;">
+    style="z-index: 50; position: fixed;">
     <hr class="horizontal light m-0" />
     <div class="toast-body text-white">
       <div class="html"></div>
@@ -45,8 +45,8 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href="#" target="_blank">
-        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
-        <span class="ms-1 text-sm text-dark">Costureiros</span>
+        <img src="../assets/img/walpaper.png" class="navbar-brand-img" width="50" height="50" alt="main_logo">
+        <span class="ms-1 text-sm text-dark"><strong>Costureiros</strong></span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
@@ -87,6 +87,19 @@
             </a>
           </div>
         </div>
+        <div class="row justify-content-start">
+          <div class="col-11 pt-3 pe-2 pb-0">
+            <div class="input-group input-group-outline">
+              <label class="form-label">Buscar Cliente</label>
+              <input id='client' type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-1 text-end pt-3 ps-5">
+            <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listClients();">
+              <i class='material-symbols-rounded'>search</i>
+            </button>
+          </div>
+        </div>
       </div>
     </nav>
     <!-- End Navbar -->
@@ -124,7 +137,8 @@
 
     const listClients = () => {
       $.post("../php/back_client.php", {
-          action: "list_clients"
+          action: "list_clients",
+          client: $('#client').val()
         })
         .done(function(response) {
           response = JSON.parse(response);

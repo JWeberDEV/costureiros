@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="icon" type="image/png" href="../assets/img/walpaper.png">
   <title>
     Ordens de Serviço
   </title>
@@ -36,8 +36,8 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href="#" target="_blank">
-        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
-        <span class="ms-1 text-sm text-dark">Costureiros</span>
+        <img src="../assets/img/walpaper.png" class="navbar-brand-img" width="50" height="50" alt="main_logo">
+        <span class="ms-1 text-sm text-dark"><strong>Costureiros</strong></span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
@@ -115,6 +115,7 @@
             </div>
           </div>
           <div class="col-2 mt-4">
+            <Strong class="pt-3" id='labelIncomming'></Strong>
             <Strong class="pt-3" id='labelTotal'></Strong>
           </div>
           <div class="col-2 text-end mt-3 pe-4">
@@ -240,7 +241,8 @@
           response.forEach(item => {
             let itemStatus = item.servicestatus == 1 ? 'text-success' : 'text-warning'
             let textStatus = item.servicestatus == 1 ? 'OS Encerrada' : 'OS Em andamento'
-            $('#labelTotal').html('Total: ' + item.sum);
+            $('#labelIncomming').html('Em caixa: ' + item.sumIncoming);
+            $('#labelTotal').html('Total: ' + item.sumTotal);
             lines += `
             <tr>
               <td class='ps-4' style='width: 10px'>
@@ -370,11 +372,14 @@
     const exportBalance = () => {
       let entry = $('#entry').val() || 0;
       let exit = $('#entry').val() || 0;
+      let client = $('#client').val();
+      let status = $('#status').val() || 0;
       let url;
 
       url = `../php/export_balance_excel.php?exit=${encodeURIComponent(entry)}
       &entry=${encodeURIComponent(exit)}
-      &client=${encodeURIComponent($('#client').val())}`;
+      &client=${encodeURIComponent(client)}
+      &status=${encodeURIComponent(status)}`;
 
       window.open(url, '_blank');
     }

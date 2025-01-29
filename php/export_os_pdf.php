@@ -15,18 +15,28 @@ $pdf->AddPage();
 $pdf->Ln(20);
 
 $pdf->Cell(0, 10, "Cliente: $data->name  Entrada: $data->entry Saida: $data->exit", 0, 1, 'C');
-
 $pdf->SetFont('helvetica', '', 10);
-$table = '<table border="0" cellpadding="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-  <thead>
-    <tr style="background-color:rgb(221, 238, 124); font-weight: bold;">
-      <th style="padding: 8px;">OS</th>
-      <th style="padding: 8px;">Serviço</th>
-      <th style="padding: 8px;">Observação</th>
-      <th style="padding: 8px; text-align: right;">Preço</th>
-      <th style="padding: 8px; text-align: right;">Desconto</th>
-    </tr>
-  </thead>
+$top = __DIR__ . '/../assets/img/walpaper.png';
+$bottom = __DIR__ . '/../assets/img/qrcode.png';
+
+// Position at (X = 15mm, Y = 140mm), width = 50mm, height = auto
+$pdf->Image($top, 10, 15, 25, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
+$pdf->Image($bottom, 4, 90, 70, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
+
+$table = '
+  <div style="text-align: center">
+    <img src="../assets/img/walpaper.png" width="100" alt="Logo">
+  </div>
+  <table border="0" cellpadding="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color:rgb(221, 238, 124); font-weight: bold;">
+        <th style="padding: 8px;">OS</th>
+        <th style="padding: 8px;">Serviço</th>
+        <th style="padding: 8px;">Observação</th>
+        <th style="padding: 8px; text-align: right;">Preço</th>
+        <th style="padding: 8px; text-align: right;">Desconto</th>
+      </tr>
+    </thead>
   <tbody>';
 
 $query = "SELECT
@@ -85,9 +95,8 @@ foreach ($data as $row) {
     } else {
       $table .= '<td style="padding: 2px;">' . htmlspecialchars($cell) . '</td>';
     }
-
   }
-  
+
   $table .= '</tr>';
   $rowIndex++;
   $incoming = $row[5];
@@ -105,7 +114,12 @@ $table .= '
   </tr>
 ';
 
-$table .= '</tbody></table>';
+$table .= '</tbody></table>
+  <p><strong>E-mail: Costureiros.nh@gmail.com</strong></p>
+  <p><strong>Roupas não retiradas até 60 dias 
+    após as data de entrega, serão encaminhadas para doação.
+  </strong></p>
+';
 
 $pdf->writeHTML($table);
 

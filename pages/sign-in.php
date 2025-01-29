@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="icon" type="image/png" href="../assets/img/walpaper.png">
   <title>
     Login
   </title>
@@ -25,7 +25,7 @@
 
 <body class="bg-gray-200">
   <main class="main-content  mt-0">
-    <div class="page-header align-items-start min-vh-100" style="background-image: url('https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');">
+    <div class="page-header align-items-start min-vh-100" style="background-image: url('../assets/img/walpaper.png');">
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div
         class="toast fade hide p-2 mt-2 bg-gradient-danger top-0 end-1"
@@ -33,7 +33,7 @@
         aria-live="assertive"
         id="infoToast"
         aria-atomic="true"
-        style="z-index: 5; position: fixed;">
+        style="z-index: 50; position: fixed;">
         <hr class="horizontal light m-0" />
         <div class="toast-body text-white">
           Senha Incorreta
@@ -76,7 +76,7 @@
               © <script>
                 document.write(new Date().getFullYear())
               </script>,
-              Ceiado por Josias Weber
+              Criado por Josias Weber
             </div>
           </div>
         </div>

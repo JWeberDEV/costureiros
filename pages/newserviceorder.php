@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="icon" type="image/png" href="../assets/img/walpaper.png">
   <title>
     Nova Ordem de Serviço
   </title>
@@ -38,7 +38,7 @@
     aria-live="assertive"
     id="infoToast"
     aria-atomic="true"
-    style="z-index: 5; position: fixed;">
+    style="z-index: 50; position: fixed;">
     <hr class="horizontal light m-0" />
     <div class="toast-body text-white">
       <div class="html"></div>
@@ -48,8 +48,8 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href="#" target="_blank">
-        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
-        <span class="ms-1 text-sm text-dark">Costureiros</span>
+        <img src="../assets/img/walpaper.png" class="navbar-brand-img" width="50" height="50" alt="main_logo">
+        <span class="ms-1 text-sm text-dark"><strong>Costureiros</strong></span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
@@ -183,7 +183,7 @@
               <hr class="dark horizontal my-0">
               <div class="container-fluid text-center">
                 <div class="row justify-content-end">
-                  <div class="col-1"><button type="button" id='save' class="btn bg-gradient-dark mt-2" onclick="saveOrderService();">Salvar</button></div>
+                  <div class="col-1"><button type="button" id='save' class="btn bg-gradient-dark mt-2" onclick="confirmSaveOs();">Salvar</button></div>
                 </div>
               </div>
             </div>
@@ -273,6 +273,10 @@
 
       if (statusOs == 1) {
         $('#save').attr('disabled', true);
+        $('.line').each(function() {
+          const row = $(this).attr('row');
+          $(`#remove${row}`).attr('disabled', true);
+        });
       }
     });
 
@@ -337,7 +341,7 @@
             </div>
           </td>
           <td class="text-center ps-0">
-            <button type="button" class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row},${idOrder})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
+            <button type="button" id='remove${row}' class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row},${idOrder})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
           </td>
         </tr>
       `);
@@ -355,7 +359,11 @@
     }
 
     function removeRow(row, idOrder) {
-      if (id) {
+      if (condition) {
+
+      }
+
+      if (id && $(`.service${row}`).val()) {
         let html =
           `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
           </br></br>
@@ -435,6 +443,45 @@
 
       if ($(`#obs${arg}`).val()) {
         $(`.obs${arg}`).addClass('is-filled');
+      }
+    }
+
+    const confirmSaveOs = () => {
+      if (parseFloat($('#incoming').val()) > parseFloat($('#total').val())) {
+        let html =
+          `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+          </br></br>
+          <div class="alert alert-danger" role="alert">
+            <p style="color:#fff;">
+              <strong>
+                O valor de entrada é maior que o valor total.
+                Tem Certeza de que deseja excluir este Serviço?
+              </strong>
+            </p>
+          </div>
+        `;
+
+        Swal.fire({
+          html: html,
+          customClass: 'swal-height',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Confirmar',
+          showCancelButton: true,
+          allowEnterKey: true,
+          confirmButtonColor: "#43a047",
+          customClass: {
+            confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+            cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+          },
+          width: 500,
+        }).then((result) => {
+          if (!result.isConfirmed) {
+            return;
+          }
+          saveOrderService();
+        });
+      } else {
+        saveOrderService();
       }
     }
 
@@ -658,12 +705,20 @@
                 $('.osStatus').addClass('bg-gradient-success');
                 $('.osStatus').text('Encerrada');
                 $('#save').attr('disabled', true);
+                $('.line').each(function() {
+                  const row = $(this).attr('row');
+                  $(`#remove${row}`).attr('disabled', true);
+                });
                 statusOs = response.status;
               } else {
                 $('.osStatus').removeClass('bg-gradient-success');
                 $('.osStatus').addClass('bg-gradient-warning');
                 $('.osStatus').text('Em andamento');
                 $('#save').attr('disabled', false);
+                $('.line').each(function() {
+                  const row = $(this).attr('row');
+                  $(`#remove${row}`).attr('disabled', false);
+                });
                 statusOs = response.status;
               }
             });

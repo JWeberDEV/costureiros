@@ -89,7 +89,8 @@ switch ($data->action) {
         s.serviceorder,
         s.ticket,
         s.total,
-        SUM(s.total) OVER() AS sum,
+        SUM(s.incoming) OVER() AS sumIncoming,
+        SUM(s.total) OVER() AS sumTotal,
         s.servicestatus,
         c.name
       FROM serviceorders s
@@ -112,7 +113,7 @@ switch ($data->action) {
       $query .= " AND s.servicexit <= '$out'";
     }
 
-    $query .= " ORDER BY s.id";
+    $query .= " ORDER BY s.serviceorder DESC";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute();
@@ -126,7 +127,8 @@ switch ($data->action) {
         'serviceorder' => $value['serviceorder'],
         'ticket' => $value['ticket'],
         'total' => $value['total'],
-        'sum' => $value['sum'],
+        'sumIncoming' => $value['sumIncoming'],
+        'sumTotal' => $value['sumTotal'],
         'servicestatus' => $value['servicestatus'],
         'name' => $value['name'],
       ];

@@ -68,7 +68,8 @@ $sheet->getStyle('A1:' . Coordinate::stringFromColumnIndex(count($header)) . '1'
     ]
   );
 
-$query = "SELECT 
+$query = "
+    SELECT 
       s.serviceorder,
       s.incoming,
       s.total,
@@ -80,8 +81,12 @@ $query = "SELECT
     JOIN clients c ON c.id = s.idclient
     WHERE s.`status` = 1";
 
-if ($data->client) {
+if ($data->client != 0) {
   $query .= " AND c.id = $data->client";
+}
+
+if ($data->status && $data->status != 2) {
+  $query .= " AND s.servicestatus = $data->status";
 }
 
 if ($data->entry != 0) {
