@@ -75,7 +75,7 @@
           <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ações</div>
           <hr class="horizontal dark m-0 mb-2" />
           <div class="row justify-content-between">
-            <div class="col-1">
+            <div class="col-2">
               <a href="../pages/newserviceorder.php">
                 <button type="button" class="btn bg-gradient-dark w-100 m-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Nova Ordem de Serviço">Nova OS</button>
               </a>
