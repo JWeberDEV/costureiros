@@ -32,6 +32,7 @@ switch ($data->action) {
           $stmt = $pdo->prepare(
             "UPDATE orders SET
                 idservice = '{$value['idService']}',
+                item = '{$value['item']}',
                 price = '{$value['price']}',
                 discount = '{$value['discount']}',
                 obs = '{$value['obs']}'
@@ -61,8 +62,8 @@ switch ($data->action) {
         $services = "";
 
         foreach ($data->data as $key => $value) {
-          $stmt = $pdo->prepare("INSERT INTO orders (idserviceorders, idservice, price, discount, obs)
-          VALUES($lastInsertId, {$value['idService']}, {$value['price']}, {$value['discount']}, '{$value['obs']}')");
+          $stmt = $pdo->prepare("INSERT INTO orders (idserviceorders, idservice, item,price, discount, obs)
+          VALUES($lastInsertId, {$value['idService']}, '{$value['item']}',{$value['price']}, {$value['discount']}, '{$value['obs']}')");
           $services = $stmt->execute([]);
         }
 
@@ -169,14 +170,18 @@ switch ($data->action) {
         o.id AS 'idorder',
         o.idserviceorders,
         o.idservice,
+        o.item,
         FORMAT(o.price, 2) AS price,
         FORMAT(o.discount, 2) AS discount,
         o.obs,
         (SELECT `name` FROM clients WHERE id = so.idclient) AS 'name',
-        s.service
+        s.service,
+        c.balance,
+        c.debit
       FROM serviceorders so
       JOIN orders o ON o.idserviceorders = so.id
       JOIN services s ON s.id = o.idservice
+      JOIN clients c ON c.id = so.idclient
       WHERE so.id = $data->id"
     );
 
@@ -197,12 +202,15 @@ switch ($data->action) {
         'idorder' => (int) $value['idorder'],
         'idserviceorders' => (int) $value['idserviceorders'],
         'idservice' => (int) $value['idservice'],
+        'item' => $value['item'],
         'price' => $value['price'],
         'discount' => $value['discount'],
         'obs' => $value['obs'],
         'service' => $value['service'],
         'name' => $value['name'],
         'servicestatus' => $value['servicestatus'],
+        'balance' => $value['balance'],
+        'debit' => $value['debit'],
       ];
     }
 

@@ -97,8 +97,9 @@
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 price">
-                        <label class="form-label">Preço</label>
-                        <input id="price" type="number" class="form-control" autocomplete="off" onchange="format()">
+                        <span class="input-group-text">R$:</span>
+                        <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Preço</label>
+                        <input id="price" type="number" class="form-control extra-padding" autocomplete="off" onchange="format()">
                       </div>
                     </div>
                   </div>

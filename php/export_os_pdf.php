@@ -28,6 +28,7 @@ $table = '
     <thead>
       <tr style="background-color:#aeabab; font-weight: bold;">
         <th style="padding: 8px;">OS</th>
+        <th style="padding: 8px;">Item</th>
         <th style="padding: 8px;">Serviço</th>
         <th style="padding: 8px;">Observação</th>
         <th style="padding: 8px; text-align: right;">Preço</th>
@@ -42,6 +43,7 @@ $query = "SELECT
   so.total,
   so.remainder,
   s.service,
+  o.item,
   o.obs,
   o.price,
   o.discount
@@ -61,6 +63,7 @@ if ($stmt->rowCount() > 0) {
 
     $data[] = [
       $row['serviceorder'],
+      $row['item'],
       $row['service'],
       $row['obs'],
       (float)$row['price'],
@@ -83,12 +86,12 @@ foreach ($data as $row) {
   $table .= '<tr style="background-color: ' . $backgroundColor . ';">';
 
   foreach ($row as $key => $cell) {
-    if ($key > 4) {
+    if ($key > 5) {
       continue;
     }
 
-    if ($key > 2) {
-      $table .= '<td style="padding: 2px; text-align: right;">' . htmlspecialchars($cell) . '</td>';
+    if ($key > 3) {
+      $table .= '<td style="padding: 2px; text-align: right;">R$: ' . htmlspecialchars($cell) . '</td>';
     } else {
       $table .= '<td style="padding: 2px;">' . htmlspecialchars($cell) . '</td>';
     }
@@ -105,6 +108,7 @@ $table .= '
   <tr style="background-color:#aeabab;"> 
     <td style="padding: 8px;"><strong>Entrada:</strong> <strong> R$: ' . number_format($incoming, 2, '.', ',') . '</strong></td>
     <td style="padding: 8px;"><strong>Em a ver:</strong> <strong> R$: ' . number_format($remainder, 2, '.', ',') . '</strong></td>
+    <td style="padding: 8px;"></td>
     <td style="padding: 8px;"></td>
     <td style="padding: 8px;"></td>
     <td style="padding: 8px; text-align: right;"><strong>Total</strong><strong> R$: ' . number_format($total, 2, '.', ',') . '</strong></td>

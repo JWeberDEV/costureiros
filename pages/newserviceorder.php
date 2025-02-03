@@ -129,6 +129,20 @@
                         <i class='material-symbols-rounded'>file_export</i>
                       </button>
                     </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 is-filled balance">
+                        <span class="input-group-text">R$:</span>
+                        <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Saldo</label>
+                        <input id="balance" type="number" class="form-control extra-padding" disabled>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 is-filled debit">
+                        <span class="input-group-text">R$:</span>
+                        <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Débito</label>
+                        <input id="debit" type="number" class="form-control extra-padding" disabled>
+                      </div>
+                    </div>
                   </div>
                   <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Serviços</div>
                   <hr class="horizontal dark m-0" />
@@ -137,7 +151,9 @@
                       <table class="table table-responsive align-items-center mb-0">
                         <thead>
                           <tr>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Serviço</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-15">Serviço</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Item</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3"></th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Preço</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Desconto</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Observação</th>
@@ -159,20 +175,23 @@
                   <div class="row">
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 ticket">
-                        <label class="form-label">Entrada</label>
-                        <input id="incoming" type="number" class="form-control">
+                        <span class="input-group-text">R$:</span>
+                        <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Entrada</label>
+                        <input id="incoming" type="number" class="form-control extra-padding">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 total">
-                        <label class="form-label">Total</label>
-                        <input id="total" type="number" class="form-control" onchange="budget()">
+                        <span class="input-group-text">R$:</span>
+                        <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Total</label>
+                        <input id="total" type="number" class="form-control extra-padding" onchange="budget()">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 remainder">
-                        <label class="form-label">Em a ver</label>
-                        <input id="remainder" type="number" class="form-control">
+                        <span class="input-group-text">R$:</span>
+                        <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Em a ver</label>
+                        <input id="remainder" type="number" class="form-control extra-padding">
                       </div>
                     </div>
                   </div>
@@ -246,6 +265,7 @@
       $('#remainder').mask("###.###.00", {
         reverse: true
       });
+
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       id = urlParams.get('id');
@@ -316,19 +336,29 @@
               <select id='${selectId}' class="form-control service${row}" ${service} onchange='setPrice(${row})'>
             </div>
           </td>
+          <td colspan='2'>
+            <div class="d-flex px-2 py-1">
+              <div class="input-group input-group-outline my-3 ${classstyle} item${row}">
+                <label class="form-label">Item</label>
+                <input id="item${row}" type="text" class="form-control" onblur="onkeydown='setIsFilled(${row})'" onkeydown='setIsFilled(${row})' autocomplete="off">
+              </div>
+            </div>
+          </td>
           <td>
             <div class="d-flex px-2 py-1">
               <div class="input-group input-group-outline my-3 ${classstyle} price${row}">
-                <label class="form-label">Preço</label>
-                <input id="price${row}" type="number" class="form-control" autocomplete="off">
+                <span class="input-group-text">R$:</span>
+                <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Preço</label>
+                <input id="price${row}" type="number" class="form-control extra-padding" autocomplete="off">
               </div>
             </div>
           </td>
           <td>
             <div class="d-flex px-2 py-1">
               <div class="input-group input-group-outline my-3 ${classstyle} discount${row}">
-                <label class="form-label">Desconto</label>
-                <input id="discount${row}" type="number" class="form-control" onkeydown='setIsFilled(${row})' onblur='format(${row});calculator()' autocomplete="off">
+                <span class="input-group-text">R$:</span>
+                <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Desconto</label>
+                <input id="discount${row}" type="number" class="form-control extra-padding" onkeydown='setIsFilled(${row})' onblur='format(${row});calculator()' autocomplete="off">
               </div>
             </div>
           </td>
@@ -359,9 +389,6 @@
     }
 
     function removeRow(row, idOrder) {
-      if (condition) {
-
-      }
 
       if (id && $(`.service${row}`).val()) {
         let html =
@@ -437,6 +464,10 @@
     }
 
     const setIsFilled = (arg) => {
+      if ($(`#item${arg}`).val()) {
+        $(`.item${arg}`).addClass('is-filled');
+      }
+
       if ($(`#discount${arg}`).val()) {
         $(`.discount${arg}`).addClass('is-filled');
       }
@@ -499,6 +530,7 @@
         const row = $(this).attr('row');
         const idService = $(`.service${row}`).val();
         const order = $(this).attr('idorder');
+        const item = $(this).find(`#item${row}`).val();
         const priceValue = $(this).find(`#price${row}`).val();
         const discountValue = $(this).find(`#discount${row}`).val();
         const obsValue = $(this).find(`#obs${row}`).val();
@@ -506,6 +538,7 @@
         data.push({
           idService: idService || '',
           order: order || '',
+          item: item || '',
           price: parseFloat(priceValue) || 0,
           discount: parseFloat(discountValue) || 0,
           obs: obsValue || ''
@@ -561,6 +594,8 @@
             $("#incoming").val(element.incoming);
             $("#total").val(element.total);
             $("#remainder").val(element.remainder);
+            $("#balance").val(element.balance);
+            $("#debit").val(element.debit);
 
             if (element.servicestatus == 1) {
               $('.osStatus').addClass('bg-gradient-success');
@@ -599,7 +634,7 @@
             service.addOption(services);
 
             service.setValue(element.idservice)
-
+            $(`#item${row}`).val(element.item);
             $(`#price${row}`).val(element.price);
             $(`#discount${row}`).val(element.discount);
             $(`#obs${row}`).val(element.obs);

@@ -87,8 +87,8 @@
               <div class="container">
                 <form role="form" class="text-start">
                   <input type="hidden" id="id">
+                  <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados Pessoais</div>
                   <div class="row">
-                    <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados Pessoais</div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 name">
                         <label class="form-label">Nome</label>
@@ -135,7 +135,7 @@
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3 obs">
+                      <div class="input-group input-group-outline my-3 number">
                         <label class="form-label">Numero</label>
                         <input id="number" type="number" class="form-control" autocomplete="off">
                       </div>
@@ -144,6 +144,23 @@
                       <div class="input-group input-group-outline my-3 obs">
                         <label class="form-label">Complemento</label>
                         <input id="obs" type="text" class="form-control" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados Monetários</div>
+                  <div class="row">
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 balance">
+                        <span class="input-group-text">R$:</span>
+                        <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Saldo</label>
+                        <input id="balance" type="number" class="form-control extra-padding" autocomplete="off">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 debit">
+                        <span class="input-group-text">R$:</span>
+                        <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Débito</label>
+                        <input id="debit" type="number" class="form-control extra-padding" autocomplete="off">
                       </div>
                     </div>
                   </div>
@@ -176,6 +193,12 @@
       $('#phone').mask('(00) 00000-0000');
       $('#phoneOption').mask('(00) 00000-0000');
       $('#cep').mask('00000-000');
+      $('#balance').mask("###.###.00", {
+        reverse: true
+      });
+      $('#debit').mask("###.###.00", {
+        reverse: true
+      });
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get('id');
@@ -247,6 +270,8 @@
           street: $('#street').val(),
           obs: $('#obs').val(),
           number: $('#number').val(),
+          balance: $('#balance').val(),
+          debit: $('#debit').val(),
         })
         .done(response => {
           let data = JSON.parse(response);
@@ -263,7 +288,7 @@
 
     const listUserId = (args) => {
       let data = {
-        action: "list_user_id",
+        action: "list_client_id",
         id: args
       }
 
@@ -280,8 +305,10 @@
           $("#street").val(response.street);
           $("#obs").val(response.obs);
           $("#number").val(response.number);
+          $("#balance").val(response.balance);
+          $("#debit").val(response.debit);
 
-          let data = ['name', 'phone', 'cep', 'city', 'neigbouhod', 'street', 'obs', 'number'];
+          let data = ['name', 'phone', 'cep', 'city', 'neigbouhod', 'street', 'obs', 'number', 'balance', 'debit'];
 
           data.forEach(element => {
             if ($(`#${element}`).val()) {

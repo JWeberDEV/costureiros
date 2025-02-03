@@ -6,21 +6,24 @@ $response = (object) [];
 
 switch ($data->action) {
   case 'save_client':
-    if ($data->id > 0) {
 
-      // Decalara os Valores para usar o prepare
-      $arrayData = [
-        'id' => $data->id,
-        'name' => "$data->name",
-        'phone' => "$data->phone",
-        'phoneOption' => "$data->phoneOption",
-        'cep' => "$data->cep",
-        'city' => "$data->city",
-        'neigbouhod' => "$data->neigbouhod",
-        'street' => "$data->street",
-        'obs' => "$data->obs",
-        'number' => "$data->number",
-      ];
+    // Decalara os Valores para usar o prepare
+    $arrayData = [
+      'name' => "$data->name",
+      'phone' => "$data->phone",
+      'phoneOption' => "$data->phoneOption",
+      'cep' => "$data->cep",
+      'city' => "$data->city",
+      'neigbouhod' => "$data->neigbouhod",
+      'street' => "$data->street",
+      'obs' => "$data->obs",
+      'number' => "$data->number",
+      'balance' => "$data->balance",
+      'debit' => "$data->debit",
+    ];
+
+    if ($data->id > 0) {
+      $arrayData['id'] = $data->id;
 
       // Preapara a query de fato
       $stmt = $pdo->prepare(
@@ -33,7 +36,9 @@ switch ($data->action) {
           neigbouhod = :neigbouhod,
           street = :street,
           obs = :obs,
-          number = :number
+          number = :number,
+          balance = :balance,
+          debit = :debit
         WHERE id = :id"
       );
 
@@ -49,20 +54,8 @@ switch ($data->action) {
       }
     } else {
 
-      $arrayData = [
-        'name' => "$data->name",
-        'phone' => "$data->phone",
-        'phoneOption' => "$data->phoneOption",
-        'cep' => $data->cep,
-        'city' => "$data->city",
-        'neigbouhod' => "$data->neigbouhod",
-        'street' => "$data->street",
-        'obs' => "$data->obs",
-        'number' => "$data->number",
-      ];
-
-      $stmt = $pdo->prepare("INSERT INTO clients (name,phone,phoneOption,cep,city,neigbouhod,street,obs,number)
-      VALUES (:name, :phone, :phoneOption,:cep, :city, :neigbouhod, :street, :obs, :number)");
+      $stmt = $pdo->prepare("INSERT INTO clients (name,phone,phoneOption,cep,city,neigbouhod,street,obs,number,balance,debit)
+      VALUES (:name, :phone, :phoneOption,:cep, :city, :neigbouhod, :street, :obs, :number, :debit, :debit)");
 
       $execute = $stmt->execute($arrayData);
 
@@ -119,7 +112,7 @@ switch ($data->action) {
 
     echo json_encode($response);
     break;
-  case 'list_user_id':
+  case 'list_client_id':
 
     $stmt = $pdo->prepare("SELECT * FROM clients WHERE id = $data->id");
     $stmt->execute();
