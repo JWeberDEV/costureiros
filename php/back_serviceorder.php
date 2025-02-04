@@ -16,6 +16,7 @@ switch ($data->action) {
       $stmt = $pdo->prepare(
         "UPDATE serviceorders SET
           idclient = $data->client,
+          ticket = $data->ticket,
           incoming = $data->incoming,
           total = $data->total,
           remainder = $data->remainder,

@@ -107,8 +107,8 @@ foreach ($data as $row) {
 $table .= '
   <tr style="background-color:#aeabab;"> 
     <td style="padding: 8px;"><strong>Entrada:</strong> <strong> R$: ' . number_format($incoming, 2, '.', ',') . '</strong></td>
-    <td style="padding: 8px;"><strong>Em a ver:</strong> <strong> R$: ' . number_format($remainder, 2, '.', ',') . '</strong></td>
     <td style="padding: 8px;"></td>
+    <td style="padding: 8px;"><strong>Débito:</strong> <strong> R$:</strong><strong>' . number_format($remainder, 2, '.', ',') . '</strong></td>
     <td style="padding: 8px;"></td>
     <td style="padding: 8px;"></td>
     <td style="padding: 8px; text-align: right;"><strong>Total</strong><strong> R$: ' . number_format($total, 2, '.', ',') . '</strong></td>
