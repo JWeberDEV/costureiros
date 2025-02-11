@@ -119,8 +119,7 @@
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3">
                         <label class="form-label">Cliente</label>
-                        <select id="client" class="form-select">
-                          <option value="0" disabled selected>Cliente</option>
+                        <select id="client" class="form-select" placeholder="Cliente">
                         </select>
                       </div>
                     </div>
@@ -333,7 +332,7 @@
         <tr class='line' row='${row}' idOrder='${idOrder}' idService='${selectId}'>
           <td>
             <div class="d-flex px-2 py-1 m-2 is-filled">
-              <select id='${selectId}' class="form-control service${row}" ${service} onchange='setPrice(${row})'>
+              <select id='${selectId}' class="form-control service${row}" ${service} onchange='setPrice(${row}), calculator();'>
             </div>
           </td>
           <td colspan='2'>
@@ -552,9 +551,9 @@
           ticket: $('#ticket').val(),
           entry: $('#entry').val(),
           exit: $('#exit').val(),
-          incoming: $('#incoming').val(),
+          incoming: $('#incoming').val() || 0,
           total: $('#total').val(),
-          remainder: $('#remainder').val(),
+          remainder: $('#remainder').val() || 0,
           data
         })
         .done(function(response) {

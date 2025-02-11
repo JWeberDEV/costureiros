@@ -99,16 +99,16 @@ foreach ($data as $row) {
 
   $table .= '</tr>';
   $rowIndex++;
-  $incoming = $row[5];
-  $total = $row[6];
-  $remainder = $row[7];
+  $incoming = $row[6];
+  $total = $row[7];
+  $remainder = $row[8];
 }
 
 $table .= '
   <tr style="background-color:#aeabab;"> 
-    <td style="padding: 8px;"><strong>Entrada:</strong> <strong> R$: ' . number_format($incoming, 2, '.', ',') . '</strong></td>
+    <td style="padding: 8px;"><strong>Entrada</strong><strong> R$: ' . number_format($incoming, 2, '.', ',') . '</strong></td>
     <td style="padding: 8px;"></td>
-    <td style="padding: 8px;"><strong>Débito:</strong> <strong> R$:</strong><strong>' . number_format($remainder, 2, '.', ',') . '</strong></td>
+    <td style="padding: 8px;"><strong>Débito</strong><strong> R$:</strong><strong>' . number_format($remainder, 2, '.', ',') . '</strong></td>
     <td style="padding: 8px;"></td>
     <td style="padding: 8px;"></td>
     <td style="padding: 8px; text-align: right;"><strong>Total</strong><strong> R$: ' . number_format($total, 2, '.', ',') . '</strong></td>
