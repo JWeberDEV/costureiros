@@ -590,12 +590,6 @@
             setTimeout(() => {
               client.setValue([element.idclient]);
             }, 500);
-            $("#incoming").val(element.incoming);
-            $("#total").val(element.total);
-            $("#remainder").val(element.remainder);
-            $("#balance").val(element.balance);
-            $("#debit").val(element.debit);
-
             if (element.servicestatus == 1) {
               $('.osStatus').addClass('bg-gradient-success');
               $('.osStatus').text('Encerrada');
@@ -639,6 +633,12 @@
             $(`#obs${row}`).val(element.obs);
             $(`.total`).addClass('is-filled');
             $(`.remainder`).addClass('is-filled');
+            $("#incoming").val(element.incoming);
+            $("#total").val(element.total);
+            $("#remainder").val(element.remainder);
+            $("#balance").val(element.balance);
+            $("#debit").val(element.debit);
+
           });
 
           setActive();

@@ -270,7 +270,7 @@ switch ($data->action) {
       $val = 1;
       $message = "Oredem de serviço finalizada com sucesso!";
     }
-    $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = $val WHERE id = $data->id");
+    $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = $val, remainder = 0 WHERE id = $data->id");
     $execute = $stmt->execute();
 
     if ($execute) {
