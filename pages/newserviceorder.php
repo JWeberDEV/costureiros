@@ -173,7 +173,7 @@
                   <hr class="horizontal dark m-0" />
                   <div class="row">
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3 ticket">
+                      <div class="input-group input-group-outline my-3 incoming">
                         <span class="input-group-text">R$:</span>
                         <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Entrada</label>
                         <input id="incoming" type="number" class="form-control extra-padding">
@@ -551,9 +551,9 @@
           ticket: $('#ticket').val(),
           entry: $('#entry').val(),
           exit: $('#exit').val(),
-          incoming: $('#incoming').val() || 0,
+          incoming: $('#incoming').val(),
           total: $('#total').val(),
-          remainder: $('#remainder').val() || 0,
+          remainder: $('#remainder').val(),
           data
         })
         .done(function(response) {
@@ -669,13 +669,16 @@
       $('#total').val(formattedResult).trigger('input');
       $(`.total`).addClass('is-filled');
 
-      if ($(`#total`).val() && $(`#incoming`).val()) {
-        budget();
-      }
+      budget();
     }
 
     const budget = () => {
-      let result = $(`#total`).toNumber() - $(`#incoming`).toNumber();
+      let incoming = $(`#incoming`).toNumber() ? $(`#incoming`).toNumber() : 0;
+      if (incoming == 0) {
+        $(`#incoming`).val('0.00').trigger('input');
+        $(`.incoming`).addClass('is-filled');
+      }
+      let result = $(`#total`).toNumber() - incoming;
       let formattedResult = result.toFixed(2);
       $(`#remainder`).val(formattedResult).trigger('input');
       $(`.remainder`).addClass('is-filled');
