@@ -263,14 +263,18 @@ switch ($data->action) {
   case 'set_os_status':
     $val = "";
     $message = "";
+    $query = "";
     if ($data->statusOs == 1) {
       $val = 0;
       $message = "Oredem de serviço Re aberta com sucesso!";
+      $query = "UPDATE serviceorders SET servicestatus = $val WHERE id = $data->id";
     } else {
       $val = 1;
       $message = "Oredem de serviço finalizada com sucesso!";
+      $query = "UPDATE serviceorders SET servicestatus = $val, remainder = 0 WHERE id = $data->id";
     }
-    $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = $val, remainder = 0 WHERE id = $data->id");
+
+    $stmt = $pdo->prepare($query);
     $execute = $stmt->execute();
 
     if ($execute) {
