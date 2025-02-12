@@ -201,7 +201,7 @@
               <hr class="dark horizontal my-0">
               <div class="container-fluid text-center">
                 <div class="row justify-content-end">
-                  <div class="col-1"><button type="button" id='save' class="btn bg-gradient-info mt-2" onclick="calculator();">Salvar</button></div>
+                  <div class="col-1"><button type="button" id='save' class="btn bg-gradient-info mt-2" onclick="calculator();">Calcular</button></div>
                   <div class="col-1"><button type="button" id='save' class="btn bg-gradient-dark mt-2" onclick="confirmSaveOs();">Salvar</button></div>
                 </div>
               </div>
