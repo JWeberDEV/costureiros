@@ -315,7 +315,9 @@
       });
 
       $('#total').on('keyup', function() {
-        budget();
+        setTimeout(() => {
+          budget();
+        }, 500);
       });
 
       $(document).ready(async function() {

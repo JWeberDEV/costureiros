@@ -86,6 +86,8 @@ switch ($data->action) {
         s.serviceorder,
         s.ticket,
         s.total,
+        s.incoming,
+        s.remainder,
         SUM(CASE 
             WHEN s.incoming > 0 THEN s.incoming
             WHEN s.servicestatus = 1 THEN s.total
@@ -128,6 +130,8 @@ switch ($data->action) {
         'serviceorder' => $value['serviceorder'],
         'ticket' => $value['ticket'],
         'total' => $value['total'],
+        'incoming' => $value['incoming'],
+        'remainder' => $value['remainder'],
         'sumInCash' => $value['sumInCash'],
         'sumTotal' => $value['sumTotal'],
         'servicestatus' => $value['servicestatus'],

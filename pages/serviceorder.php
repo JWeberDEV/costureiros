@@ -272,7 +272,21 @@
                   <td cclass='ps-3'>
                     <div class='d-flex px-2 py-1'>
                       <div class='d-flex flex-column justify-content-center'>
+                        <h6 class='mb-0 text-sm'>${item.incoming}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td cclass='ps-3'>
+                    <div class='d-flex px-2 py-1'>
+                      <div class='d-flex flex-column justify-content-center'>
                         <h6 class='mb-0 text-sm'>${item.total}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td cclass='ps-3'>
+                    <div class='d-flex px-2 py-1'>
+                      <div class='d-flex flex-column justify-content-center'>
+                        <h6 class='mb-0 text-sm'>${item.remainder}</h6>
                       </div>
                     </div>
                   </td>
@@ -296,7 +310,9 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">OS</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cliente</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Guichê</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Entrada</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Total</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Em a ver</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                 </tr>
               </thead>
@@ -309,7 +325,9 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">OS</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cliente</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Guichê</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Entrada</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Total</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Em a ver</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                 </tr>
               </tfoot>
