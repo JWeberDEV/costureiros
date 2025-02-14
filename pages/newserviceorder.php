@@ -311,7 +311,7 @@
       $('#incoming').on('keyup', function() {
         setTimeout(() => {
           budget();
-        }, 800);
+        }, 1000);
       });
 
       $('#total').on('keyup', function() {
