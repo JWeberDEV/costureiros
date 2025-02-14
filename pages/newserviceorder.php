@@ -334,7 +334,9 @@
         $('#remainder').mask("###.###.00", {
           reverse: true
         });
-
+        $('#price').mask("###.###.00", {
+          reverse: true
+        });
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         id = urlParams.get('id');
