@@ -114,9 +114,9 @@
               <input id="exit" type="date" class="form-control">
             </div>
           </div>
-          <div class="col-2 mt-4">
-            <Strong class="pt-3" id='labelIncomming'></Strong>
-            <Strong class="pt-3" id='labelTotal'></Strong>
+          <div class='col-2 mt-2 text-center'>
+            <Strong class='pt-3' id='labelIncomming'></Strong><br>
+            <Strong class='pt-3' id='labelTotal'></Strong>
           </div>
           <div class="col-2 text-end mt-3 pe-4">
             <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listServiccesOrders();">
@@ -241,8 +241,8 @@
           response.forEach(item => {
             let itemStatus = item.servicestatus == 1 ? 'text-success' : 'text-warning'
             let textStatus = item.servicestatus == 1 ? 'OS Encerrada' : 'OS Em andamento'
-            $('#labelIncomming').html('Em caixa: ' + item.sumIncoming);
-            $('#labelTotal').html('Total: ' + item.sumTotal);
+            $('#labelIncomming').html('Em caixa R$: ' + item.sumInCash);
+            $('#labelTotal').html('Total R$: ' + item.sumTotal);
             lines += `
             <tr>
               <td class='ps-4' style='width: 10px'>
@@ -351,6 +351,7 @@
         showCancelButton: true,
         allowEnterKey: true,
         confirmButtonColor: "#43a047",
+      cancelButtonColor: "#f44335",
         customClass: {
           confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
           cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'

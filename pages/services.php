@@ -217,6 +217,7 @@
         showCancelButton: true,
         allowEnterKey: true,
         confirmButtonColor: "#43a047",
+        cancelButtonColor: "#f44335",
         customClass: {
           confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
           cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'

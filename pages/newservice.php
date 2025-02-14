@@ -85,10 +85,12 @@
             <div class="card-body px-0 pb-2">
               <hr class="dark horizontal my-0">
               <div class="container">
+                <div class="col-2 pb-2 pt-1">
+                  <a type="button" href="../pages/services.php" class="btn bg-gradient-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Retornar"><i class='material-symbols-rounded'>undo</i></a>
+                </div>
                 <form role="form" class="text-start">
                   <input type="hidden" id="id">
                   <div class="row">
-                    <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados Pessoais</div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 service">
                         <label class="form-label">Serviço</label>
@@ -110,7 +112,12 @@
               <hr class="dark horizontal my-0">
               <div class="container-fluid text-center">
                 <div class="row justify-content-end">
-                  <div class="col-1"><button id="login" type="button" class="btn bg-gradient-dark mt-2" onclick="saveService();">Salvar</button></div>
+                  <div class="col-1"><button id="save" type="button" class="btn bg-gradient-dark mt-2" onclick="saveService();">Salvar</button></div>
+                  <div class="col-1 load">
+                  <button class="btn  bg-gradient-dark mt-2" type="button" disabled>
+                    <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                    <span class="visually-hidden" role="status">Loading...</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -129,7 +136,10 @@
   <script src="../assets/libs/jQueryMask/dist/jquery.mask.js"></script>
   <script>
     $(document).ready(function() {
-      $('#price').mask("###.###.00", {reverse: true});
+      $('.load').hide();
+      $('#price').mask("###.###.00", {
+        reverse: true
+      });
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get('id');
@@ -172,6 +182,9 @@
     }
 
     const saveService = () => {
+      $('#save').attr('disabled', 'disabled');
+      $('.notload').hide();
+      $('.load').show();
       $.post("../php/back_service.php", {
           action: 'save_service',
           id: $('#id').val(),
@@ -183,6 +196,9 @@
           $('#infoToast').addClass(data.class);
           $('.html').html(data.message);
           $('#infoToast').toast('show');
+          $('#save').removeAttr('disabled');
+          $('.notload').show();
+          $('.load').hide();
           if (data.class == 'bg-gradient-success') {
             setTimeout(() => {
               window.location = '../pages/services.php';

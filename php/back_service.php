@@ -6,16 +6,14 @@ $response = (object) [];
 
 switch ($data->action) {
   case 'save_service':
+    $arrayData = [
+      'service' => "$data->service",
+      'price' => "$data->price",
+    ];
+
     if ($data->id > 0) {
-
-      // Decalara os Valores para usar o prepare
-      $arrayData = [
-        'id' => $data->id,
-        'service' => "$data->service",
-        'price' => "$data->price",
-      ];
-
-      // Preapara a query de fato
+      $arrayData['id'] = $data->id;
+      
       $stmt = $pdo->prepare(
         "UPDATE services SET
           service = :service,
@@ -34,11 +32,6 @@ switch ($data->action) {
         $response->message = "Erro ao editar o registro!";
       }
     } else {
-
-      $arrayData = [
-        'service' => "$data->service",
-        'price' => "$data->price",
-      ];
 
       $stmt = $pdo->prepare("INSERT INTO services (service,price)
       VALUES (:service, :price)");

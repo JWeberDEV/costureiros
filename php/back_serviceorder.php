@@ -12,7 +12,7 @@ switch ($data->action) {
     $out = date_format($out, "Y-m-d");
 
     if ($data->id > 0) {
-      
+
       $stmt = $pdo->prepare(
         "UPDATE serviceorders SET
           idclient = $data->client,
@@ -81,17 +81,16 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'list_serviceorders':
-    $entry = date_create($data->entry);
-    $entry = date_format($entry, "Y-m-d");
-    $out = date_create($data->exit);
-    $out = date_format($out, "Y-m-d");
-
     $query = "SELECT 
         s.id,
         s.serviceorder,
         s.ticket,
         s.total,
-        SUM(s.incoming) OVER() AS sumIncoming,
+        SUM(CASE 
+            WHEN s.incoming > 0 THEN s.incoming
+            WHEN s.servicestatus = 1 THEN s.total
+            ELSE 0
+        END) OVER() AS sumInCash,
         SUM(s.total) OVER() AS sumTotal,
         s.servicestatus,
         c.name
@@ -107,12 +106,12 @@ switch ($data->action) {
       $query .= " AND s.servicestatus = $data->status";
     }
 
-    if ($data->entry) {
-      $query .= " AND s.sevicentry >= '$entry'";
-    }
-
-    if ($data->exit) {
-      $query .= " AND s.servicexit <= '$out'";
+    if ($data->entry && $data->exit) {
+      $query .= " AND s.sevicentry BETWEEN '$data->entry' AND '$data->exit'";
+    } else if ($data->entry) {
+      $query .= " AND s.sevicentry >= '$data->entry'";
+    } else if ($data->exit) {
+      $query .= " AND s.servicexit = '$data->exit'";
     }
 
     $query .= " ORDER BY s.serviceorder DESC";
@@ -129,7 +128,7 @@ switch ($data->action) {
         'serviceorder' => $value['serviceorder'],
         'ticket' => $value['ticket'],
         'total' => $value['total'],
-        'sumIncoming' => $value['sumIncoming'],
+        'sumInCash' => $value['sumInCash'],
         'sumTotal' => $value['sumTotal'],
         'servicestatus' => $value['servicestatus'],
         'name' => $value['name'],
@@ -271,7 +270,7 @@ switch ($data->action) {
     } else {
       $val = 1;
       $message = "Oredem de serviço finalizada com sucesso!";
-      $query = "UPDATE serviceorders SET servicestatus = $val, remainder = 0 WHERE id = $data->id";
+      $query = "UPDATE serviceorders SET servicestatus = $val, remainder = 0.00, incoming = 0.00 WHERE id = $data->id";
     }
 
     $stmt = $pdo->prepare($query);
