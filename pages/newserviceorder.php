@@ -322,7 +322,7 @@
       $('#incoming').on('keyup', function() {
         setTimeout(() => {
           budget();
-        }, 1000);
+        }, 1500);
       });
 
       $('#total').on('keyup', function() {
@@ -336,9 +336,9 @@
         $('.load-modal').hide();
         $(`.entry`).addClass('is-filled');
         $(`.exit`).addClass('is-filled');
-        $('#incoming').mask("###.###.00", {
-          reverse: true
-        });
+        // $('#incoming').mask("###.###.00", {
+        //   reverse: true
+        // });
         $('#total').mask("###.###.00", {
           reverse: true
         });
@@ -785,7 +785,7 @@
       const budget = () => {
         let incoming = $(`#incoming`).toNumber() ? $(`#incoming`).toNumber() : 0;
         if (incoming == 0) {
-          $(`#incoming`).val('0.00').trigger('input');
+          // $(`#incoming`).val('0.00').trigger('input');
           $(`.incoming`).addClass('is-filled');
         }
         let result = $(`#total`).toNumber() - incoming;
@@ -796,11 +796,12 @@
 
       const exportOs = () => {
         url = `../php/export_os_pdf.php?id=${encodeURIComponent(id)}&
-      os=${encodeURIComponent(os)}
-      &entry=${encodeURIComponent($("#entry").val())}
-      &exit=${encodeURIComponent($("#exit").val())}
-      &name=${encodeURIComponent(name)}`;
-        window.open(url, '_blank');
+          os=${encodeURIComponent(os)}
+          &entry=${encodeURIComponent($("#entry").val())}
+          &exit=${encodeURIComponent($("#exit").val())}
+          &name=${encodeURIComponent(name)}`;
+          window.open(url, '_blank'
+        );
       }
 
       const finishOs = () => {

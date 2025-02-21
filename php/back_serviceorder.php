@@ -275,7 +275,7 @@ switch ($data->action) {
           OR t.id = $data->ticketid
         )
       ";
-    }else{
+    } else {
       $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s)";
     }
 
