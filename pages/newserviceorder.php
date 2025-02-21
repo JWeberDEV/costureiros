@@ -102,9 +102,10 @@
                   <div class="row" style="position: relative; z-index: 11;">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados da Ordem de serviço</div>
                     <div class="col-2">
-                      <div class="input-group input-group-outline my-3 ticket">
+                      <div class="input-group input-group-outline my-3">
                         <label class="form-label">Guichê</label>
-                        <input id="ticket" type="number" class="form-control" autocomplete="off">
+                        <select id="ticket" class="form-select" placeholder="Guichê">
+                        </select>
                       </div>
                     </div>
                     <div class="col-3">
@@ -288,6 +289,8 @@
       }
 
       let client = "";
+      let ticket = "";
+      let ticketid = "";
       let service = "";
       let services = [];
       let os = "";
@@ -306,6 +309,14 @@
           action: 'load_services'
         })
         services = JSON.parse(response);
+      }
+
+      const fetchTicket = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'load_tickets',
+          ticketid
+        })
+        return JSON.parse(response);
       }
 
       $('#incoming').on('keyup', function() {
@@ -340,6 +351,7 @@
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         id = urlParams.get('id');
+        ticketid = urlParams.get('ticket');
         await fetchServices();
         if (!id) {
           addRow();
@@ -360,6 +372,22 @@
         fetchClients().then(response => {
           client.addOption(response);
           client.refreshOptions(false);
+        });
+
+        let ticketSelectize = $(`#ticket`).selectize({
+          valueField: 'id',
+          labelField: 'name',
+          searchField: ['name'],
+          sortField: 'name',
+          sortField: "$order",
+          create: false,
+        });
+
+        ticket = ticketSelectize[0].selectize;
+
+        fetchTicket().then(response => {
+          ticket.addOption(response);
+          ticket.refreshOptions(false);
         });
 
         if (statusOs == 1) {
@@ -664,9 +692,11 @@
               statusOs = element.servicestatus;
               $("#id").val(element.serviceorder);
               $("#os").html('Nº ' + element.serviceorder);
-              $("#ticket").val(element.ticket);
               $("#entry").val(element.sevicentry);
               $("#exit").val(element.servicexit);
+              setTimeout(() => {
+                ticket.setValue([element.ticket]);
+              }, 500);
               setTimeout(() => {
                 client.setValue([element.idclient]);
               }, 500);

@@ -291,7 +291,7 @@
                     </div>
                   </td>
                   <td class='text-end'>
-                    <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}'>
+                    <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}&ticket=${item.ticket}'>
                   <i class='material-symbols-rounded opacity-5'>edit</i>
                   </a>
                   <button type='button' class='btn bg-gradient-danger m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Excluir' onclick='deleteServiceOrder(${item.id})'>

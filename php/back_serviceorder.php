@@ -263,6 +263,36 @@ switch ($data->action) {
 
     echo (json_encode($response));
     break;
+  case 'load_tickets':
+    $query ="SELECT t.id,t.name
+      FROM tickets t
+      WHERE t.status = 1
+    ";
+
+    if ($data->ticketid) {
+      $query .= " AND (
+          t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.ticket IS NOT NULL)
+          OR t.id = $data->ticketid
+        )
+      ";
+    }else{
+      $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s)";
+    }
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute() or die("Failed to execute");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
+
+    $response = [];
+    foreach ($results as $key => $value) {
+      $response[] = [
+        'id' => $value['id'],
+        'name' => $value['name'],
+      ];
+    }
+
+    echo (json_encode($response));
+    break;
   case 'set_os_status':
     $val = "";
     $message = "";
