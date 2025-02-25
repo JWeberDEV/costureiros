@@ -271,12 +271,12 @@ switch ($data->action) {
 
     if ($data->ticketid) {
       $query .= " AND (
-          t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.ticket IS NOT NULL)
+          t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.ticket IS NOT NULL AND s.servicestatus = 1)
           OR t.id = $data->ticketid
         )
       ";
     } else {
-      $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s)";
+      $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.servicestatus = 1)";
     }
 
     $stmt = $pdo->prepare($query);
