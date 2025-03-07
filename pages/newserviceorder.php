@@ -627,6 +627,19 @@
           $('#infoToast').addClass('bg-gradient-warning');
           $('.html').html('Verifique os campos que precisam ser preenchidos ');
           $('#infoToast').toast('show');
+          $('#save').removeAttr('disabled');
+          $('.notload').show();
+          $('.load').hide();
+          return;
+        }
+
+        if (!$('#incoming').val()) {
+          $('#infoToast').addClass('bg-gradient-danger');
+          $('.html').html('É preciso preencher corretamente o campo de entrada');
+          $('#infoToast').toast('show');
+          $('#save').removeAttr('disabled');
+          $('.notload').show();
+          $('.load').hide();
           return;
         }
 
@@ -800,8 +813,7 @@
           &entry=${encodeURIComponent($("#entry").val())}
           &exit=${encodeURIComponent($("#exit").val())}
           &name=${encodeURIComponent(name)}`;
-          window.open(url, '_blank'
-        );
+        window.open(url, '_blank');
       }
 
       const finishOs = () => {
