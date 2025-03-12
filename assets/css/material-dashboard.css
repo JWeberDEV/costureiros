@@ -11520,6 +11520,14 @@ fieldset:disabled .btn {
   background-image: var(--bs-gradient) !important;
 }
 
+.bg-gradient-hover{
+  opacity: 0.8 !important;
+}
+
+.bg-gradient-hover:hover{
+  opacity: 1 !important;
+}
+
 .user-select-all {
   user-select: all !important;
 }
@@ -29166,4 +29174,3 @@ pre[class*=language-] {
   }
 }
 
-/*# sourceMappingURL=dashboard-free.css.map */

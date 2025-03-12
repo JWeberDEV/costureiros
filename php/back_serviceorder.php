@@ -95,9 +95,12 @@ switch ($data->action) {
         END) OVER() AS sumInCash,
         SUM(s.total) OVER() AS sumTotal,
         s.servicestatus,
-        c.name
+        c.name,
+        so.status,
+        so.color
       FROM serviceorders s
       JOIN clients c ON c.id = s.idclient
+      JOIN serviceorderstatus so ON so.id = s.servicestatus
       WHERE s.`status` = 1";
 
     if ($data->client) {
@@ -136,6 +139,8 @@ switch ($data->action) {
         'sumTotal' => $value['sumTotal'],
         'servicestatus' => $value['servicestatus'],
         'name' => $value['name'],
+        'status' => $value['status'],
+        'color' => $value['color'],
       ];
     }
 
@@ -181,11 +186,14 @@ switch ($data->action) {
         (SELECT `name` FROM clients WHERE id = so.idclient) AS 'name',
         s.service,
         c.balance,
-        c.debit
+        c.debit,
+        ss.status,
+        ss.button
       FROM serviceorders so
       JOIN orders o ON o.idserviceorders = so.id
       JOIN services s ON s.id = o.idservice
       JOIN clients c ON c.id = so.idclient
+      JOIN serviceorderstatus ss ON ss.id = so.servicestatus
       WHERE so.id = $data->id"
     );
 
@@ -215,6 +223,8 @@ switch ($data->action) {
         'servicestatus' => $value['servicestatus'],
         'balance' => $value['balance'],
         'debit' => $value['debit'],
+        'button' => $value['button'],
+        'status' => $value['status'],
       ];
     }
 
@@ -264,7 +274,7 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'load_tickets':
-    $query ="SELECT t.id,t.name
+    $query = "SELECT t.id,t.name
       FROM tickets t
       WHERE t.status = 1
     ";
@@ -297,17 +307,14 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'set_os_status':
-    $val = "";
     $message = "";
     $query = "";
-    if ($data->statusOs == 1) {
-      $val = 0;
-      $message = "Oredem de serviço Re aberta com sucesso!";
-      $query = "UPDATE serviceorders SET servicestatus = $val WHERE id = $data->id";
-    } else {
-      $val = 1;
+    if ($data->statusOs == 2) {
       $message = "Oredem de serviço finalizada com sucesso!";
-      $query = "UPDATE serviceorders SET servicestatus = $val, remainder = 0.00, incoming = 0.00 WHERE id = $data->id";
+      $query = "UPDATE serviceorders SET servicestatus = $data->statusOs, remainder = 0.00, incoming = 0.00 WHERE id = $data->id";
+    } else {
+      $message = "Status da Oredem de serviço atualizado";
+      $query = "UPDATE serviceorders SET servicestatus = $data->statusOs WHERE id = $data->id";
     }
 
     $stmt = $pdo->prepare($query);
@@ -316,11 +323,11 @@ switch ($data->action) {
     if ($execute) {
       $response->class = 'bg-gradient-success';
       $response->message = $message;
-      $response->status = $val;
+      $response->status = $data->statusOs;
     } else {
       $response->class = 'bg-gradient-danger';
       $response->message = "Erro ao finalizar Ordem de Serviço!";
-      $response->status = $val;
+      $response->status = $data->statusOs;
     }
 
     echo json_encode($response);

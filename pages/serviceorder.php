@@ -80,7 +80,17 @@
                 <button type="button" class="btn bg-gradient-dark w-100 m-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Nova Ordem de Serviço">Nova OS</button>
               </a>
             </div>
-            <div class="col-2 text-end">
+            <div class="col-7">
+              <div class="row text-end">
+                <h4>
+                  <span class="badge bg-gradient-warning">Em andamento</span>
+                  <span class="ms-2 badge bg-gradient-success">Encerrada</span>
+                  <span class="ms-2 badge bg-gradient-info">Criada</span>
+                  <span class="ms-2 badge bg-gradient-primary">Aguardando entrega</span>
+                </h4>
+              </div>
+            </div>
+            <div class="col-3 text-end">
               <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar Balanço" onClick="exportBalance();">
                 <i class='material-symbols-rounded'>file_export</i>
               </button>
@@ -239,64 +249,62 @@
           let lines = "";
 
           response.forEach(item => {
-            let itemStatus = item.servicestatus == 1 ? 'text-success' : 'text-warning'
-            let textStatus = item.servicestatus == 1 ? 'OS Encerrada' : 'OS Em andamento'
             $('#labelIncomming').html('Em caixa R$: ' + item.sumInCash);
             $('#labelTotal').html('Total R$: ' + item.sumTotal);
             lines += `
             <tr>
-              <td class='ps-4' style='width: 10px'>
-                <i class='fa-solid fa-circle ${itemStatus}' data-bs-toggle='tooltip' data-bs-placement='bottom' title='${textStatus}'></i>
-                  </td>
-                  <td class='ps-3'>
-                    <div class='d-flex px-2 py-1'>
-                      <div class='d-flex flex-column justify-content-center'>
-                        <h6 class='mb-0 text-sm'>${item.serviceorder}</h6>
-                      </div>
-                    </div>
-                  </td>
-                  <td class='ps-0'>
-                    <div class='d-flex px-2 py-1'>
-                      <div class='d-flex flex-column justify-content-center'>
-                        <h6 class='mb-0 text-sm'>${item.name}</h6>
-                      </div>
-                    </div>
-                  </td>
-                  <td cclass='ps-3'>
-                    <div class='d-flex px-2 py-1'>
-                      <div class='d-flex flex-column justify-content-center'>
-                        <h6 class='mb-0 text-sm'>${item.ticket}</h6>
-                      </div>
-                    </div>
-                  </td>
-                  <td cclass='ps-3'>
-                    <div class='d-flex px-2 py-1'>
-                      <div class='d-flex flex-column justify-content-center'>
-                        <h6 class='mb-0 text-sm'>${item.incoming}</h6>
-                      </div>
-                    </div>
-                  </td>
-                  <td cclass='ps-3'>
-                    <div class='d-flex px-2 py-1'>
-                      <div class='d-flex flex-column justify-content-center'>
-                        <h6 class='mb-0 text-sm'>${item.total}</h6>
-                      </div>
-                    </div>
-                  </td>
-                  <td cclass='ps-3'>
-                    <div class='d-flex px-2 py-1'>
-                      <div class='d-flex flex-column justify-content-center'>
-                        <h6 class='mb-0 text-sm'>${item.remainder}</h6>
-                      </div>
-                    </div>
-                  </td>
-                  <td class='text-end'>
-                    <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}&ticket=${item.ticket}'>
+              <td class='p2-4' style='width: 10px'>
+                <i class='fa-solid fa-circle ${item.color}' data-bs-toggle='tooltip' data-bs-placement='bottom' title='${item.status}'></i>
+              </td>
+              <td class='ps-0'>
+                <div class='d-flex px-2 py-1'>
+                  <div class='d-flex flex-column justify-content-center'>
+                    <h6 class='mb-0 text-sm'>${item.serviceorder}</h6>
+                  </div>
+                </div>
+              </td>
+              <td class='ps-0'>
+                <div class='d-flex px-2 py-1'>
+                  <div class='d-flex flex-column justify-content-center'>
+                    <h6 class='mb-0 text-sm'>${item.name}</h6>
+                  </div>
+                </div>
+              </td>
+              <td cclass='ps-3'>
+                <div class='d-flex px-2 py-1'>
+                  <div class='d-flex flex-column justify-content-center'>
+                    <h6 class='mb-0 text-sm'>${item.ticket}</h6>
+                  </div>
+                </div>
+              </td>
+              <td cclass='ps-3'>
+                <div class='d-flex px-2 py-1'>
+                  <div class='d-flex flex-column justify-content-center'>
+                    <h6 class='mb-0 text-sm'>${item.incoming}</h6>
+                  </div>
+                </div>
+              </td>
+              <td cclass='ps-3'>
+                <div class='d-flex px-2 py-1'>
+                  <div class='d-flex flex-column justify-content-center'>
+                    <h6 class='mb-0 text-sm'>${item.total}</h6>
+                  </div>
+                </div>
+              </td>
+              <td cclass='ps-3'>
+                <div class='d-flex px-2 py-1'>
+                  <div class='d-flex flex-column justify-content-center'>
+                    <h6 class='mb-0 text-sm'>${item.remainder}</h6>
+                  </div>
+                </div>
+              </td>
+              <td class='text-end'>
+                <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}&ticket=${item.ticket}'>
                   <i class='material-symbols-rounded opacity-5'>edit</i>
-                  </a>
-                  <button type='button' class='btn bg-gradient-danger m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Excluir' onclick='deleteServiceOrder(${item.id})'>
-                    <i class='material-symbols-rounded opacity-5'>delete</i>
-                  </button>
+                </a>
+                <button type='button' class='btn bg-gradient-danger m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Excluir' onclick='deleteServiceOrder(${item.id})'>
+                  <i class='material-symbols-rounded opacity-5'>delete</i>
+                </button>
               </td>
             </tr>
             `;
@@ -369,7 +377,7 @@
         showCancelButton: true,
         allowEnterKey: true,
         confirmButtonColor: "#43a047",
-      cancelButtonColor: "#f44335",
+        cancelButtonColor: "#f44335",
         customClass: {
           confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
           cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'

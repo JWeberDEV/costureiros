@@ -92,9 +92,17 @@
             <div class="card-body px-0 pb-2">
               <div class="container">
                 <div class="row">
-                  <div class="col-2 pb-2 pt-1">
+                  <div class="col-3 pb-2 pt-1">
                     <a type="button" href="../pages/serviceorder.php" class="btn bg-gradient-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Retornar"><i class='material-symbols-rounded'>undo</i></a>
-                    <button type="button" class="btn osStatus" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clique para encerrar a OS" onclick="finishOs()"></button>
+                    <div class="btn-group dropdown">
+                      <button type="button" class="btn osStatus dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                      <ul class="dropdown-menu bg-gradient-light" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-warning" onclick="finishOs(1)">Em andamento</a></li>
+                        <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-success" onclick="finishOs(2)">Encerrada</a></li>
+                        <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-info" onclick="finishOs(3)">Criada</a></li>
+                        <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-primary" onclick="finishOs(4)">Aguardando entrega</a></li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
                 <form role="form" class="text-start">
@@ -390,7 +398,7 @@
           ticket.refreshOptions(false);
         });
 
-        if (statusOs == 1) {
+        if (statusOs == 2) {
           $('#save').attr('disabled', true);
           $('.line').each(function() {
             const row = $(this).attr('row');
@@ -691,12 +699,10 @@
       }
 
       const listServiceId = async (arg) => {
-        let data = {
-          action: "list_serviceorder_id",
-          id: arg
-        }
-
-        let response = await $.post("../php/back_serviceorder.php", data)
+        let response = await $.post("../php/back_serviceorder.php", {
+            action: "list_serviceorder_id",
+            id: arg
+          })
           .done(function(response) {
             response = JSON.parse(response);
             response.forEach(element => {
@@ -713,13 +719,8 @@
               setTimeout(() => {
                 client.setValue([element.idclient]);
               }, 500);
-              if (element.servicestatus == 1) {
-                $('.osStatus').addClass('bg-gradient-success');
-                $('.osStatus').text('Encerrada');
-              } else {
-                $('.osStatus').addClass('bg-gradient-warning');
-                $('.osStatus').text('Em andamento');
-              }
+              $('.osStatus').addClass(element.button);
+              $('.osStatus').text(element.status);
 
               let row = '';
               let actual = '';
@@ -761,7 +762,6 @@
               $("#remainder").val(element.remainder);
               $("#balance").val(element.balance);
               $("#debit").val(element.debit);
-
             });
 
             setActive();
@@ -816,25 +816,14 @@
         window.open(url, '_blank');
       }
 
-      const finishOs = () => {
-        let html = "";
-        if (statusOs == 1) {
-          html =
-            `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+      const finishOs = (arg) => {
+        let html =
+          `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
           </br></br>
           <div class="alert alert-danger" role="alert">
-            <p style="color:#fff;"><strong>Tem Certeza de que deseja Reabrir a Ordem de Serviço?</strong></p>
+            <p style="color:#fff;"><strong>Tem Certeza de que deseja alterar o estado desta OS?</strong></p>
           </div>
         `;
-        } else {
-          html =
-            `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
-          </br></br>
-          <div class="alert alert-danger" role="alert">
-            <p style="color:#fff;"><strong>Tem Certeza de que deseja encerrar esta Ordem de Serviço?</strong></p>
-          </div>
-        `;
-        }
 
         Swal.fire({
           html: html,
@@ -854,38 +843,32 @@
             $.post("../php/back_serviceorder.php", {
                 action: 'set_os_status',
                 id,
-                statusOs
+                statusOs: arg
               })
               .done(async function(response) {
                 response = JSON.parse(response);
                 $('#infoToast').addClass(response.class);
                 $('.html').html(response.message);
                 $('#infoToast').toast('show');
-                if (response.status == 1) {
-                  $('.osStatus').removeClass('bg-gradient-warning');
-                  $('.osStatus').addClass('bg-gradient-success');
-                  $('.osStatus').text('Encerrada');
+                statusOs = response.status;
+                if (response.status == 2) {
                   $('#save').attr('disabled', true);
                   $('.line').each(function() {
                     const row = $(this).attr('row');
                     $(`#remove${row}`).attr('disabled', true);
                   });
-                  statusOs = response.status;
-                  if (response.class == 'bg-gradient-success') {
-                    setTimeout(() => {
-                      window.location = '../pages/serviceorder.php';
-                    }, 2000);
-                  }
                 } else {
-                  $('.osStatus').removeClass('bg-gradient-success');
-                  $('.osStatus').addClass('bg-gradient-warning');
-                  $('.osStatus').text('Em andamento');
                   $('#save').attr('disabled', false);
                   $('.line').each(function() {
                     const row = $(this).attr('row');
                     $(`#remove${row}`).attr('disabled', false);
                   });
-                  statusOs = response.status;
+                }
+
+                if (response.stauts != 2) {
+                  setTimeout(() => {
+                    window.location = '../pages/serviceorder.php';
+                  }, 2000);
                 }
               });
           },
