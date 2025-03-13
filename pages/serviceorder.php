@@ -82,12 +82,12 @@
             </div>
             <div class="col-7">
               <div class="row text-end">
-                <h4>
+                <h5>
                   <span class="badge bg-gradient-warning">Em andamento</span>
                   <span class="ms-2 badge bg-gradient-success">Encerrada</span>
                   <span class="ms-2 badge bg-gradient-info">Criada</span>
                   <span class="ms-2 badge bg-gradient-primary">Aguardando entrega</span>
-                </h4>
+                </h5>
               </div>
             </div>
             <div class="col-3 text-end">
@@ -210,15 +210,21 @@
         options: [
 
           {
-            id: 0,
+            id: 1,
             name: 'Em andamento'
           },
           {
-            id: 1,
+            id: 2,
             name: 'Encerrada'
           },
           {
-            id: 2,
+            id: 3,
+            name: 'Criada'
+          },{
+            id: 4,
+            name: 'Aguardando Entrega'
+          },{
+            id: 5,
             name: 'Todas'
           }
         ],
@@ -240,7 +246,7 @@
       $.post("../php/back_serviceorder.php", {
           action: "list_serviceorders",
           client: $('#client').val(),
-          status: $('#status').val() != '' ? $('#status').val() : 2,
+          status: $('#status').val() != '' ? $('#status').val() : 5,
           entry: $('#entry').val(),
           exit: $('#exit').val(),
         })
@@ -267,6 +273,13 @@
                 <div class='d-flex px-2 py-1'>
                   <div class='d-flex flex-column justify-content-center'>
                     <h6 class='mb-0 text-sm'>${item.name}</h6>
+                  </div>
+                </div>
+              </td>
+              <td class='ps-0'>
+                <div class='d-flex px-2 py-1'>
+                  <div class='d-flex flex-column justify-content-center'>
+                    <h6 class='mb-0 text-sm'>${item.phone}</h6>
                   </div>
                 </div>
               </td>
@@ -317,6 +330,7 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">OS</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cliente</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Telefone</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Guichê</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Entrada</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Total</th>
@@ -332,6 +346,7 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">OS</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cliente</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Telefone</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Guichê</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Entrada</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Total</th>

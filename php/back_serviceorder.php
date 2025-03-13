@@ -96,6 +96,7 @@ switch ($data->action) {
         SUM(s.total) OVER() AS sumTotal,
         s.servicestatus,
         c.name,
+        c.phone,
         so.status,
         so.color
       FROM serviceorders s
@@ -107,7 +108,7 @@ switch ($data->action) {
       $query .= " AND c.id = $data->client";
     }
 
-    if (isset($data->status) && $data->status != 2) {
+    if (isset($data->status) && $data->status != 5) {
       $query .= " AND s.servicestatus = $data->status";
     }
 
@@ -139,6 +140,7 @@ switch ($data->action) {
         'sumTotal' => $value['sumTotal'],
         'servicestatus' => $value['servicestatus'],
         'name' => $value['name'],
+        'phone' => $value['phone'],
         'status' => $value['status'],
         'color' => $value['color'],
       ];
@@ -231,7 +233,6 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'load_clients':
-    // prepara a query que lista os eventos que são vinculados pelo usuário
     $stmt = $pdo->prepare("SELECT c.id, c.name
       FROM clients c
       WHERE c.status = 1

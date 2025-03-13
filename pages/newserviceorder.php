@@ -865,11 +865,13 @@
                   });
                 }
 
-                if (response.stauts != 2) {
-                  setTimeout(() => {
-                    window.location = '../pages/serviceorder.php';
-                  }, 2000);
-                }
+                window.location.reload();
+
+                // if (response.stauts != 2) {
+                //   setTimeout(() => {
+                //     window.location = '../pages/serviceorder.php';
+                //   }, 2000);
+                // }
               });
           },
         });
