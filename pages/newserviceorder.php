@@ -715,10 +715,10 @@
               $("#exit").val(element.servicexit);
               setTimeout(() => {
                 ticket.setValue([element.ticket]);
-              }, 500);
+              }, 700);
               setTimeout(() => {
                 client.setValue([element.idclient]);
-              }, 500);
+              }, 700);
               $('.osStatus').addClass(element.button);
               $('.osStatus').text(element.status);
 
