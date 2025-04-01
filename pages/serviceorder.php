@@ -73,7 +73,7 @@
               </div>
             </div>
             <div class="col-3 text-end">
-              <button type="button" class="btn bg-gradient-dark notify" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OS Em Atraso" onClick="exportBalance();">
+              <button type="button" class="btn bg-gradient-dark notify" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OS Em Atraso" onClick="verifyLateServices();">
                 <i class='material-symbols-rounded'>e911_emergency</i>
                 <span id="notification" style="border-radius: 5px; padding: 2px" class="bg-gradient-danger"></span>
               </button>
@@ -163,7 +163,6 @@
 
     $(document).ready(function() {
       $('.notify').click();
-      $('.notify').hide();
       setTimeout(() => {
         listServiccesOrders();
       }, 10);
@@ -220,9 +219,7 @@
 
       });
 
-      statusService = statusServiceSelectize[0].selectize;
-
-      verifyLateServices();
+      statusService = statusServiceSelectize[0].selectize;      
       notifyLateServices();
       
       if (Notification.permission !== "granted") {
@@ -248,7 +245,6 @@
               new Notification("Late Services Alert", {
                 body: `You have ${count} late service(s)!`,
               });
-              $('.notify').show();
               $('#notification').html(count);
             }
           }

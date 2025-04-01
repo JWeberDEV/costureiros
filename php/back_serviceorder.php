@@ -356,6 +356,7 @@ switch ($data->action) {
         servicestatus
       FROM serviceorders
       WHERE servicexit BETWEEN '$data->entry' AND '$data->exit'
+      AND status = 1
     ");
 
     $stmt->execute() or die("Failed to execute");
@@ -364,7 +365,8 @@ switch ($data->action) {
 
     foreach ($results as $key => $value) {
       $serviceExitDate = new DateTime($value['servicexit']);
-      if ($serviceExitDate > $currentDate && $value['servicestatus'] != 5) {
+
+      if ($currentDate > $serviceExitDate && $value['servicestatus'] != 5) {
         $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = 5 WHERE id = :id");
         $stmt->execute([':id' => $value['id']]);
       }
