@@ -108,7 +108,7 @@ switch ($data->action) {
       $query .= " AND c.id = $data->client";
     }
 
-    if (isset($data->status) && $data->status != 5) {
+    if (isset($data->status) && $data->status != 6) {
       $query .= " AND s.servicestatus = $data->status";
     }
 
@@ -344,5 +344,27 @@ switch ($data->action) {
     }
 
     echo json_encode($response);
+    break;
+  case 'verify_late_services':
+    $stmt = $pdo->prepare(" SELECT 
+        id,
+        servicexit,
+        servicestatus
+      FROM serviceorders
+      WHERE servicexit BETWEEN '$data->entry' AND '$data->exit'
+    ");
+
+    $stmt->execute() or die("Failed to execute");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
+    $currentDate = new DateTime();
+
+    foreach ($results as $key => $value) {
+      $serviceExitDate = new DateTime($value['servicexit']);
+      if ($serviceExitDate > $currentDate && $value['servicestatus'] != 5) {
+        $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = 5 WHERE id = :id");
+        $stmt->execute([':id' => $value['id']]);
+      }
+    }
+    
     break;
 }

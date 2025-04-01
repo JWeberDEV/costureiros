@@ -9,26 +9,7 @@
   <title>
     Ordens de Serviço
   </title>
-  <!-- Fonts and icons -->
-  <link rel="stylesheet" href="../assets/css/google-fonts.css" />
-  <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <link href="../assets/libs/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
-  <!-- Material Icons -->
-  <link rel="stylesheet" href="../assets/css/google-icons.css" />
-  <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
-  <!-- JQuery -->
-  <script src="../assets/js/jquery.js"></script>
-  <!-- swall -->
-  <link rel="stylesheet" href="../assets/libs/sweetalert/dist/sweetalert2.min.css">
-  <!-- Selectize -->
-  <link rel="stylesheet" href="../assets/libs/selectize/selectize.css" />
-  <script src="../assets/libs/selectize/selectize.js"></script>
-  <!-- Datatable -->
-  <link rel="stylesheet" href="../assets/libs/datatable/datatable.css">
+  <?php require_once("../includes/header.php") ?>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -87,6 +68,7 @@
                   <span class="ms-2 badge bg-gradient-success">Encerrada</span>
                   <span class="ms-2 badge bg-gradient-info">Criada</span>
                   <span class="ms-2 badge bg-gradient-primary">Aguardando entrega</span>
+                  <span class="ms-2 badge bg-gradient-danger">Em Atraso</span>
                 </h5>
               </div>
             </div>
@@ -159,14 +141,12 @@
     </div>
   </main>
   <!--   Core JS Files   -->
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/chartjs.min.js"></script>
-  <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
-  <script src="../assets/libs/datatable/datatable.js"></script>
+  <?php require_once("../includes/footer.php") ?>
   <script>
+    const firstDay = moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD");
+    const lastDay = moment().endOf("month").format("YYYY-MM-DD");
+    $('#entry').val(firstDay);
+    $('#exit').val(lastDay);
     let client = "";
     let statusService = "";
 
@@ -225,6 +205,9 @@
             name: 'Aguardando Entrega'
           },{
             id: 5,
+            name: 'Em Atraso'
+          },{
+            id: 6,
             name: 'Todas'
           }
         ],
@@ -233,6 +216,7 @@
 
       statusService = statusServiceSelectize[0].selectize;
 
+      verifyLateServices();
     });
 
     const clearfilters = () => {
@@ -246,7 +230,7 @@
       $.post("../php/back_serviceorder.php", {
           action: "list_serviceorders",
           client: $('#client').val(),
-          status: $('#status').val() != '' ? $('#status').val() : 5,
+          status: $('#status').val() != '' ? $('#status').val() : 6,
           entry: $('#entry').val(),
           exit: $('#exit').val(),
         })
@@ -424,6 +408,14 @@
       &status=${encodeURIComponent(status)}`;
 
       window.open(url, '_blank');
+    }
+
+    const verifyLateServices = () =>{
+      $.post("../php/back_serviceorder.php", {
+        action:'verify_late_services',
+        entry: moment().startOf("month").format("YYYY-MM-DD"),
+        exit: lastDay
+      })
     }
   </script>
   <!-- Github buttons -->

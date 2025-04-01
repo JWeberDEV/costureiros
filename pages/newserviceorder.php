@@ -9,26 +9,7 @@
   <title>
     Nova Ordem de Serviço
   </title>
-  <!--     Fonts and icons     -->
-  <link rel="stylesheet" href="../assets/css/google-fonts.css" />
-  <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Material Icons -->
-  <link rel="stylesheet" href="../assets/css/google-icons.css" />
-  <!-- Font Awesome Icons -->
-  <link href="../assets/libs/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
-  <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
-  <!-- Daterangerpicker -->
-  <link rel="stylesheet" href="../assets/libs/daterangepicker/daterangepicker.css">
-  <!-- JQuery -->
-  <script src="../assets/js/jquery.js"></script>
-  <!-- Selectize -->
-  <link rel="stylesheet" href="../assets/libs/selectize/selectize.css" />
-  <script src="../assets/libs/selectize/selectize.js"></script>
-  <!-- swall -->
-  <link rel="stylesheet" href="../assets/libs/sweetalert/dist/sweetalert2.min.css">
+  <?php require_once("../includes/header.php") ?>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -282,15 +263,8 @@
       </div>
     </div>
     <!--   Core JS Files   -->
-    <script src="../assets/js/core/popper.min.js"></script>
-    <script src="../assets/js/core/bootstrap.min.js"></script>
-    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <script src="../assets/js/plugins/chartjs.min.js"></script>
-    <script src="../assets/libs/daterangepicker/moment.min.js"></script>
-    <script src="../assets/libs/daterangepicker/daterangepicker.js"></script>
-    <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>
-    <script src="../assets/libs/jQueryMask/dist/jquery.mask.js"></script>
+    <?php require_once("../includes/footer.php") ?>
+
     <script>
       $.fn.toNumber = function() {
         return parseFloat($(this).val()) || 0;
@@ -715,10 +689,10 @@
               $("#exit").val(element.servicexit);
               setTimeout(() => {
                 ticket.setValue([element.ticket]);
-              }, 700);
+              }, 1200);
               setTimeout(() => {
                 client.setValue([element.idclient]);
-              }, 700);
+              }, 1200);
               $('.osStatus').addClass(element.button);
               $('.osStatus').text(element.status);
 
