@@ -73,6 +73,10 @@
               </div>
             </div>
             <div class="col-3 text-end">
+              <button type="button" class="btn bg-gradient-dark notify" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OS Em Atraso" onClick="exportBalance();">
+                <i class='material-symbols-rounded'>e911_emergency</i>
+                <span id="notification" style="border-radius: 5px; padding: 2px" class="bg-gradient-danger"></span>
+              </button>
               <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar Balanço" onClick="exportBalance();">
                 <i class='material-symbols-rounded'>file_export</i>
               </button>
@@ -158,6 +162,8 @@
     }
 
     $(document).ready(function() {
+      $('.notify').click();
+      $('.notify').hide();
       setTimeout(() => {
         listServiccesOrders();
       }, 10);
@@ -200,13 +206,13 @@
           {
             id: 3,
             name: 'Criada'
-          },{
+          }, {
             id: 4,
             name: 'Aguardando Entrega'
-          },{
+          }, {
             id: 5,
             name: 'Em Atraso'
-          },{
+          }, {
             id: 6,
             name: 'Todas'
           }
@@ -217,6 +223,42 @@
       statusService = statusServiceSelectize[0].selectize;
 
       verifyLateServices();
+      notifyLateServices();
+      
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+
+      let userInteracted = false;
+      document.addEventListener("click", () => {
+        userInteracted = true;
+      }, {
+        once: true
+      });
+
+      function notifyLateServices() {
+        $.post("../php/back_serviceorder.php", {
+          action: "notify_late_services",
+        }).done(function(response) {
+          let data = JSON.parse(response);
+          let count = data.reduce((acc, item) => acc + item.count, 0);
+
+          if (count > 0) {
+            if (Notification.permission === "granted") {
+              new Notification("Late Services Alert", {
+                body: `You have ${count} late service(s)!`,
+              });
+              $('.notify').show();
+              $('#notification').html(count);
+            }
+          }
+        }).then(() => {
+          let audio = new Audio("../assets/sounds/notification.mp3");
+          audio.play();
+
+        });
+      }
+
     });
 
     const clearfilters = () => {
@@ -410,9 +452,9 @@
       window.open(url, '_blank');
     }
 
-    const verifyLateServices = () =>{
+    const verifyLateServices = () => {
       $.post("../php/back_serviceorder.php", {
-        action:'verify_late_services',
+        action: 'verify_late_services',
         entry: moment().startOf("month").format("YYYY-MM-DD"),
         exit: lastDay
       })

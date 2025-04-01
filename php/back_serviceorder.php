@@ -120,7 +120,11 @@ switch ($data->action) {
       $query .= " AND s.servicexit = '$data->exit'";
     }
 
-    $query .= " ORDER BY s.serviceorder DESC";
+    $query .= " ORDER BY CASE
+             WHEN s.servicestatus = 5 THEN 0
+             ELSE 1
+         END,
+    s.serviceorder DESC";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute();
@@ -365,6 +369,24 @@ switch ($data->action) {
         $stmt->execute([':id' => $value['id']]);
       }
     }
-    
+    break;
+  case 'notify_late_services':
+    $stmt = $pdo->prepare("SELECT
+        COUNT(s.`servicestatus`) as count
+        FROM serviceorders s
+        WHERE s.servicestatus = 5
+        AND STATUS = 1
+      ");
+    $stmt->execute() or die("Failed to execute");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
+
+    $response = [];
+    foreach ($results as $key => $value) {
+      $response[] = [
+        'count' => $value['count'],
+      ];
+    }
+
+    echo (json_encode($response));
     break;
 }
