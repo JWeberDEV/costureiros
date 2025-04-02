@@ -17,11 +17,10 @@ $pdf->Ln(20);
 $pdf->Cell(0, 10, "Cliente: $data->name  Entrada: $data->entry Saida: $data->exit", 0, 1, 'C');
 $pdf->SetFont('helvetica', '', 10);
 $top = __DIR__ . '/../assets/img/walpaper.png';
-$bottom = __DIR__ . '/../assets/img/chave.jpg';
+$bottom = __DIR__ . '/../assets/img/pix.jpg';
+$currentY = $pdf->GetY();
 
-// Position at (X = 15mm, Y = 140mm), width = 50mm, height = auto
 $pdf->Image($top, 10, 11, 25, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
-$pdf->Image($bottom, 10, 150, 35, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false);
 
 $table = '
   <table border="0" cellpadding="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
@@ -113,23 +112,13 @@ $table .= '
     <td style="padding: 8px;"></td>
     <td style="padding: 8px; text-align: right;"><strong>Total</strong><strong> R$: ' . number_format($total, 2, '.', ',') . '</strong></td>
   </tr>
-';
-// Roupas não retiradas até 60 dias após as data de entrega, serão encaminhadas para doação.
-$table .= '</tbody></table>
-  <br>
-  <div style="background-color:#2e2d2d;">
-    <p><strong style="color:#fff; font-size:20px; text-align: center;">Roupas não retiradas até 60 dias 
-      após a data de entrega, serão encaminhadas para doação.
-    </strong></p>
-  </div>
-  <br>
-  <div style="margin-top:0px;">
-    <p><strong style=" font-size:20px; text-align: center;">
-      Email: costureiros.nh@gmail.com
-    </strong></p>
-  </div>
+  </tbody></table>
 ';
 
 $pdf->writeHTML($table);
+
+$currentY = $pdf->GetY();
+$currentX = $pdf->GetX();
+$pdf->Image($bottom, $currentX + 15, $currentY, 160, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false);
 
 $pdf->Output('Ordem de Serviço.pdf', 'I');
