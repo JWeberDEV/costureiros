@@ -234,11 +234,12 @@
       });
 
       function notifyLateServices() {
+        let count ="";
         $.post("../php/back_serviceorder.php", {
           action: "notify_late_services",
         }).done(function(response) {
           let data = JSON.parse(response);
-          let count = data.reduce((acc, item) => acc + item.count, 0);
+          count = data.reduce((acc, item) => acc + item.count, 0);
 
           if (count > 0) {
             if (Notification.permission === "granted") {
@@ -250,7 +251,7 @@
           }
         }).then(() => {
           let audio = new Audio("../assets/sounds/notification.mp3");
-          // audio.play();
+          audio.play();
 
         });
       }
