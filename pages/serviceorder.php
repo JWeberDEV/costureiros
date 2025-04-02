@@ -244,7 +244,7 @@
           if (count > 0) {
             if (Notification.permission === "granted") {
               new Notification("Late Services Alert", {
-                body: `You have ${count} late service(s)!`,
+                body: `Você tem ${count} Ordens de serviços atrasadas`,
               });
               $('#notification').html(count);
             }
