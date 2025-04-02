@@ -286,13 +286,13 @@ switch ($data->action) {
 
     if ($data->ticketid) {
       $query .= " AND (
-          t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.ticket IS NOT NULL AND s.servicestatus = 0)
+          t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.ticket IS NOT NULL AND s.servicestatus = 2)
           OR t.id = $data->ticketid
         )
         ORDER BY t.id
       ";
     } else {
-      $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.servicestatus = 0)
+      $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.servicestatus = 2)
         ORDER BY t.id
       ";
     }
