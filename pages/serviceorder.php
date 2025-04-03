@@ -234,24 +234,30 @@
       });
 
       function notifyLateServices() {
+        var localNotify = localStorage.getItem("localNotify");
         let count ="";
         $.post("../php/back_serviceorder.php", {
           action: "notify_late_services",
         }).done(function(response) {
           let data = JSON.parse(response);
           count = data.reduce((acc, item) => acc + item.count, 0);
+          $('#notification').html(localNotify);
+
+          if (localNotify == count) {
+            return;
+          }
 
           if (count > 0) {
             if (Notification.permission === "granted") {
-              new Notification("Late Services Alert", {
+              new Notification("Alerta de ordem de serviço", {
                 body: `Você tem ${count} Ordens de serviços atrasadas`,
               });
-              $('#notification').html(count);
             }
+            localStorage.setItem("localNotify", count);
           }
         }).then(() => {
           let audio = new Audio("../assets/sounds/notification.mp3");
-          // audio.play();
+          
         });
       }
 
