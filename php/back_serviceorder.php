@@ -356,6 +356,7 @@ switch ($data->action) {
         servicestatus
       FROM serviceorders
       WHERE servicexit BETWEEN '$data->entry' AND '$data->exit'
+      AND servicestatus NOT IN (2)
       AND status = 1
     ");
 

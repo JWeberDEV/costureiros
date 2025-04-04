@@ -460,6 +460,7 @@
         entry: moment().startOf("month").format("YYYY-MM-DD"),
         exit: lastDay
       })
+      listServiccesOrders();
     }
   </script>
   <!-- Github buttons -->
