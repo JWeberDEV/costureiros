@@ -82,6 +82,7 @@
                         <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-success" onclick="finishOs(2)">Encerrada</a></li>
                         <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-info" onclick="finishOs(3)">Criada</a></li>
                         <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-primary" onclick="finishOs(4)">Aguardando entrega</a></li>
+                        <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-secondary" onclick="finishOs(6)">Atraso de retirada</a></li>
                       </ul>
                     </div>
                   </div>

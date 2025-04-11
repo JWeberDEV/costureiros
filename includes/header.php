@@ -18,4 +18,5 @@
 <script src="../assets/libs/selectize/selectize.js"></script>
 <!-- Datatable -->
 <link rel="stylesheet" href="../assets/libs/datatable/datatable.css">
-
+<!-- Daterangepicker -->
+<link rel="stylesheet" href="../assets/libs/daterangepicker/daterangepicker.css">

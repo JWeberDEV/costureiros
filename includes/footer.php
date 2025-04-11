@@ -9,3 +9,4 @@
 <script src="../assets/libs/daterangepicker/daterangepicker.js"></script>
 <script src="../assets/libs/jQueryMask/dist/jquery.mask.js"></script>
 <script src="../assets/js/moment.js"></script>
+<script src="../assets/libs/daterangepicker/daterangepicker.js"></script>

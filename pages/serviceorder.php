@@ -61,18 +61,19 @@
                 <button type="button" class="btn bg-gradient-dark w-100 m-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Nova Ordem de Serviço">Nova OS</button>
               </a>
             </div>
-            <div class="col-7">
-              <div class="row text-end">
+            <div class="col-8">
+              <div class="row text-center">
                 <h5>
                   <span class="badge bg-gradient-warning">Em andamento</span>
-                  <span class="ms-2 badge bg-gradient-success">Encerrada</span>
-                  <span class="ms-2 badge bg-gradient-info">Criada</span>
-                  <span class="ms-2 badge bg-gradient-primary">Aguardando entrega</span>
-                  <span class="ms-2 badge bg-gradient-danger">Em Atraso</span>
+                  <span class="ms-1 badge bg-gradient-success">Encerrada</span>
+                  <span class="ms-1 badge bg-gradient-info">Criada</span>
+                  <span class="ms-1 badge bg-gradient-primary">Aguardando entrega</span>
+                  <span class="ms-1 badge bg-gradient-danger">Em Atraso</span>
+                  <span class="ms-1 badge bg-gradient-secondary">Atraso de retirada</span>
                 </h5>
               </div>
             </div>
-            <div class="col-3 text-end">
+            <div class="col-2 text-end">
               <button type="button" class="btn bg-gradient-dark notify" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OS Em Atraso" onClick="verifyLateServices();">
                 <i class='material-symbols-rounded'>e911_emergency</i>
                 <span id="notification" style="border-radius: 5px; padding: 2px" class="bg-gradient-danger"></span>
@@ -98,16 +99,17 @@
               </select>
             </div>
           </div>
-          <div class="col-2">
-            <div class="input-group input-group-outline my-3 entry  ">
-              <label class="form-label">Entrada</label>
-              <input id="entry" type="date" class="form-control">
+          <div class="col-2 ">
+            <div class="input-group input-group-outline my-3">
+              <label class="form-label">Tipo de Periodo</label>
+              <select id="period" class="form-select" placeholder="Tipo de periodo">
+              </select>
             </div>
           </div>
           <div class="col-2">
-            <div class="input-group input-group-outline my-3 exit">
-              <label class="form-label">Saida</label>
-              <input id="exit" type="date" class="form-control">
+            <div class="input-group input-group-outline my-3 date  ">
+              <label class="form-label">Intervalo</label>
+              <input id="date" type="text" class="form-control">
             </div>
           </div>
           <div class='col-2 mt-2 text-center'>
@@ -148,9 +150,7 @@
   <?php require_once("../includes/footer.php") ?>
   <script>
     const firstDay = moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD");
-    const lastDay = moment().endOf("month").format("YYYY-MM-DD");
-    $('#entry').val(firstDay);
-    $('#exit').val(lastDay);
+    $('#date').val(firstDay);
     let client = "";
     let statusService = "";
 
@@ -162,12 +162,44 @@
     }
 
     $(document).ready(function() {
+      $(function() {
+        $('#date').daterangepicker({
+          timePicker: true,
+          startDate: moment().startOf('month'),
+          endDate: moment().endOf('month'),
+          locale: {
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Cancelar",
+            fromLabel: "De",
+            toLabel: "Até",
+            weekLabel: "S",
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+            monthNames: [
+              "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+              "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ],
+            firstDay: 0 // Domingo como primeiro dia da semana
+          },
+          ranges: {
+            "Hoje": [moment().startOf('day'), moment().endOf('day')],
+            "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+            "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+            "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+            "Este Mês": [moment().startOf('month'), moment().endOf('month')],
+            "Mês Passado": [
+              moment().subtract(1, 'month').startOf('month'),
+              moment().subtract(1, 'month').endOf('month')
+            ]
+          }
+        });
+      });
+
       $('.notify').click();
       setTimeout(() => {
         listServiccesOrders();
       }, 10);
-      $(`.entry`).addClass('is-filled');
-      $(`.exit`).addClass('is-filled');
+      $(`.date`).addClass('is-filled');
 
       let clientSelectize = $(`#client`).selectize({
         plugins: ["clear_button"],
@@ -219,9 +251,35 @@
 
       });
 
-      statusService = statusServiceSelectize[0].selectize;      
+      statusService = statusServiceSelectize[0].selectize;
+
+      let periodSelectize = $(`#period`).selectize({
+        plugins: ["clear_button"],
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ['name'],
+        sortField: 'name',
+        create: false,
+        options: [
+
+          {
+            id: 1,
+            name: 'Entrada'
+          },
+          {
+            id: 2,
+            name: 'Saida'
+          },
+        ],
+        onInitialize: function() {
+          this.setValue(1);
+        }
+      });
+
+      periodService = periodSelectize[0].selectize;
+
       notifyLateServices();
-      
+
       if (Notification.permission !== "granted") {
         Notification.requestPermission();
       }
@@ -235,7 +293,7 @@
 
       function notifyLateServices() {
         var localNotify = localStorage.getItem("localNotify");
-        let count ="";
+        let count = "";
         $.post("../php/back_serviceorder.php", {
           action: "notify_late_services",
         }).done(function(response) {
@@ -257,7 +315,7 @@
           }
         }).then(() => {
           let audio = new Audio("../assets/sounds/notification.mp3");
-          
+
         });
       }
 
@@ -266,17 +324,17 @@
     const clearfilters = () => {
       client.clear();
       statusService.clear();
-      $('#entry').val('');
-      $('#exit').val('');
+      $('#date').val('');
+      $('#period').val('');
     }
 
     const listServiccesOrders = () => {
       $.post("../php/back_serviceorder.php", {
           action: "list_serviceorders",
           client: $('#client').val(),
-          status: $('#status').val() != '' ? $('#status').val() : 6,
-          entry: $('#entry').val(),
-          exit: $('#exit').val(),
+          status: $('#status').val() != '' ? $('#status').val() : 7,
+          period: $('#period').val(),
+          date: $('#date').val(),
         })
         .done(function(response) {
           response = JSON.parse(response);
@@ -440,14 +498,13 @@
     }
 
     const exportBalance = () => {
-      let entry = $('#entry').val() || 0;
-      let exit = $('#entry').val() || 0;
+      let date = $('#date').val() || 0;
       let client = $('#client').val();
       let status = $('#status').val() || 0;
       let url;
 
-      url = `../php/export_balance_excel.php?exit=${encodeURIComponent(entry)}
-      &entry=${encodeURIComponent(exit)}
+      url = `../php/export_balance_excel.php?
+      &date=${encodeURIComponent(date)}
       &client=${encodeURIComponent(client)}
       &status=${encodeURIComponent(status)}`;
 
@@ -455,10 +512,11 @@
     }
 
     const verifyLateServices = () => {
+      const lastDay = moment().endOf("month").format("YYYY-MM-DD");
       $.post("../php/back_serviceorder.php", {
         action: 'verify_late_services',
         entry: moment().startOf("month").format("YYYY-MM-DD"),
-        exit: lastDay
+        out: lastDay
       })
       listServiccesOrders();
     }

@@ -81,6 +81,11 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'list_serviceorders':
+    list($start, $end) = explode(' - ', $data->date);
+
+    $start = DateTime::createFromFormat('d/m/Y', $start)->format('Y-m-d');
+    $end = DateTime::createFromFormat('d/m/Y', $end)->format('Y-m-d');
+
     $query = "SELECT 
         s.id,
         s.serviceorder,
@@ -108,16 +113,14 @@ switch ($data->action) {
       $query .= " AND c.id = $data->client";
     }
 
-    if (isset($data->status) && $data->status != 6) {
+    if (isset($data->status) && $data->status != 7) {
       $query .= " AND s.servicestatus = $data->status";
     }
 
-    if ($data->entry && $data->exit) {
-      $query .= " AND s.sevicentry BETWEEN '$data->entry' AND '$data->exit'";
-    } else if ($data->entry) {
-      $query .= " AND s.sevicentry >= '$data->entry'";
-    } else if ($data->exit) {
-      $query .= " AND s.servicexit = '$data->exit'";
+    if ($data->period == 1) {
+      $query .= " AND s.sevicentry BETWEEN '$start' AND '$end'";
+    } else {
+      $query .= " AND s.servicexit BETWEEN '$start' AND '$end'";
     }
 
     $query .= " ORDER BY CASE
@@ -355,8 +358,8 @@ switch ($data->action) {
         servicexit,
         servicestatus
       FROM serviceorders
-      WHERE servicexit BETWEEN '$data->entry' AND '$data->exit'
-      AND servicestatus NOT IN (2)
+      WHERE servicexit BETWEEN '$data->entry' AND '$data->out'
+      AND servicestatus NOT IN (2,6)
       AND status = 1
     ");
 
@@ -367,7 +370,12 @@ switch ($data->action) {
     foreach ($results as $key => $value) {
       $serviceExitDate = new DateTime($value['servicexit']);
 
-      if ($currentDate > $serviceExitDate && $value['servicestatus'] != 5) {
+      if ($currentDate > $serviceExitDate && $value['servicestatus'] == 4) {
+        $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = 6 WHERE id = :id");
+        $stmt->execute([':id' => $value['id']]);
+      }
+
+      if ($currentDate > $serviceExitDate && !in_array($value['servicestatus'], [4, 5])) {
         $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = 5 WHERE id = :id");
         $stmt->execute([':id' => $value['id']]);
       }
