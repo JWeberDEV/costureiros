@@ -6,6 +6,7 @@ $response = (object) [];
 
 switch ($data->action) {
   case 'save_service':
+    $data->service = ucwords($data->service);
     $arrayData = [
       'service' => "$data->service",
       'price' => "$data->price",

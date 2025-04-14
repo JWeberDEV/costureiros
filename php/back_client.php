@@ -7,9 +7,9 @@ $response = (object) [];
 switch ($data->action) {
   case 'save_client':
 
-    // Decalara os Valores para usar o prepare
+    $data->name = ucwords($data->name);
     $arrayData = [
-      'name' => "$data->name",
+      'name' => "ucwords($data->name)",
       'phone' => "$data->phone",
       'phoneOption' => "$data->phoneOption",
       'cep' => "$data->cep",
