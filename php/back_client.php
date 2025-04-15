@@ -9,7 +9,7 @@ switch ($data->action) {
 
     $data->name = ucwords($data->name);
     $arrayData = [
-      'name' => "ucwords($data->name)",
+      'name' => "$data->name",
       'phone' => "$data->phone",
       'phoneOption' => "$data->phoneOption",
       'cep' => "$data->cep",

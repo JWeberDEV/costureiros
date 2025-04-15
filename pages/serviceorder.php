@@ -64,12 +64,12 @@
             <div class="col-8">
               <div class="row text-center">
                 <h6>
-                  <span class="badge bg-gradient-warning">Em andamento</span>
-                  <span class="ms-1 badge bg-gradient-success">Encerrada</span>
                   <span class="ms-1 badge bg-gradient-info">Criada</span>
+                  <span class="badge bg-gradient-warning">Em andamento</span>
                   <span class="ms-1 badge bg-gradient-primary">Aguardando entrega</span>
                   <span class="ms-1 badge bg-gradient-danger">Em Atraso</span>
                   <span class="ms-1 badge bg-gradient-secondary">Atraso de retirada</span>
+                  <span class="ms-1 badge bg-gradient-success">Encerrada</span>
                 </h6>
               </div>
             </div>
@@ -246,6 +246,9 @@
           }, {
             id: 6,
             name: 'Todas'
+          },{
+            id: 7,
+            name: 'Atraso de Retirada'
           }
         ],
 

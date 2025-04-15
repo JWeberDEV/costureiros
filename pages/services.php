@@ -67,7 +67,7 @@
             </div>
           </div>
           <div class="col-1 text-end pt-3 ps-5">
-            <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listServicces();">
+            <button type="button" id='search' class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listServicces();">
               <i class='material-symbols-rounded'>search</i>
             </button>
           </div>
@@ -98,6 +98,12 @@
   <script>
     $(document).ready(function() {
       listServicces();
+    });
+
+    $("#service").keyup(function(data) {
+      if (data.keyCode === 13) {
+        $("#search").click();
+      }
     });
 
     const listServicces = () => {
