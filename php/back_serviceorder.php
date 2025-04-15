@@ -369,8 +369,10 @@ switch ($data->action) {
 
     foreach ($results as $key => $value) {
       $serviceExitDate = new DateTime($value['servicexit']);
+      $exitDate = new DateTime($value['servicexit']);
+      $exitDate->modify('+1 day');
 
-      if ($currentDate > $serviceExitDate && $value['servicestatus'] == 4) {
+      if ($currentDate > $exitDate && $value['servicestatus'] == 4) {
         $stmt = $pdo->prepare("UPDATE serviceorders SET servicestatus = 6 WHERE id = :id");
         $stmt->execute([':id' => $value['id']]);
       }
