@@ -400,11 +400,7 @@
         const idOrder = args?.element?.idorder ? `${args.element.idorder}` : '';
         const service = args?.element?.service ? `placeholder=${args.element.service}` : 'placeholder="Selecione o Serviço"';
         let id = '';
-        let classstyle = "";
-        if (args.row) {
-          row = args.row;
-          classstyle = "is-filled";
-        }
+        let classstyle = "is-filled";
 
         $('.lines').append(`
         <tr class='line' row='${row}' idOrder='${idOrder}' idService='${selectId}'>
