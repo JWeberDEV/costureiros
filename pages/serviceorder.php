@@ -63,14 +63,14 @@
             </div>
             <div class="col-8">
               <div class="row text-center">
-                <h5>
+                <h6>
                   <span class="badge bg-gradient-warning">Em andamento</span>
                   <span class="ms-1 badge bg-gradient-success">Encerrada</span>
                   <span class="ms-1 badge bg-gradient-info">Criada</span>
                   <span class="ms-1 badge bg-gradient-primary">Aguardando entrega</span>
                   <span class="ms-1 badge bg-gradient-danger">Em Atraso</span>
                   <span class="ms-1 badge bg-gradient-secondary">Atraso de retirada</span>
-                </h5>
+                </h6>
               </div>
             </div>
             <div class="col-2 text-end">
