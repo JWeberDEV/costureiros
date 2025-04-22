@@ -655,9 +655,10 @@
           })
           .done(function(response) {
             response = JSON.parse(response);
+            $('#infoToast').removeClass('bg-gradient-danger','bg-gradient-warning','bg-gradient-success');
             $('#infoToast').addClass(response.class);
-            $('.html').html(response.message);
             $('#infoToast').toast('show');
+            $('.html').html(response.message);
             $('#save').removeAttr('disabled');
             $('.notload').show();
             $('.load').hide();

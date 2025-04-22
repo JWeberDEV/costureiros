@@ -324,6 +324,13 @@
 
     });
 
+    // const saveFIlds = () => {
+    //   localStorage.setItem('client', valor)
+    //   localStorage.setItem('status', valor)
+    //   localStorage.setItem('typePeriod', valor)
+    //   localStorage.setItem('period', valor)
+    // }
+
     const clearfilters = () => {
       client.clear();
       statusService.clear();

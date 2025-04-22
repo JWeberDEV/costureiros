@@ -95,7 +95,7 @@ switch ($data->action) {
         s.remainder,
         SUM(CASE 
             WHEN s.incoming > 0 THEN s.incoming
-            WHEN s.servicestatus = 1 THEN s.total
+            WHEN s.servicestatus = 2 THEN s.total
             ELSE 0
         END) OVER() AS sumInCash,
         SUM(s.total) OVER() AS sumTotal,
