@@ -117,7 +117,7 @@
             <Strong class='pt-3' id='labelTotal'></Strong>
           </div>
           <div class="col-2 text-end mt-3 pe-4">
-            <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listServiccesOrders();">
+            <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar" onClick="listServiccesOrders(),saveFields();">
               <i class='material-symbols-rounded'>search</i>
             </button>
             <button type="button" class="btn bg-gradient-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Limpar Filtros" onClick="clearfilters();">
@@ -225,7 +225,6 @@
         sortField: 'name',
         create: false,
         options: [
-
           {
             id: 1,
             name: 'Em andamento'
@@ -245,10 +244,10 @@
             name: 'Em Atraso'
           }, {
             id: 6,
-            name: 'Todas'
-          },{
-            id: 7,
             name: 'Atraso de Retirada'
+          }, {
+            id: 7,
+            name: 'Todas'
           }
         ],
 
@@ -322,14 +321,40 @@
         });
       }
 
+      setFields();
     });
 
-    // const saveFIlds = () => {
-    //   localStorage.setItem('client', valor)
-    //   localStorage.setItem('status', valor)
-    //   localStorage.setItem('typePeriod', valor)
-    //   localStorage.setItem('period', valor)
-    // }
+    const saveFields = () => {
+      localStorage.setItem('client', $('#client').val())
+      localStorage.setItem('status', $('#status').val())
+      localStorage.setItem('period', $('#period').val())
+      localStorage.setItem('date', $('#date').val())
+    }
+
+    const setFields = () => {
+      var clientInput = localStorage.getItem('client');
+      var status = localStorage.getItem('status');
+      var period = localStorage.getItem('period');
+      var date = localStorage.getItem('date');
+
+      setTimeout(() => {
+        client.setValue([clientInput]);
+        statusService.setValue([status]);
+        periodService.setValue([period]);
+        $("#date").val(date);
+      }, 1200);
+      setTimeout(() => {
+        listServiccesOrders();
+      }, 1300);
+
+      setTimeout(() => {
+        localStorage.removeItem('client');
+        localStorage.removeItem('status');
+        localStorage.removeItem('period');
+        localStorage.removeItem('date');
+      }, 1400)
+
+    }
 
     const clearfilters = () => {
       client.clear();
