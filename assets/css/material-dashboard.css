@@ -22336,6 +22336,101 @@ fieldset:disabled .btn {
   color: #1A237E;
 }
 
+.btn.bg-gradient-custom {
+  background-image: linear-gradient(195deg, #c8ad98 0%, #a68b75 100%);
+  color: #fff;
+  box-shadow: 0 2px 2px 0 rgba(200, 173, 152, 0.1),
+    0 3px 1px -2px rgba(200, 173, 152, 0.18),
+    0 1px 5px 0 rgba(200, 173, 152, 0.15);
+}
+
+.btn.bg-gradient-custom:hover {
+  background-color: #c8ad98;
+  border-color: #c8ad98;
+  box-shadow: 0 8px 14px -8px rgba(200, 173, 152, 0.3),
+    0 3px 18px 0 rgba(200, 173, 152, 0.1),
+    0 7px 8px -4px rgba(200, 173, 152, 0.18);
+}
+
+.btn.bg-gradient-custom:focus,
+.btn.bg-gradient-custom.focus {
+  color: #fff;
+  box-shadow: 0 0 0 0.2rem rgba(200, 173, 152, 0.5);
+}
+
+.btn.bg-gradient-custom:not(:disabled):not(.disabled).active,
+.btn.bg-gradient-custom:not(:disabled):not(.disabled):active,
+.show > .btn.bg-gradient-custom.dropdown-toggle {
+  color: #fff;
+  background-color: #c8ad98;
+  box-shadow: 0 5px 10px 2px rgba(200, 173, 152, 0.3);
+}
+
+.btn.bg-outline-custom {
+  border: 1px solid #c8ad98;
+  color: #c8ad98;
+  background-color: transparent;
+}
+
+.btn.bg-outline-custom:hover {
+  background-color: #c8ad98;
+  color: #fff;
+}
+
+.btn-custom.focus,
+.btn-custom:focus,
+.btn.bg-gradient-custom.focus,
+.btn.bg-gradient-custom:focus {
+  color: #fff;
+}
+
+.btn.bg-gradient-purple {
+  background-image: linear-gradient(195deg, #8e24aa 0%, #6a1b9a 100%);
+  color: #fff;
+  box-shadow: 0 2px 2px 0 rgba(142, 36, 170, 0.1),
+    0 3px 1px -2px rgba(142, 36, 170, 0.18),
+    0 1px 5px 0 rgba(142, 36, 170, 0.15);
+}
+
+.btn.bg-gradient-purple:hover {
+  background-color: #8e24aa;
+  border-color: #8e24aa;
+  box-shadow: 0 8px 14px -8px rgba(142, 36, 170, 0.3),
+    0 3px 18px 0 rgba(142, 36, 170, 0.1),
+    0 7px 8px -4px rgba(142, 36, 170, 0.18);
+}
+
+.btn.bg-gradient-purple:focus,
+.btn.bg-gradient-purple.focus {
+  color: #fff;
+  box-shadow: 0 0 0 0.2rem rgba(142, 36, 170, 0.5);
+}
+
+.btn.bg-gradient-purple:not(:disabled):not(.disabled).active,
+.btn.bg-gradient-purple:not(:disabled):not(.disabled):active,
+.show > .btn.bg-gradient-purple.dropdown-toggle {
+  color: #fff;
+  background-color: #8e24aa;
+  box-shadow: 0 5px 10px 2px rgba(142, 36, 170, 0.3);
+}
+
+.btn.bg-outline-purple {
+  border: 1px solid #8e24aa;
+  color: #8e24aa;
+  background-color: transparent;
+}
+
+.btn-outline-dark-blue {
+  box-shadow: none;
+}
+
+.btn-purple.focus,
+.btn-purple:focus,
+.btn.bg-gradient-purple.focus,
+.btn.bg-gradient-purple:focus {
+  color: #fff;
+}
+
 .btn-outline-white {
   border-color: rgba(255, 255, 255, 0.75);
   background: rgba(255, 255, 255, 0.1);
@@ -23837,7 +23932,7 @@ body.dark-version {
 
 .form-check:not(.form-switch) .form-check-input[type=checkbox]:after {
   transition: opacity 0.25s ease-in-out;
-  font-family: "FontAwesome";
+  font-family: "Font Awesome";
   content: "\f00c";
   width: 100%;
   height: 100%;
@@ -24059,6 +24154,18 @@ label,
 
 .bg-gradient-dark {
   background-image: linear-gradient(195deg, #42424a 0%, #191919 100%);
+}
+
+.bg-gradient-dark-blue {
+  background-image: linear-gradient(195deg, #1A237E 0%, #0D47A1 100%);
+}
+
+.bg-gradient-purple {
+  background-image: linear-gradient(195deg, #8E24AA 0%, #6A1B9A 100%);
+}
+
+.bg-gradient-custom {
+  background-image: linear-gradient(195deg, #C8AD98 0%, #A68B75 100%);
 }
 
 .bg-gradient-faded-primary {

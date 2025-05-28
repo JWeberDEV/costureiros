@@ -30,15 +30,20 @@ switch ($data->action) {
       if ($execute) {
         foreach ($data->data as $key => $value) {
 
-          $stmt = $pdo->prepare(
-            "UPDATE orders SET
+          if ($value['order']) {
+            $stmt = $pdo->prepare(
+              "UPDATE orders SET
                 idservice = '{$value['idService']}',
                 item = '{$value['item']}',
                 price = '{$value['price']}',
                 discount = '{$value['discount']}',
                 obs = '{$value['obs']}'
               WHERE id = {$value['order']}"
-          );
+            );
+          } else {
+            $stmt = $pdo->prepare("INSERT INTO orders (idserviceorders, idservice, item,price, discount, obs)
+            VALUES($data->id, {$value['idService']}, '{$value['item']}',{$value['price']}, {$value['discount']}, '{$value['obs']}')");
+          }
 
           $update = $stmt->execute();
         }
@@ -81,10 +86,12 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'list_serviceorders':
-    list($start, $end) = explode(' - ', $data->date);
+    if ($data->date) {
+      list($start, $end) = explode(' - ', $data->date);
 
-    $start = DateTime::createFromFormat('d/m/Y', $start)->format('Y-m-d');
-    $end = DateTime::createFromFormat('d/m/Y', $end)->format('Y-m-d');
+      $start = DateTime::createFromFormat('d/m/Y', $start)->format('Y-m-d');
+      $end = DateTime::createFromFormat('d/m/Y', $end)->format('Y-m-d');
+    }
 
     $query = "SELECT 
         s.id,
@@ -119,7 +126,7 @@ switch ($data->action) {
 
     if ($data->period == 1) {
       $query .= " AND s.sevicentry BETWEEN '$start' AND '$end'";
-    } else {
+    } else if ($data->period == 2) {
       $query .= " AND s.servicexit BETWEEN '$start' AND '$end'";
     }
 
@@ -289,13 +296,13 @@ switch ($data->action) {
 
     if ($data->ticketid) {
       $query .= " AND (
-          t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.ticket IS NOT NULL AND s.servicestatus IN (1,3,4,5) AND s.`status` = 1)
+          t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.ticket IS NOT NULL AND s.servicestatus IN (1,3,4,5,6) AND s.`status` = 1)
           OR t.id = $data->ticketid
         )
         ORDER BY t.id
       ";
     } else {
-      $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.servicestatus IN (1,3,4,5) AND s.`status` = 1)
+      $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.servicestatus IN (1,3,4,5,6) AND s.`status` = 1)
         ORDER BY t.id
       ";
     }
