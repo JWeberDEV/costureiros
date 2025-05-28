@@ -10,6 +10,7 @@
     Novo Cliente
   </title>
   <?php require_once("../includes/header.php") ?>
+  <?php require_once("../includes/scripsJs.php") ?>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -164,11 +165,11 @@
                 <div class="row justify-content-end">
                   <div class="col-1 notload"><button id="save" type="button" class="btn bg-gradient-dark mt-2" onclick="saveClient();">Salvar</button></div>
                   <div class="col-1 load">
-                  <button class="btn  bg-gradient-dark mt-2" type="button" disabled>
-                    <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-                    <span class="visually-hidden" role="status">Loading...</span>
-                  </button>
-                </div>
+                    <button class="btn  bg-gradient-dark mt-2" type="button" disabled>
+                      <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                      <span class="visually-hidden" role="status">Loading...</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -178,8 +179,6 @@
     </div>
     </div>
   </main>
-  <!--   Core JS Files   -->
-  <?php require_once("../includes/footer.php") ?>
 
   <script>
     $(document).ready(function() {
@@ -323,10 +322,6 @@
         });
     }
   </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
 
 </html>

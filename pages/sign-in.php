@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -17,10 +18,9 @@
   <link href="../assets/libs/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
   <!-- Material Icons -->
   <link rel="stylesheet" href="../assets/css/google-icons.css" />
-  <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <!-- JQuery -->
   <script src="../assets/js/jquery.js"></script>
+  <?php require_once("../includes/footer.php") ?>
 </head>
 
 <body class="bg-gray-200">
@@ -61,7 +61,7 @@
                   <div class="text-center">
                     <button id="login" type="button" class="btn bg-gradient-dark w-100 my-4 mb-2" onclick="login();">Entrar</button>
                   </div>
-                </div>
+              </div>
               </form>
             </div>
           </div>
@@ -84,11 +84,6 @@
     </footer>
     </div>
   </main>
-  <!--   Core JS Files   -->
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -143,10 +138,6 @@
       login();
     });
   </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
 
 </html>

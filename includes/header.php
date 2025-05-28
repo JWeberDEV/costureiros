@@ -8,7 +8,7 @@
 <!-- Material Icons -->
 <link rel="stylesheet" href="../assets/css/google-icons.css" />
 <!-- CSS Files -->
-<link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+<link id="pagestyle" href="../assets/css/material-dashboard.css" rel="stylesheet" />
 <!-- JQuery -->
 <script src="../assets/js/jquery.js"></script>
 <!-- swall -->

@@ -10,6 +10,7 @@
     Nova Ordem de Serviço
   </title>
   <?php require_once("../includes/header.php") ?>
+  <?php require_once("../includes/scripsJs.php") ?>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -263,8 +264,6 @@
         </div>
       </div>
     </div>
-    <!--   Core JS Files   -->
-    <?php require_once("../includes/footer.php") ?>
 
     <script>
       $.fn.toNumber = function() {
@@ -655,7 +654,7 @@
           })
           .done(function(response) {
             response = JSON.parse(response);
-            $('#infoToast').removeClass('bg-gradient-danger','bg-gradient-warning','bg-gradient-success');
+            $('#infoToast').removeClass('bg-gradient-danger', 'bg-gradient-warning', 'bg-gradient-success');
             $('#infoToast').addClass(response.class);
             $('#infoToast').toast('show');
             $('.html').html(response.message);
@@ -885,10 +884,6 @@
         });
       }
     </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
 
 </html>

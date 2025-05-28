@@ -394,7 +394,7 @@ function initNavs() {
     var moving_div = document.createElement('div');
     var first_li = item.querySelector('li:first-child .nav-link');
     var tab = first_li.cloneNode();
-    tab.innerHTML = "-";
+    tab.innerHTML = "&nbsp;";
 
     moving_div.classList.add('moving-tab', 'position-absolute', 'nav-link');
     moving_div.appendChild(tab);
@@ -446,7 +446,7 @@ window.addEventListener('resize', function(event) {
     item.querySelector('.moving-tab').remove();
     var moving_div = document.createElement('div');
     var tab = item.querySelector(".nav-link.active").cloneNode();
-    tab.innerHTML = "-";
+    tab.innerHTML = "&nbsp;";
 
     moving_div.classList.add('moving-tab', 'position-absolute', 'nav-link');
     moving_div.appendChild(tab);
@@ -554,6 +554,29 @@ window.onload = function() {
     };
 
     inputs[i].addEventListener('focusout', function(e) {
+      if (this.value != "") {
+        this.parentElement.classList.add('is-filled');
+      }
+      this.parentElement.classList.remove('is-focused');
+    }, false);
+  }
+
+  var selects = document.querySelectorAll('select');
+
+  for (var i = 0; i < selects.length; i++) {
+    selects[i].addEventListener('focus', function(e) {
+      this.parentElement.classList.add('is-focused');
+    }, false);
+
+    selects[i].addEventListener('change', function(e) {
+      if (this.value != "") {
+        this.parentElement.classList.add('is-filled');
+      } else {
+        this.parentElement.classList.remove('is-filled');
+      }
+    }, false);
+
+    selects[i].addEventListener('focusout', function(e) {
       if (this.value != "") {
         this.parentElement.classList.add('is-filled');
       }

@@ -10,6 +10,7 @@
     Ordens de Serviço
   </title>
   <?php require_once("../includes/header.php") ?>
+  <?php require_once("../includes/scripsJs.php") ?>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -106,7 +107,7 @@
           </div>
           <div class="col-2 ">
             <div class="input-group input-group-outline my-3">
-              <label class="form-label">Tipo de Periodo</label>
+              <label class="form-label ">Tipo de Periodo</label>
               <select id="period" class="form-select" placeholder="Tipo de periodo">
               </select>
             </div>
@@ -153,242 +154,240 @@
       </div>
     </div>
   </main>
-  <!--   Core JS Files   -->
-  <?php require_once("../includes/footer.php") ?>
   <script>
-  const firstDay = moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD");
-  $('#date').val(firstDay);
-  let client = "";
-  let statusService = "";
+    const firstDay = moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD");
+    $('#date').val(firstDay);
+    let client = "";
+    let statusService = "";
 
-  const fetchClients = async () => {
-    const response = await $.post("../php/back_serviceorder.php", {
-      action: 'load_clients'
-    })
-    return JSON.parse(response);
-  }
-
-  $(document).ready(function() {
-    $(function() {
-      $('#date').daterangepicker({
-        timePicker: true,
-        startDate: moment().startOf('month'),
-        endDate: moment().endOf('month'),
-        locale: {
-          format: 'DD/MM/YYYY',
-          applyLabel: "Aplicar",
-          cancelLabel: "Cancelar",
-          fromLabel: "De",
-          toLabel: "Até",
-          weekLabel: "S",
-          daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
-          monthNames: [
-            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-          ],
-          firstDay: 0 // Domingo como primeiro dia da semana
-        },
-        ranges: {
-          "Hoje": [moment().startOf('day'), moment().endOf('day')],
-          "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-          "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
-          "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
-          "Este Mês": [moment().startOf('month'), moment().endOf('month')],
-          "Mês Passado": [
-            moment().subtract(1, 'month').startOf('month'),
-            moment().subtract(1, 'month').endOf('month')
-          ]
-        }
-      });
-    });
-
-    $('.notify').click();
-    setTimeout(() => {
-      listServiccesOrders();
-    }, 10);
-    $(`.date`).addClass('is-filled');
-
-    let clientSelectize = $(`#client`).selectize({
-      plugins: ["clear_button"],
-      valueField: 'id',
-      labelField: 'name',
-      searchField: ['name'],
-      sortField: 'name',
-      create: false,
-    });
-
-    client = clientSelectize[0].selectize;
-
-    fetchClients().then(response => {
-      client.addOption(response);
-      client.refreshOptions(false);
-    });
-
-    let statusServiceSelectize = $(`#status`).selectize({
-      plugins: ["clear_button"],
-      valueField: 'id',
-      labelField: 'name',
-      searchField: ['name'],
-      sortField: 'name',
-      create: false,
-      options: [{
-          id: 1,
-          name: 'Em andamento'
-        },
-        {
-          id: 2,
-          name: 'Encerrada'
-        },
-        {
-          id: 3,
-          name: 'Criada'
-        }, {
-          id: 4,
-          name: 'Aguardando Entrega'
-        }, {
-          id: 5,
-          name: 'Em Atraso'
-        }, {
-          id: 6,
-          name: 'Atraso de Retirada'
-        }, {
-          id: 7,
-          name: 'Todas'
-        }
-      ],
-
-    });
-
-    statusService = statusServiceSelectize[0].selectize;
-
-    let periodSelectize = $(`#period`).selectize({
-      plugins: ["clear_button"],
-      valueField: 'id',
-      labelField: 'name',
-      searchField: ['name'],
-      sortField: 'name',
-      create: false,
-      options: [
-
-        {
-          id: 1,
-          name: 'Entrada'
-        },
-        {
-          id: 2,
-          name: 'Saida'
-        },
-        {
-          id: 3,
-          name: 'Sem Periodo'
-        },
-      ],
-      onInitialize: function() {
-        this.setValue(1);
-      }
-    });
-
-    periodService = periodSelectize[0].selectize;
-
-    notifyLateServices();
-
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission();
-    }
-
-    let userInteracted = false;
-    document.addEventListener("click", () => {
-      userInteracted = true;
-    }, {
-      once: true
-    });
-
-    function notifyLateServices() {
-      var localNotify = localStorage.getItem("localNotify");
-      let count = "";
-      $.post("../php/back_serviceorder.php", {
-        action: "notify_late_services",
-      }).done(function(response) {
-        let data = JSON.parse(response);
-        count = data.reduce((acc, item) => acc + item.count, 0);
-        $('#notification').html(localNotify);
-
-        if (localNotify == count) {
-          return;
-        }
-
-        if (count > 0) {
-          if (Notification.permission === "granted") {
-            new Notification("Alerta de ordem de serviço", {
-              body: `Você tem ${count} Ordens de serviços atrasadas`,
-            });
-          }
-          localStorage.setItem("localNotify", count);
-        }
-      }).then(() => {
-        let audio = new Audio("../assets/sounds/notification.mp3");
-
-      });
-    }
-
-    setFields();
-  });
-
-  const saveFields = () => {
-    localStorage.setItem('client', $('#client').val())
-    localStorage.setItem('status', $('#status').val())
-    localStorage.setItem('period', $('#period').val())
-    localStorage.setItem('date', $('#date').val())
-  }
-
-  const setFields = () => {
-    var clientInput = localStorage.getItem('client');
-    var status = localStorage.getItem('status');
-    var period = localStorage.getItem('period');
-    var date = localStorage.getItem('date');
-
-    setTimeout(() => {
-      client.setValue([clientInput]);
-      statusService.setValue([status]);
-      periodService.setValue([period]);
-      $("#date").val(date);
-    }, 1200);
-    setTimeout(() => {
-      listServiccesOrders();
-    }, 1300);
-
-    setTimeout(() => {
-      localStorage.removeItem('client');
-      localStorage.removeItem('status');
-      localStorage.removeItem('period');
-      localStorage.removeItem('date');
-    }, 1400)
-
-  }
-
-  const clearfilters = () => {
-    client.clear();
-    statusService.clear();
-    $('#date').val('');
-    $('#period').val('');
-  }
-
-  const listServiccesOrders = () => {
-    $.post("../php/back_serviceorder.php", {
-        action: "list_serviceorders",
-        client: $('#client').val(),
-        status: $('#status').val() != '' ? $('#status').val() : 7,
-        period: $('#period').val(),
-        date: $('#date').val(),
+    const fetchClients = async () => {
+      const response = await $.post("../php/back_serviceorder.php", {
+        action: 'load_clients'
       })
-      .done(function(response) {
-        response = JSON.parse(response);
-        let lines = "";
+      return JSON.parse(response);
+    }
 
-        response.forEach(item => {
-          $('#labelIncomming').html('Em caixa R$: ' + item.sumInCash);
-          $('#labelTotal').html('Total R$: ' + item.sumTotal);
-          lines += `
+    $(document).ready(function() {
+      $(function() {
+        $('#date').daterangepicker({
+          timePicker: true,
+          startDate: moment().startOf('month'),
+          endDate: moment().endOf('month'),
+          locale: {
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Cancelar",
+            fromLabel: "De",
+            toLabel: "Até",
+            weekLabel: "S",
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+            monthNames: [
+              "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+              "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ],
+            firstDay: 0 // Domingo como primeiro dia da semana
+          },
+          ranges: {
+            "Hoje": [moment().startOf('day'), moment().endOf('day')],
+            "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+            "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+            "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+            "Este Mês": [moment().startOf('month'), moment().endOf('month')],
+            "Mês Passado": [
+              moment().subtract(1, 'month').startOf('month'),
+              moment().subtract(1, 'month').endOf('month')
+            ]
+          }
+        });
+      });
+
+      $('.notify').click();
+      setTimeout(() => {
+        listServiccesOrders();
+      }, 10);
+      $(`.date`).addClass('is-filled');
+
+      let clientSelectize = $(`#client`).selectize({
+        plugins: ["clear_button"],
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ['name'],
+        sortField: 'name',
+        create: false,
+      });
+
+      client = clientSelectize[0].selectize;
+
+      fetchClients().then(response => {
+        client.addOption(response);
+        client.refreshOptions(false);
+      });
+
+      let statusServiceSelectize = $(`#status`).selectize({
+        plugins: ["clear_button"],
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ['name'],
+        sortField: 'name',
+        create: false,
+        options: [{
+            id: 1,
+            name: 'Em andamento'
+          },
+          {
+            id: 2,
+            name: 'Encerrada'
+          },
+          {
+            id: 3,
+            name: 'Criada'
+          }, {
+            id: 4,
+            name: 'Aguardando Entrega'
+          }, {
+            id: 5,
+            name: 'Em Atraso'
+          }, {
+            id: 6,
+            name: 'Atraso de Retirada'
+          }, {
+            id: 7,
+            name: 'Todas'
+          }
+        ],
+
+      });
+
+      statusService = statusServiceSelectize[0].selectize;
+
+      let periodSelectize = $(`#period`).selectize({
+        plugins: ["clear_button"],
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ['name'],
+        sortField: 'name',
+        create: false,
+        options: [
+
+          {
+            id: 1,
+            name: 'Entrada'
+          },
+          {
+            id: 2,
+            name: 'Saida'
+          },
+          {
+            id: 3,
+            name: 'Sem Periodo'
+          },
+        ],
+        onInitialize: function() {
+          this.setValue(1);
+        }
+      });
+
+      periodService = periodSelectize[0].selectize;
+
+      notifyLateServices();
+
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+
+      let userInteracted = false;
+      document.addEventListener("click", () => {
+        userInteracted = true;
+      }, {
+        once: true
+      });
+
+      function notifyLateServices() {
+        var localNotify = localStorage.getItem("localNotify");
+        let count = "";
+        $.post("../php/back_serviceorder.php", {
+          action: "notify_late_services",
+        }).done(function(response) {
+          let data = JSON.parse(response);
+          count = data.reduce((acc, item) => acc + item.count, 0);
+          $('#notification').html(localNotify);
+
+          if (localNotify == count) {
+            return;
+          }
+
+          if (count > 0) {
+            if (Notification.permission === "granted") {
+              new Notification("Alerta de ordem de serviço", {
+                body: `Você tem ${count} Ordens de serviços atrasadas`,
+              });
+            }
+            localStorage.setItem("localNotify", count);
+          }
+        }).then(() => {
+          let audio = new Audio("../assets/sounds/notification.mp3");
+
+        });
+      }
+
+      setFields();
+    });
+
+    const saveFields = () => {
+      localStorage.setItem('client', $('#client').val())
+      localStorage.setItem('status', $('#status').val())
+      localStorage.setItem('period', $('#period').val())
+      localStorage.setItem('date', $('#date').val())
+    }
+
+    const setFields = () => {
+      var clientInput = localStorage.getItem('client');
+      var status = localStorage.getItem('status');
+      var period = localStorage.getItem('period');
+      var date = localStorage.getItem('date');
+
+      setTimeout(() => {
+        client.setValue([clientInput]);
+        statusService.setValue([status]);
+        periodService.setValue([period]);
+        $("#date").val(date);
+      }, 1200);
+      setTimeout(() => {
+        listServiccesOrders();
+      }, 1300);
+
+      setTimeout(() => {
+        localStorage.removeItem('client');
+        localStorage.removeItem('status');
+        localStorage.removeItem('period');
+        localStorage.removeItem('date');
+      }, 1400)
+
+    }
+
+    const clearfilters = () => {
+      client.clear();
+      statusService.clear();
+      $('#date').val('');
+      $('#period').val('');
+    }
+
+    const listServiccesOrders = () => {
+      $.post("../php/back_serviceorder.php", {
+          action: "list_serviceorders",
+          client: $('#client').val(),
+          status: $('#status').val() != '' ? $('#status').val() : 7,
+          period: $('#period').val(),
+          date: $('#date').val(),
+        })
+        .done(function(response) {
+          response = JSON.parse(response);
+          let lines = "";
+
+          response.forEach(item => {
+            $('#labelIncomming').html('Em caixa R$: ' + item.sumInCash);
+            $('#labelTotal').html('Total R$: ' + item.sumTotal);
+            lines += `
             <tr>
               <td class='p2-4' style='width: 10px'>
                 <i class='fa-solid fa-circle ${item.color}' data-bs-toggle='tooltip' data-bs-placement='bottom' title='${item.status}'></i>
@@ -452,9 +451,9 @@
               </td>
             </tr>
             `;
-        });
+          });
 
-        let html = `
+          let html = `
             <table id='table' class="table table-striped table-hover" style="width:100%">
               <thead>
                 <tr>
@@ -488,88 +487,84 @@
             </table>
           `;
 
-        $('.data').html(html);
+          $('.data').html(html);
 
-        // Initialize DataTable after updating the table
-        $('#table').DataTable({
-          language: {
-            url: "../assets/libs/datatable/pt-br.json"
-          },
-          searching: false,
-          pagingType: false
+          // Initialize DataTable after updating the table
+          $('#table').DataTable({
+            language: {
+              url: "../assets/libs/datatable/pt-br.json"
+            },
+            searching: false,
+            pagingType: false
+          });
         });
-      });
-  }
-
-  const deleteServiceOrder = (args) => {
-    let data = {
-      action: "delete_serviceorder",
-      id: args
     }
 
-    let html =
-      `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+    const deleteServiceOrder = (args) => {
+      let data = {
+        action: "delete_serviceorder",
+        id: args
+      }
+
+      let html =
+        `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
         </br></br>
         <div class="alert alert-danger" role="alert">
           <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir esta Ordem de Serviço?</strong></p>
         </div>
       `;
 
-    Swal.fire({
-      html: html,
-      customClass: 'swal-height',
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Confirmar',
-      showCancelButton: true,
-      allowEnterKey: true,
-      confirmButtonColor: "#43a047",
-      cancelButtonColor: "#f44335",
-      customClass: {
-        confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
-        cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
-      },
-      width: 500,
-      preConfirm: () => {
-        $.post("../php/back_serviceorder.php", data)
-          .done(response => {
-            response = JSON.parse(response);
-            $('#infoToast').addClass(response.class);
-            $('.html').html(response.message);
-            $('#infoToast').toast('show');
-            listServiccesOrders();
-          });
-      },
-    });
-  }
+      Swal.fire({
+        html: html,
+        customClass: 'swal-height',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        showCancelButton: true,
+        allowEnterKey: true,
+        confirmButtonColor: "#43a047",
+        cancelButtonColor: "#f44335",
+        customClass: {
+          confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+          cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+        },
+        width: 500,
+        preConfirm: () => {
+          $.post("../php/back_serviceorder.php", data)
+            .done(response => {
+              response = JSON.parse(response);
+              $('#infoToast').addClass(response.class);
+              $('.html').html(response.message);
+              $('#infoToast').toast('show');
+              listServiccesOrders();
+            });
+        },
+      });
+    }
 
-  const exportBalance = () => {
-    let date = $('#date').val() || 0;
-    let client = $('#client').val();
-    let status = $('#status').val() || 0;
-    let url;
+    const exportBalance = () => {
+      let date = $('#date').val() || 0;
+      let client = $('#client').val();
+      let status = $('#status').val() || 0;
+      let url;
 
-    url = `../php/export_balance_excel.php?
+      url = `../php/export_balance_excel.php?
       &date=${encodeURIComponent(date)}
       &client=${encodeURIComponent(client)}
       &status=${encodeURIComponent(status)}`;
 
-    window.open(url, '_blank');
-  }
+      window.open(url, '_blank');
+    }
 
-  const verifyLateServices = () => {
-    const lastDay = moment().endOf("month").format("YYYY-MM-DD");
-    $.post("../php/back_serviceorder.php", {
-      action: 'verify_late_services',
-      entry: moment().startOf("month").format("YYYY-MM-DD"),
-      out: lastDay
-    })
-    listServiccesOrders();
-  }
+    const verifyLateServices = () => {
+      const lastDay = moment().endOf("month").format("YYYY-MM-DD");
+      $.post("../php/back_serviceorder.php", {
+        action: 'verify_late_services',
+        entry: moment().startOf("month").format("YYYY-MM-DD"),
+        out: lastDay
+      })
+      listServiccesOrders();
+    }
   </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
 
 </html>

@@ -1820,7 +1820,8 @@
             .toggleClass("input-active", t.isFocused && !t.isInputHidden)
             .toggleClass("dropdown-active", t.isOpen)
             .toggleClass("has-options", !$.isEmptyObject(t.options))
-            .toggleClass("has-items", 0 < t.items.length),
+            .toggleClass("has-items", 0 < t.items.length)
+            .toggleClass("filled-no-focus", 0 < t.items.length && !t.isFocused),
           t.$control_input.data("grow", !e && !n);
       },
       isFull: function () {

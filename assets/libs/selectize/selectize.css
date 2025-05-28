@@ -557,6 +557,13 @@
 .selectize-control.plugin-drag_drop.multi > .selectize-input.dragging {
   overflow: visible;
 }
+
+.selectize-input.filled-no-focus {
+  border: 2px solid #e91e63  !important;
+  padding-top: 7px!important;
+  padding-bottom: 7px!important;
+}
+
 .selectize-control.plugin-drag_drop.multi
   > .selectize-input
   > div.ui-sortable-placeholder {
@@ -641,4 +648,28 @@
 }
 .selectize-control.plugin-remove_button .disabled .item .remove {
   border-left-color: white;
+}
+
+/* Custom Class */
+
+.floating-label {
+  position: absolute;
+  z-index: 2;
+  left: 6px;
+  top: 20px;
+  transform: translateY(-50%);
+  background: #ffffff;
+  padding: 0 4px;
+  font-size: 14px;
+  color: #666;
+  pointer-events: none;
+  transition: 0.2s ease all;
+}
+
+.floating-label.active {
+  top: 0px;
+  font-size: 12px;
+  background: #ffffff;
+  background: linear-gradient(180deg,rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 45%, rgba(255, 255, 255, 1) 75%, rgba(255, 255, 255, 0) 100%) !important;
+  color: #E81F63;
 }

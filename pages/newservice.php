@@ -10,7 +10,7 @@
     Novo Serviço
   </title>
   <?php require_once("../includes/header.php") ?>
-
+  <?php require_once("../includes/scripsJs.php") ?>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -116,8 +116,6 @@
     </div>
     </div>
   </main>
-  <!--   Core JS Files   -->
-  <?php require_once("../includes/footer.php") ?>
 
   <script>
     $(document).ready(function() {
@@ -192,10 +190,6 @@
         });
     }
   </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
 
 </html>
