@@ -10,7 +10,7 @@
     Serviços
   </title>
   <?php require_once("../includes/header.php") ?>
-  <?php require_once("../includes/footer.php") ?>
+  <?php require_once("../includes/scripsJs.php") ?>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">

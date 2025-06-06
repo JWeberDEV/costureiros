@@ -73,7 +73,10 @@ switch ($data->action) {
           $services = $stmt->execute([]);
         }
 
-        if ($services) {
+        $stmt = $pdo->prepare(" UPDATE tickets SET ticketactive = 'UNAVAILABLE' WHERE id IN (SELECT ticket FROM serviceorders WHERE id = $lastInsertId) ");
+        $finaly = $stmt->execute([]);
+
+        if ($finaly) {
           $response->class = 'bg-gradient-success';
           $response->message = "Ordem de Serviço criado com sucesso!";
         }
@@ -296,16 +299,15 @@ switch ($data->action) {
 
     if ($data->ticketid) {
       $query .= " AND (
-          t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.ticket IS NOT NULL AND s.servicestatus IN (1,3,4,5,6) AND s.`status` = 1)
+          ticketactive = 'AVAILABLE'
           OR t.id = $data->ticketid
         )
-        ORDER BY t.id
       ";
     } else {
-      $query .= " AND t.id NOT IN (SELECT s.ticket FROM serviceorders s WHERE s.servicestatus IN (1,3,4,5,6) AND s.`status` = 1)
-        ORDER BY t.id
-      ";
+      $query .= " AND ticketactive = 'AVAILABLE'";
     }
+
+    $query .= "ORDER BY t.id";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute() or die("Failed to execute");
@@ -327,6 +329,8 @@ switch ($data->action) {
     if ($data->statusOs == 2) {
       $message = "Oredem de serviço finalizada com sucesso!";
       $query = "UPDATE serviceorders SET servicestatus = $data->statusOs, remainder = 0.00, incoming = 0.00 WHERE id = $data->id";
+      $stmt = $pdo->prepare(" UPDATE tickets SET ticketactive = 'AVAILABLE' WHERE id IN (SELECT ticket FROM serviceorders WHERE id = $data->id) ");
+      $update = $stmt->execute();
     } else {
       $message = "Status da Oredem de serviço atualizado";
       $query = "UPDATE serviceorders SET servicestatus = $data->statusOs WHERE id = $data->id";

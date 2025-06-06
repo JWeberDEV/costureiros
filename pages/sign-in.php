@@ -20,20 +20,15 @@
   <link rel="stylesheet" href="../assets/css/google-icons.css" />
   <!-- JQuery -->
   <script src="../assets/js/jquery.js"></script>
-  <?php require_once("../includes/footer.php") ?>
+  <?php require_once("../includes/scripsJs.php") ?>
 </head>
 
 <body class="bg-gray-200">
   <main class="main-content  mt-0">
     <div class="page-header align-items-start min-vh-100" style="background-image: url('../assets/img/walpaper.png');">
       <span class="mask bg-gradient-dark opacity-6"></span>
-      <div
-        class="toast fade hide p-2 mt-2 bg-gradient-danger top-0 end-1"
-        role="alert"
-        aria-live="assertive"
-        id="infoToast"
-        aria-atomic="true"
-        style="z-index: 50; position: fixed;">
+      <div class="toast fade hide p-2 mt-2 bg-gradient-danger top-0 end-1" role="alert" aria-live="assertive"
+        id="infoToast" aria-atomic="true" style="z-index: 50; position: fixed;">
         <hr class="horizontal light m-0" />
         <div class="toast-body text-white">
           Senha Incorreta
@@ -59,7 +54,8 @@
                     <input id="password" type="password" class="form-control">
                   </div>
                   <div class="text-center">
-                    <button id="login" type="button" class="btn bg-gradient-dark w-100 my-4 mb-2" onclick="login();">Entrar</button>
+                    <button id="login" type="button" class="btn bg-gradient-dark w-100 my-4 mb-2"
+                      onclick="login();">Entrar</button>
                   </div>
               </div>
               </form>
@@ -74,7 +70,7 @@
           <div class="col-12 col-md-6 my-auto">
             <div class="copyright text-center text-sm text-white">
               © <script>
-                document.write(new Date().getFullYear())
+              document.write(new Date().getFullYear())
               </script>,
               Criado por Josias Weber
             </div>
@@ -85,58 +81,58 @@
     </div>
   </main>
   <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+  var win = navigator.platform.indexOf('Win') > -1;
+  if (win && document.querySelector('#sidenav-scrollbar')) {
+    var options = {
+      damping: '0.5'
+    }
+    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+  }
+
+  const login = () => {
+    let user = $("#user").val();
+    let password = $("#password").val();
+
+    if (user.trim() == "" || password.trim() == "") {
+      default_notification({
+        type: "danger",
+        message: "É necessário preencher os campos de login e senha para efetuar o Login!"
+      });
+      return;
     }
 
-    const login = () => {
-      let user = $("#user").val();
-      let password = $("#password").val();
-
-      if (user.trim() == "" || password.trim() == "") {
-        default_notification({
-          type: "danger",
-          message: "É necessário preencher os campos de login e senha para efetuar o Login!"
-        });
-        return;
-      }
-
-      let data = {
-        action: 'login',
-        user,
-        password
-      }
-
-      $.post("../php/action.php", data)
-        .done(function(response) {
-          response = JSON.parse(response);
-          if (response.return == 1) {
-            location.href = '../pages/serviceorder.php';
-          } else if (response.return == 0) {
-            $('#infoToast').toast('show');
-          }
-        });
+    let data = {
+      action: 'login',
+      user,
+      password
     }
 
-    $("#user").keyup(function(data) {
-      if (data.keyCode === 13) {
-        $("#login").click();
-      }
-    });
+    $.post("../php/action.php", data)
+      .done(function(response) {
+        response = JSON.parse(response);
+        if (response.return == 1) {
+          location.href = '../pages/serviceorder.php';
+        } else if (response.return == 0) {
+          $('#infoToast').toast('show');
+        }
+      });
+  }
 
-    $("#password").keyup(function(data) {
-      if (data.keyCode === 13) {
-        $("#login").click();
-      }
-    });
+  $("#user").keyup(function(data) {
+    if (data.keyCode === 13) {
+      $("#login").click();
+    }
+  });
 
-    $("#login").click(function() {
-      login();
-    });
+  $("#password").keyup(function(data) {
+    if (data.keyCode === 13) {
+      $("#login").click();
+    }
+  });
+
+  $("#login").click(function() {
+    login();
+  });
   </script>
 </body>
 
