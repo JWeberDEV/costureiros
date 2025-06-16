@@ -11153,6 +11153,11 @@ fieldset:disabled .btn {
   color: #525252 !important;
 }
 
+.text-purple {
+  color: #6a1b9a !important;
+}
+
+
 .text-black-50 {
   color: rgba(10, 10, 10, 0.5) !important;
 }
