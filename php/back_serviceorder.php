@@ -199,9 +199,10 @@ switch ($data->action) {
         o.idserviceorders,
         o.idservice,
         o.item,
+        o.obs,
+        o.issue,
         FORMAT(o.price, 2) AS price,
         FORMAT(o.discount, 2) AS discount,
-        o.obs,
         (SELECT `name` FROM clients WHERE id = so.idclient) AS 'name',
         s.service,
         c.balance,
@@ -244,6 +245,7 @@ switch ($data->action) {
         'debit' => $value['debit'],
         'button' => $value['button'],
         'status' => $value['status'],
+        'issue' => $value['issue'],
       ];
     }
 
@@ -412,5 +414,19 @@ switch ($data->action) {
     }
 
     echo (json_encode($response));
+    break;
+  case 'update_issue':
+    $stmt = $pdo->prepare("UPDATE orders SET issue = :issue WHERE id = :id");
+    $stmt->bindParam(':issue', $data->issue);
+    $stmt->bindParam(':id', $data->id);
+    $stmt->execute() or die("Failed to execute");
+
+    if ($stmt->rowCount() > 0) {
+        $response->code = 1;
+    } else {
+        $response->code = 0;
+    }
+
+    echo json_encode($response);
     break;
 }

@@ -210,9 +210,10 @@
           $.post("../php/back_service.php", data)
             .done(response => {
               response = JSON.parse(response);
-              $('#infoToast').addClass(response.class);
-              $('.html').html(response.message);
-              $('#infoToast').toast('show');
+              showToast({
+                class: response.class,
+                message: response.message
+              });
               listServicces();
             });
         },

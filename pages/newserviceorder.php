@@ -14,18 +14,7 @@
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-  <div
-    class="toast fade hide p-2 mt-2 top-0 end-1"
-    role="alert"
-    aria-live="assertive"
-    id="infoToast"
-    aria-atomic="true"
-    style="z-index: 50; position: fixed;">
-    <hr class="horizontal light m-0" />
-    <div class="toast-body text-white">
-      <div class="html"></div>
-    </div>
-  </div>
+  <?php require_once("../includes/toast.php") ?>
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -146,6 +135,7 @@
                         <thead>
                           <tr>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Pronto</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-15">Serviço</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Item</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3"></th>
@@ -394,7 +384,7 @@
         } else {
           row = 1;
         }
-
+        const issue = args?.element?.issue ? `${args.element.issue}` : 0;
         const selectId = args?.element?.idservice ? `${args.element.idservice}` : '';
         const idOrder = args?.element?.idorder ? `${args.element.idorder}` : '';
         const service = args?.element?.service ? `placeholder=${args.element.service}` : 'placeholder="Selecione o Serviço"';
@@ -407,6 +397,11 @@
           <button type="button" class="btn bg-gradient-success mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <i class='material-symbols-rounded pt-1 pb-1'>add</i>
           </button>
+          </td>
+          <td>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" ${issue == 1 ? 'checked' : ''} onClick="setIssue({idOrder:${idOrder}, row:${row}})" id="issue${row}">
+            </div>
           </td>
           <td>
             <div class="d-flex px-2 py-1 m-2 is-filled">
@@ -602,9 +597,10 @@
         let data = [];
 
         if (!$('#ticket').val() || !$('#client').val() || !$('#entry').val() || !$('#exit').val()) {
-          $('#infoToast').addClass('bg-gradient-warning');
-          $('.html').html('Verifique os campos que precisam ser preenchidos ');
-          $('#infoToast').toast('show');
+          showToast({
+            class: 'bg-gradient-warning',
+            message: 'Verifique os campos que precisam ser preenchidos'
+          });
           $('#save').removeAttr('disabled');
           $('.notload').show();
           $('.load').hide();
@@ -612,9 +608,10 @@
         }
 
         if (!$('#incoming').val()) {
-          $('#infoToast').addClass('bg-gradient-danger');
-          $('.html').html('É preciso preencher corretamente o campo de entrada');
-          $('#infoToast').toast('show');
+          showToast({
+            class: 'bg-gradient-danger',
+            message: 'É preciso preencher corretamente o campo de entrada'
+          });
           $('#save').removeAttr('disabled');
           $('.notload').show();
           $('.load').hide();
@@ -654,10 +651,10 @@
           })
           .done(function(response) {
             response = JSON.parse(response);
-            $('#infoToast').removeClass('bg-gradient-danger', 'bg-gradient-warning', 'bg-gradient-success');
-            $('#infoToast').addClass(response.class);
-            $('#infoToast').toast('show');
-            $('.html').html(response.message);
+            showToast({
+              class: response.class,
+              message: response.message
+            });
             $('#save').removeAttr('disabled');
             $('.notload').show();
             $('.load').hide();
@@ -818,9 +815,10 @@
               })
               .done(async function(response) {
                 response = JSON.parse(response);
-                $('#infoToast').addClass(response.class);
-                $('.html').html(response.message);
-                $('#infoToast').toast('show');
+                showToast({
+                  class: response.class,
+                  message: response.message
+                });
                 statusOs = response.status;
                 if (response.status == 2) {
                   $('#save').attr('disabled', true);
@@ -860,9 +858,10 @@
           })
           .done(response => {
             let data = JSON.parse(response);
-            $('#infoToast').addClass(data.class);
-            $('.html').html(data.message);
-            $('#infoToast').toast('show');
+            showToast({
+              class: data.class,
+              message: data.message
+            });
             $('#save').removeAttr('disabled');
             $('.unload-modal').show();
             $('.load-modal').hide();
@@ -882,6 +881,36 @@
             $select[0].selectize.refreshOptions();
           }
         });
+      }
+
+      const setIssue = (args) => {
+        let issue = "";
+        let id = args.idOrder;
+        if ($(`#issue${args.row}`).prop('checked')) {
+          issue = 1;
+        } else {
+          issue = 0;
+        }
+
+        $.post("../php/back_serviceorder.php", {
+            action: 'update_issue',
+            id,
+            issue
+          })
+          .done(function(response) {
+            let data = JSON.parse(response);
+            if (data.code == 1) {
+              showToast({
+                class: 'bg-gradient-success',
+                message: 'Item atualizado com sucesso'
+              });
+            } else {
+              showToast({
+                class: 'bg-gradient-danger',
+                message: 'Erro ao atualizar item'
+              });
+            }
+          });
       }
     </script>
 </body>

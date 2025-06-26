@@ -14,18 +14,7 @@
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-  <div
-    class="toast fade hide p-2 mt-2 top-0 end-1"
-    role="alert"
-    aria-live="assertive"
-    id="infoToast"
-    aria-atomic="true"
-    style="z-index: 50; position: fixed;">
-    <hr class="horizontal light m-0" />
-    <div class="toast-body text-white">
-      <div class="html"></div>
-    </div>
-  </div>
+  <?php require_once("../includes/toast.php") ?>
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -168,9 +157,9 @@
             </td>
           </tr>
           `;
-                    });
+          });
 
-                    let html = `
+          let html = `
           <table id='table' class="table table-striped table-hover" style="width:100%">
             <thead>
               <tr>
@@ -240,10 +229,11 @@
         preConfirm: () => {
           $.post("../php/back_client.php", data)
             .done(response => {
-              response = JSON.parse(response);
-              $('#infoToast').addClass(response.class);
-              $('.html').html(response.message);
-              $('#infoToast').toast('show');
+              response = JSON.parse(response);             
+              showToast({
+                class: response.class,
+                message: response.message
+              });
               listClients();
             });
         },

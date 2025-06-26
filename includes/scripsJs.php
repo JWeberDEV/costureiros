@@ -3,6 +3,7 @@
 <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
 <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
 <script src="../assets/js/plugins/chartjs.min.js"></script>
+<script src="../assets/js/core.js"></script>
 <script src="../assets/libs/daterangepicker/moment.min.js"></script>
 <script src="../assets/libs/datatable/datatable.js"></script>
 <script src="../assets/libs/sweetalert/dist/sweetalert2.all.min.js"></script>

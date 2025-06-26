@@ -29,7 +29,6 @@
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="toast fade hide p-2 mt-2 bg-gradient-danger top-0 end-1" role="alert" aria-live="assertive"
         id="infoToast" aria-atomic="true" style="z-index: 50; position: fixed;">
-        <hr class="horizontal light m-0" />
         <div class="toast-body text-white">
           Senha Incorreta
         </div>
