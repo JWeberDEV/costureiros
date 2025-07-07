@@ -119,8 +119,13 @@ switch ($data->action) {
       JOIN serviceorderstatus so ON so.id = s.servicestatus
       WHERE s.`status` = 1";
 
+    
     if ($data->client) {
       $query .= " AND c.id = $data->client";
+    }
+
+    if ($data->ticket) {
+      $query .= " AND s.ticket = $data->ticket";
     }
 
     if (isset($data->status) && $data->status != 7) {
@@ -325,6 +330,28 @@ switch ($data->action) {
 
     echo (json_encode($response));
     break;
+
+  case 'load_all_tickets':
+    $query = "SELECT t.id,t.name
+      FROM tickets t
+      WHERE t.status = 1
+      ORDER BY t.id ASC
+    ";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute() or die("Failed to execute");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
+
+    $response = [];
+    foreach ($results as $key => $value) {
+      $response[] = [
+        'id' => $value['id'],
+        'name' => $value['name'],
+      ];
+    }
+
+    echo (json_encode($response));
+    break;
   case 'set_os_status':
     $message = "";
     $query = "";
@@ -422,9 +449,9 @@ switch ($data->action) {
     $stmt->execute() or die("Failed to execute");
 
     if ($stmt->rowCount() > 0) {
-        $response->code = 1;
+      $response->code = 1;
     } else {
-        $response->code = 0;
+      $response->code = 0;
     }
 
     echo json_encode($response);

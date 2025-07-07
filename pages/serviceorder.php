@@ -91,6 +91,13 @@
           </div>
           <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Filtros</div>
           <hr class="horizontal dark m-0" />
+          <div class="col-1 ">
+            <div class="input-group input-group-outline my-3">
+              <label class="form-label">Guichê</label>
+              <select id="ticket" class="form-select" placeholder="Guichê">
+              </select>
+            </div>
+          </div>
           <div class="col-2 ">
             <div class="input-group input-group-outline my-3">
               <label class="form-label">Cliente</label>
@@ -98,7 +105,7 @@
               </select>
             </div>
           </div>
-          <div class="col-2 ">
+          <div class="col-1 ">
             <div class="input-group input-group-outline my-3">
               <label class="form-label">Status</label>
               <select id="status" class="form-select" placeholder="Status">
@@ -155,8 +162,6 @@
     </div>
   </main>
   <script>
-    const firstDay = moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD");
-    $('#date').val(firstDay);
     let client = "";
     let statusService = "";
 
@@ -167,38 +172,27 @@
       return JSON.parse(response);
     }
 
+    const fetchTickets = async () => {
+      const response = await $.post("../php/back_serviceorder.php", {
+        action: 'load_all_tickets'
+      })
+      return JSON.parse(response);
+    }
+
     $(document).ready(function() {
-      $(function() {
-        $('#date').daterangepicker({
-          timePicker: true,
-          startDate: moment().startOf('month'),
-          endDate: moment().endOf('month'),
-          locale: {
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Cancelar",
-            fromLabel: "De",
-            toLabel: "Até",
-            weekLabel: "S",
-            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
-            monthNames: [
-              "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-              "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-            ],
-            firstDay: 0 // Domingo como primeiro dia da semana
-          },
-          ranges: {
-            "Hoje": [moment().startOf('day'), moment().endOf('day')],
-            "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-            "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
-            "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
-            "Este Mês": [moment().startOf('month'), moment().endOf('month')],
-            "Mês Passado": [
-              moment().subtract(1, 'month').startOf('month'),
-              moment().subtract(1, 'month').endOf('month')
-            ]
-          }
-        });
+      let ticketsSelectize = $(`#ticket`).selectize({
+        plugins: ["clear_button"],
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ['name'],
+        create: false,
+      });
+
+      tickets = ticketsSelectize[0].selectize;
+
+      fetchTickets().then(response => {
+        tickets.addOption(response);
+        tickets.refreshOptions(false);
       });
 
       $('.notify').click();
@@ -372,9 +366,43 @@
       $('#period').val('');
     }
 
+    $(function() {
+        $('#date').daterangepicker({
+          timePicker: true,
+          startDate: moment().subtract(6, 'days').startOf('day'),
+          endDate: moment().endOf('day'),
+          locale: {
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Cancelar",
+            fromLabel: "De",
+            toLabel: "Até",
+            weekLabel: "S",
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+            monthNames: [
+              "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+              "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ],
+            firstDay: 0 // Domingo como primeiro dia da semana
+          },
+          ranges: {
+            "Hoje": [moment().startOf('day'), moment().endOf('day')],
+            "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+            "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+            "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+            "Este Mês": [moment().startOf('month'), moment().endOf('month')],
+            "Mês Passado": [
+              moment().subtract(1, 'month').startOf('month'),
+              moment().subtract(1, 'month').endOf('month')
+            ]
+          }
+        });
+      });
+
     const listServiccesOrders = () => {
       $.post("../php/back_serviceorder.php", {
           action: "list_serviceorders",
+          ticket: $('#ticket').val() != '' ? $('#ticket').val() : 0,
           client: $('#client').val(),
           status: $('#status').val() != '' ? $('#status').val() : 7,
           period: $('#period').val(),
@@ -498,6 +526,8 @@
             pagingType: false
           });
         });
+
+      saveFields();
     }
 
     const deleteServiceOrder = (args) => {
