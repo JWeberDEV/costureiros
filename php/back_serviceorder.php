@@ -364,6 +364,8 @@ switch ($data->action) {
     } else {
       $message = "Status da Oredem de serviço atualizado";
       $query = "UPDATE serviceorders SET servicestatus = $data->statusOs WHERE id = $data->id";
+      $stmt = $pdo->prepare(" UPDATE tickets SET ticketactive = 'UNAVAILABLE' WHERE id IN (SELECT ticket FROM serviceorders WHERE id = $data->id) ");
+      $update = $stmt->execute();
     }
 
     $stmt = $pdo->prepare($query);
