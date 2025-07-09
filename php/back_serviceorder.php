@@ -189,6 +189,7 @@ switch ($data->action) {
     echo json_encode($response);
     break;
   case 'list_serviceorder_id':
+    
     $stmt = $pdo->prepare(
       "SELECT 
         so.serviceorder,
@@ -215,8 +216,8 @@ switch ($data->action) {
         ss.status,
         ss.button
       FROM serviceorders so
-      JOIN orders o ON o.idserviceorders = so.id
-      JOIN services s ON s.id = o.idservice
+      LEFT JOIN orders o ON o.idserviceorders = so.id
+      LEFT JOIN services s ON s.id = o.idservice
       JOIN clients c ON c.id = so.idclient
       JOIN serviceorderstatus ss ON ss.id = so.servicestatus
       WHERE so.id = $data->id"

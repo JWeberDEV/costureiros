@@ -105,17 +105,17 @@
               </select>
             </div>
           </div>
-          <div class="col-1 ">
+          <div class="col-2 ">
             <div class="input-group input-group-outline my-3">
               <label class="form-label">Status</label>
               <select id="status" class="form-select" placeholder="Status">
               </select>
             </div>
           </div>
-          <div class="col-2 ">
+          <div class="col-1 ">
             <div class="input-group input-group-outline my-3">
-              <label class="form-label ">Tipo de Periodo</label>
-              <select id="period" class="form-select" placeholder="Tipo de periodo">
+              <label class="form-label ">Periodo</label>
+              <select id="period" class="form-select" placeholder="Periodo">
               </select>
             </div>
           </div>
@@ -129,7 +129,7 @@
             <Strong class='pt-3' id='labelIncomming'></Strong><br>
             <Strong class='pt-3' id='labelTotal'></Strong>
           </div>
-          <div class="col-2 text-end mt-3 pe-4">
+          <div class="col-1 text-end mt-3 pe-4">
             <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom"
               title="Pesquisar" onClick="listServiccesOrders(),saveFields();">
               <i class='material-symbols-rounded'>search</i>
