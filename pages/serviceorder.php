@@ -112,7 +112,7 @@
               </select>
             </div>
           </div>
-          <div class="col-1 ">
+          <div class="col-2 ">
             <div class="input-group input-group-outline my-3">
               <label class="form-label ">Periodo</label>
               <select id="period" class="form-select" placeholder="Periodo">
