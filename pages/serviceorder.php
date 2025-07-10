@@ -328,6 +328,7 @@
     });
 
     const saveFields = () => {
+      localStorage.setItem('ticket', $('#ticket').val())
       localStorage.setItem('client', $('#client').val())
       localStorage.setItem('status', $('#status').val())
       localStorage.setItem('period', $('#period').val())
@@ -339,8 +340,10 @@
       var status = localStorage.getItem('status');
       var period = localStorage.getItem('period');
       var date = localStorage.getItem('date');
+      var ticket = localStorage.getItem('ticket');
 
       setTimeout(() => {
+        tickets.setValue([ticket]);
         client.setValue([clientInput]);
         statusService.setValue([status]);
         periodService.setValue([period]);
@@ -470,7 +473,7 @@
                 </div>
               </td>
               <td class='text-end'>
-                <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}&ticket=${item.ticket}'>
+                <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}&ticket=${item.ticket}' onClick="saveFields()">
                   <i class='material-symbols-rounded opacity-5'>edit</i>
                 </a>
                 <button type='button' class='btn bg-gradient-danger m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Excluir' onclick='deleteServiceOrder(${item.id})'>
