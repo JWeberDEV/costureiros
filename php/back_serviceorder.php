@@ -302,20 +302,15 @@ switch ($data->action) {
   case 'load_tickets':
     $query = "SELECT t.id,t.name
       FROM tickets t
-      WHERE t.status = 1
+      WHERE (t.status = 1
+      AND ticketactive = 'AVAILABLE')
     ";
 
     if ($data->ticketid) {
-      $query .= " AND (
-          ticketactive = 'AVAILABLE'
-          OR t.id = $data->ticketid
-        )
-      ";
-    } else {
-      $query .= " AND ticketactive = 'AVAILABLE'";
+      $query .= " OR t.id = $data->ticketid";
     }
 
-    $query .= "ORDER BY t.id";
+    $query .= " ORDER BY t.id";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute() or die("Failed to execute");
@@ -477,12 +472,12 @@ switch ($data->action) {
     $results = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     if (!$results) {
-      echo("Nenhum ticket encontrado.");
+      echo ("Nenhum ticket encontrado.");
     }
 
     $placeholders = rtrim(str_repeat('?,', count($results)), ',');
 
-    print_r ($results);
+    print_r($results);
 
     $stmt = $pdo->prepare(" UPDATE tickets SET ticketactive = 'AVAILABLE' 
       WHERE id IN ($placeholders)
@@ -495,7 +490,15 @@ switch ($data->action) {
     ");
     $update2 = $stmt->execute($results);
 
-    if ($update1) {echo "</br>Tickets atualizados com sucesso!";} else {echo "<br>Erro ao atualizar tickets!";}
-    if ($update2) {echo "</br>Tickets Inativados com sucesso!";} else {echo "<br>Erro ao Inativados tickets!";}
+    if ($update1) {
+      echo "</br>Tickets atualizados com sucesso!";
+    } else {
+      echo "<br>Erro ao atualizar tickets!";
+    }
+    if ($update2) {
+      echo "</br>Tickets Inativados com sucesso!";
+    } else {
+      echo "<br>Erro ao Inativados tickets!";
+    }
     break;
 }
