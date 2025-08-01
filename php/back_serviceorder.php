@@ -119,7 +119,7 @@ switch ($data->action) {
       JOIN serviceorderstatus so ON so.id = s.servicestatus
       WHERE s.`status` = 1";
 
-    
+
     if ($data->client) {
       $query .= " AND c.id = $data->client";
     }
@@ -189,7 +189,7 @@ switch ($data->action) {
     echo json_encode($response);
     break;
   case 'list_serviceorder_id':
-    
+
     $stmt = $pdo->prepare(
       "SELECT 
         so.serviceorder,
@@ -458,5 +458,44 @@ switch ($data->action) {
     }
 
     echo json_encode($response);
+    break;
+
+  case 'update_ticket_status':
+
+    $stmt = $pdo->prepare("SELECT so.ticket
+      FROM serviceorders so
+      INNER JOIN (
+          SELECT ticket, MAX(id) AS max_id
+          FROM serviceorders
+          WHERE ticket BETWEEN 1 AND 49
+          GROUP BY ticket
+      ) latest ON so.id = latest.max_id
+      WHERE so.servicestatus = 2
+      ORDER BY so.ticket
+    ");
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    if (!$results) {
+      echo("Nenhum ticket encontrado.");
+    }
+
+    $placeholders = rtrim(str_repeat('?,', count($results)), ',');
+
+    print_r ($results);
+
+    $stmt = $pdo->prepare(" UPDATE tickets SET ticketactive = 'AVAILABLE' 
+      WHERE id IN ($placeholders)
+    ");
+    $update1 = $stmt->execute($results);
+
+    $stmt = $pdo->prepare(" UPDATE tickets SET ticketactive = 'UNAVAILABLE' 
+      WHERE id NOT IN ($placeholders)
+      AND id < 80
+    ");
+    $update2 = $stmt->execute($results);
+
+    if ($update1) {echo "</br>Tickets atualizados com sucesso!";} else {echo "<br>Erro ao atualizar tickets!";}
+    if ($update2) {echo "</br>Tickets Inativados com sucesso!";} else {echo "<br>Erro ao Inativados tickets!";}
     break;
 }

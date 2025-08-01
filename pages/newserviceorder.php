@@ -303,7 +303,14 @@
         }, 500);
       });
 
+      const updateTickets = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'update_ticket_status'
+        })
+      }
+
       $(document).ready(async function() {
+        await updateTickets();
         $('.load').hide();
         $('.load-modal').hide();
         $(`.entry`).addClass('is-filled');
