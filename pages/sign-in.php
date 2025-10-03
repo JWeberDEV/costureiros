@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="../assets/css/google-icons.css" />
   <!-- JQuery -->
   <script src="../assets/js/jquery.js"></script>
+  <?php require_once("../includes/header.php") ?>
   <?php require_once("../includes/scripsJs.php") ?>
 </head>
 
