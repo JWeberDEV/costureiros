@@ -1,5 +1,5 @@
 <?php
-$page = 'clients';
+$page = 'payments';
 ?>
 
 <!DOCTYPE html>
@@ -25,23 +25,16 @@ $page = 'clients';
     <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
       <div class="container-fluid text-center">
         <div class="row justify-content-start">
-          <div class="col-2">
-            <a href="../pages/newclient.php">
-              <button type="button" class="btn bg-gradient-dark w-100 m-0">Novo Cliente</button>
-            </a>
-          </div>
-        </div>
-        <div class="row justify-content-start">
           <div class="col-11 pt-3 pe-2 pb-0">
             <div class="input-group input-group-outline">
-              <label class="form-label">Buscar Cliente</label>
-              <input id='client' type="text" class="form-control">
+              <label class="form-label">Forma</label>
+              <input id='payment' type="text" class="form-control">
             </div>
           </div>
           <div class="col-1 text-end pt-3 ps-5">
             <button type="button" id="search" class="btn bg-gradient-info" data-bs-toggle="tooltip"
-              data-bs-placement="bottom" title="Pesquisar" onClick="listClients();">
-              <i class='material-symbols-rounded'>search</i>
+              data-bs-placement="bottom" title="Salvar" onClick="SavePayment();">
+              <i class='material-symbols-rounded'>add</i>
             </button>
           </div>
         </div>
@@ -54,7 +47,7 @@ $page = 'clients';
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                <h6 class="text-white text-capitalize ps-3">Cadastro de Clientes</h6>
+                <h6 class="text-white text-capitalize ps-3">Formas de Pagamento</h6>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
@@ -69,18 +62,30 @@ $page = 'clients';
   </main>
   <script>
     $(document).ready(function() {
-      listClients();
+      listPayments();
     });
 
-    $("#client").keyup(function(data) {
-      if (data.keyCode === 13) {
-        $("#search").click();
+    const SavePayment = () => {
+      let data = {
+        action: "save_payment",
+        payment: $('#payment').val()
       }
-    });
 
-    const listClients = () => {
-      $.post("../php/back_client.php", {
-          action: "list_clients",
+      $.post("../php/back_payment.php", data)
+        .done(response => {
+          response = JSON.parse(response);
+          showToast({
+            class: response.class,
+            message: response.message
+          });
+          $('#payment').val('');
+          listPayments();
+        });
+    }
+
+    const listPayments = () => {
+      $.post("../php/back_payment.php", {
+          action: "list_payments",
           client: $('#client').val()
         })
         .done(function(response) {
@@ -93,28 +98,7 @@ $page = 'clients';
             <td>
               <div class='d-flex px-2 py-1'>
                 <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>${item.name}</h6>
-                </div>
-              </div>
-            </td>
-            <td class='align-middle text-center'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>${item.phone}</h6>
-                </div>
-              </div>
-            </td>
-            <td class='align-middle text-center'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>${item.street} - ${item.number}</h6>
-                </div>
-              </div>
-            </td>
-            <td class='align-middle text-center'>
-              <div class='d-flex px-2 py-1'>
-                <div class='d-flex flex-column justify-content-center'>
-                  <h6 class='mb-0 text-sm'>${item.obs}</h6>
+                  <h6 class='mb-0 text-sm'>${item.payment}</h6>
                 </div>
               </div>
             </td>
@@ -134,10 +118,7 @@ $page = 'clients';
           <table id='table' class="table table-striped table-hover" style="width:100%">
             <thead>
               <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Telefone</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ponto de referência</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tipo</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
               </tr>
             </thead>
@@ -146,10 +127,7 @@ $page = 'clients';
             </tbody>
             <tfoot>
               <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Telefone</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ponto de referência</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tipo</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolde opacity-7"></th>
               </tr>
             </tfoot>
@@ -205,7 +183,7 @@ $page = 'clients';
                 class: response.class,
                 message: response.message
               });
-              listClients();
+              listPayments();
             });
         },
       });
