@@ -96,6 +96,13 @@ $page = 'os';
                         <input id="debit" type="number" class="form-control extra-padding" disabled>
                       </div>
                     </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3">
+                        <label class="form-label">Forma de pagamento</label>
+                        <select id="payment" class="form-select" placeholder="Forma de pagamento">
+                        </select>
+                      </div>
+                    </div>
                   </div>
                   <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Serviços</div>
                   <hr class="horizontal dark m-0" />
@@ -239,6 +246,7 @@ $page = 'os';
       let name = "";
       let id = "";
       let statusOs = "";
+
       const fetchClients = async () => {
         const response = await $.post("../php/back_serviceorder.php", {
           action: 'load_clients'
@@ -257,6 +265,13 @@ $page = 'os';
         const response = await $.post("../php/back_serviceorder.php", {
           action: 'load_tickets',
           ticketid
+        })
+        return JSON.parse(response);
+      }
+
+      const fetchPayment = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'load_payments'
         })
         return JSON.parse(response);
       }
@@ -337,6 +352,22 @@ $page = 'os';
         fetchTicket().then(response => {
           ticket.addOption(response);
           ticket.refreshOptions(false);
+        });
+
+        let paymentSelectize = $(`#payment`).selectize({
+          valueField: 'id',
+          labelField: 'payment',
+          searchField: ['payment'],
+          sortField: 'payment',
+          sortField: "$order",
+          create: false,
+        });
+
+        payment = paymentSelectize[0].selectize;
+
+        fetchPayment().then(response => {
+          payment.addOption(response);
+          payment.refreshOptions(false);
         });
 
         if (statusOs == 2) {
@@ -619,6 +650,7 @@ $page = 'os';
             id,
             client: $('#client').val(),
             ticket: $('#ticket').val(),
+            payment: $('#payment').val(),
             entry: $('#entry').val(),
             exit: $('#exit').val(),
             incoming: $('#incoming').val(),
@@ -663,6 +695,9 @@ $page = 'os';
               }, 1200);
               setTimeout(() => {
                 client.setValue([element.idclient]);
+              }, 1200);
+              setTimeout(() => {
+                payment.setValue([element.idpayment]);
               }, 1200);
               $('.osStatus').addClass(element.button);
               $('.osStatus').text(element.status);

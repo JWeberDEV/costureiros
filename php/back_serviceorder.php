@@ -16,6 +16,7 @@ switch ($data->action) {
       $stmt = $pdo->prepare(
         "UPDATE serviceorders SET
           idclient = $data->client,
+          idpayment = $data->payment,
           ticket = $data->ticket,
           incoming = $data->incoming,
           total = $data->total,
@@ -58,8 +59,8 @@ switch ($data->action) {
       }
     } else {
 
-      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,ticket,incoming,total,remainder,sevicentry,servicexit)
-      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out' FROM serviceorders WHERE `status` = 1");
+      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,idpayment,ticket,incoming,total,remainder,sevicentry,servicexit)
+      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out' FROM serviceorders WHERE `status` = 1");
 
       $execute = $stmt->execute();
       $lastInsertId = $pdo->lastInsertId();
@@ -197,6 +198,7 @@ switch ($data->action) {
         so.idclient,
         so.sevicentry,
         so.servicexit,
+        so.idpayment,
         FORMAT(so.incoming, 2) AS incoming,
         FORMAT(so.total, 2) AS total,
         FORMAT(so.remainder, 2) AS remainder,
@@ -240,6 +242,7 @@ switch ($data->action) {
         'idorder' => (int) $value['idorder'],
         'idserviceorders' => (int) $value['idserviceorders'],
         'idservice' => (int) $value['idservice'],
+        'idpayment' => (int) $value['idpayment'],
         'item' => $value['item'],
         'price' => $value['price'],
         'discount' => $value['discount'],
@@ -477,8 +480,6 @@ switch ($data->action) {
 
     $placeholders = rtrim(str_repeat('?,', count($results)), ',');
 
-    print_r($results);
-
     $stmt = $pdo->prepare(" UPDATE tickets SET ticketactive = 'AVAILABLE' 
       WHERE id IN ($placeholders)
     ");
@@ -500,5 +501,25 @@ switch ($data->action) {
     } else {
       echo "<br>Erro ao Inativados tickets!";
     }
+    break;
+  case 'load_payments':
+    $query = "SELECT id,payment
+      FROM payments 
+      WHERE status = 1
+    ";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute() or die("Failed to execute");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
+
+    $response = [];
+    foreach ($results as $key => $value) {
+      $response[] = [
+        'id' => $value['id'],
+        'payment' => $value['payment'],
+      ];
+    }
+
+    echo (json_encode($response));
     break;
 }

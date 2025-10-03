@@ -7,15 +7,13 @@ $response = (object) [];
 switch ($data->action) {
   case 'save_payment':
 
-    $data->name = ucwords($data->name);
     $arrayData = [
       'payment' => "$data->payment",
     ];
 
-    if ($data->id > 0) {
+    if (isset($data->id) > 0) {
       $arrayData['id'] = $data->id;
 
-      // Preapara a query de fato
       $stmt = $pdo->prepare(
         "UPDATE payments SET
           payment = :payment
@@ -66,12 +64,12 @@ switch ($data->action) {
 
     echo (json_encode($response));
     break;
-  case 'delete_client':
+  case 'delete_payment':
     $arrayData = [
       'id' => "$data->id"
     ];
 
-    $stmt = $pdo->prepare("UPDATE clients SET status = 0 WHERE id = :id");
+    $stmt = $pdo->prepare("UPDATE payments SET status = 0 WHERE id = :id");
     $execute = $stmt->execute($arrayData);
 
     if ($execute) {
@@ -83,13 +81,5 @@ switch ($data->action) {
     }
 
     echo json_encode($response);
-    break;
-  case 'list_client_id':
-
-    $stmt = $pdo->prepare("SELECT * FROM clients WHERE id = $data->id");
-    $stmt->execute();
-    $results = $stmt->fetch();
-
-    print_r(json_encode($results));
     break;
 }

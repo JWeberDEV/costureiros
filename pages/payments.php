@@ -25,16 +25,21 @@ $page = 'payments';
     <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
       <div class="container-fluid text-center">
         <div class="row justify-content-start">
-          <div class="col-11 pt-3 pe-2 pb-0">
-            <div class="input-group input-group-outline">
+          <input type="hidden" id="id">
+          <div class="col-10 pt-3 pe-2 pb-0">
+            <div class="input-group input-group-outline payment">
               <label class="form-label">Forma</label>
               <input id='payment' type="text" class="form-control">
             </div>
           </div>
-          <div class="col-1 text-end pt-3 ps-5">
+          <div class="col-2 text-end pt-3 ps-5">
             <button type="button" id="search" class="btn bg-gradient-info" data-bs-toggle="tooltip"
               data-bs-placement="bottom" title="Salvar" onClick="SavePayment();">
               <i class='material-symbols-rounded'>add</i>
+            </button>
+            <button type="button" id="search" class="btn bg-gradient-success" data-bs-toggle="tooltip"
+              data-bs-placement="bottom" title="Buscar" onClick="listPayments();">
+              <i class='material-symbols-rounded'>search</i>
             </button>
           </div>
         </div>
@@ -68,7 +73,8 @@ $page = 'payments';
     const SavePayment = () => {
       let data = {
         action: "save_payment",
-        payment: $('#payment').val()
+        payment: $('#payment').val(),
+        id: $('#id').val()
       }
 
       $.post("../php/back_payment.php", data)
@@ -103,10 +109,10 @@ $page = 'payments';
               </div>
             </td>
             <td class='text-end'>
-              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' href="../pages/newclient.php?id='${item.id}'">
+              <a type='button' class='btn bg-gradient-warning m-0' data-toggle='tooltip' title='Editar' onclick="editPayment('${item.id}','${item.payment}')">
                 <i class='material-symbols-rounded opacity-5'>edit</i>
               </a>
-              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick="deleteClient('${item.id}')">
+              <button type='button' class='btn bg-gradient-danger m-0' data-toggle='tooltip' data-placement='top' title='Excluir' onclick="deletePayment('${item.id}')">
                 <i class='material-symbols-rounded opacity-5'>delete</i>
               </button>
             </td>
@@ -147,9 +153,22 @@ $page = 'payments';
         });
     }
 
-    const deleteClient = (args) => {
+    const editPayment = (id,payment) => {
+      $('#id').val(id);
+      $('#payment').val(payment);
+
+      let data = ['payment'];
+
+      data.forEach(element => {
+        if ($(`#${element}`).val()) {
+          $(`.${element}`).addClass('is-filled');
+        }
+      });
+    }
+
+    const deletePayment = (args) => {
       let data = {
-        action: "delete_client",
+        action: "delete_payment",
         id: args
       }
 
@@ -157,7 +176,7 @@ $page = 'payments';
         `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
         </br></br>
         <div class="alert alert-danger" role="alert">
-          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este Cliente?</strong></p>
+          <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir esta forma de pagamento?</strong></p>
         </div>
       `;
 
@@ -176,7 +195,7 @@ $page = 'payments';
         },
         width: 500,
         preConfirm: () => {
-          $.post("../php/back_client.php", data)
+          $.post("../php/back_payment.php", data)
             .done(response => {
               response = JSON.parse(response);
               showToast({
