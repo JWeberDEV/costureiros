@@ -3,7 +3,7 @@ $page = 'services';
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
   <meta charset="utf-8" />

@@ -11,7 +11,7 @@ switch ($data->action) {
       'payment' => "$data->payment",
     ];
 
-    if (isset($data->id) > 0) {
+    if ($data->id > 0) {
       $arrayData['id'] = $data->id;
 
       $stmt = $pdo->prepare(
@@ -30,7 +30,6 @@ switch ($data->action) {
         $response->message = "Erro ao editar o registro!";
       }
     } else {
-
       $stmt = $pdo->prepare("INSERT INTO payments (payment)
       VALUES (:payment)");
 

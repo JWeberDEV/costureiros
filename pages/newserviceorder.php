@@ -2,7 +2,7 @@
 $page = 'os';
 ?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
   <meta charset="utf-8" />
@@ -31,9 +31,9 @@ $page = 'os';
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="container">
+              <div class="container-OS">
                 <div class="row">
-                  <div class="col-3 pb-2 pt-1">
+                  <div class="col-4 pb-2 pt-1">
                     <a type="button" href="../pages/serviceorder.php" class="btn bg-gradient-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Retornar"><i class='material-symbols-rounded'>undo</i></a>
                     <div class="btn-group dropdown">
                       <button type="button" class="btn osStatus dropdown-toggle d-flex align-itens-center" data-bs-toggle="dropdown" aria-expanded="false"></button>
@@ -45,13 +45,16 @@ $page = 'os';
                         <li><a class="dropdown-item bg-gradient-hover text-white bg-gradient-secondary" onclick="finishOs(6)">Atraso de retirada</a></li>
                       </ul>
                     </div>
+                    <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="exportOs();">
+                      <i class='material-symbols-rounded'>file_export</i>
+                    </button>
                   </div>
                 </div>
                 <form role="form" class="text-start">
                   <input type="hidden" id="id">
                   <div class="row" style="position: relative; z-index: 11;">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados da Ordem de serviço</div>
-                    <div class="col-2">
+                    <div class="col-3">
                       <div class="input-group input-group-outline my-3">
                         <label class="form-label">Guichê</label>
                         <select id="ticket" class="form-select" placeholder="Guichê">
@@ -62,6 +65,12 @@ $page = 'os';
                       <div class="input-group input-group-outline my-3 entry">
                         <label class="form-label">DT Entrada</label>
                         <input id="entry" type="date" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 exit">
+                        <label class="form-label">DT Prova</label>
+                        <input id="proof" type="date" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
@@ -77,19 +86,14 @@ $page = 'os';
                         </select>
                       </div>
                     </div>
-                    <div class="col-1">
-                      <button type="button" class="btn bg-gradient-info m-0 mt-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportar OS" onClick="exportOs();">
-                        <i class='material-symbols-rounded'>file_export</i>
-                      </button>
-                    </div>
-                    <div class="col-3">
+                    <div class="col-2">
                       <div class="input-group input-group-outline my-3 is-filled balance">
                         <span class="input-group-text">R$:</span>
                         <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Saldo</label>
                         <input id="balance" type="number" class="form-control extra-padding" disabled>
                       </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                       <div class="input-group input-group-outline my-3 is-filled debit">
                         <span class="input-group-text">R$:</span>
                         <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Débito</label>
@@ -652,6 +656,7 @@ $page = 'os';
             ticket: $('#ticket').val(),
             payment: $('#payment').val(),
             entry: $('#entry').val(),
+            proof: $('#proof').val(),
             exit: $('#exit').val(),
             incoming: $('#incoming').val(),
             total: $('#total').val(),
@@ -689,6 +694,7 @@ $page = 'os';
               $("#id").val(element.serviceorder);
               $("#os").html('Nº ' + element.serviceorder);
               $("#entry").val(element.sevicentry);
+              $("#proof").val(element.serviceproof);
               $("#exit").val(element.servicexit);
               setTimeout(() => {
                 ticket.setValue([element.ticket]);

@@ -10,6 +10,8 @@ switch ($data->action) {
     $entry = date_format($entry, "Y-m-d");
     $out = date_create($data->exit);
     $out = date_format($out, "Y-m-d");
+    $proof = date_create($data->proof);
+    $proof = date_format($proof, "Y-m-d");
 
     if ($data->id > 0) {
 
@@ -22,7 +24,8 @@ switch ($data->action) {
           total = $data->total,
           remainder = $data->remainder,
           sevicentry = '$entry',
-          servicexit = '$out'
+          servicexit = '$out',
+          serviceproof = '$proof'
         WHERE id = $data->id"
       );
 
@@ -59,8 +62,8 @@ switch ($data->action) {
       }
     } else {
 
-      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,idpayment,ticket,incoming,total,remainder,sevicentry,servicexit)
-      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out' FROM serviceorders WHERE `status` = 1");
+      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,idpayment,ticket,incoming,total,remainder,sevicentry,servicexit, serviceproof)
+      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out', '$proof' FROM serviceorders WHERE `status` = 1");
 
       $execute = $stmt->execute();
       $lastInsertId = $pdo->lastInsertId();
@@ -197,6 +200,7 @@ switch ($data->action) {
         so.ticket,
         so.idclient,
         so.sevicentry,
+        so.serviceproof,
         so.servicexit,
         so.idpayment,
         FORMAT(so.incoming, 2) AS incoming,
@@ -235,6 +239,7 @@ switch ($data->action) {
         'ticket' => (int) $value['ticket'],
         'idclient' => (int) $value['idclient'],
         'sevicentry' => $value['sevicentry'],
+        'serviceproof' => $value['serviceproof'],
         'servicexit' => $value['servicexit'],
         'incoming' => $value['incoming'],
         'total' => $value['total'],

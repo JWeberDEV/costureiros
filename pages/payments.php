@@ -85,6 +85,7 @@ $page = 'payments';
             message: response.message
           });
           $('#payment').val('');
+          $('#id').val('');
           listPayments();
         });
     }
