@@ -23,7 +23,7 @@ $page = 'os';
     <!-- Filters -->
     <nav class="navbar navbar-main navbar-expand-lg mt-2 px-0 mx-2 card" id="navbarBlur" data-scroll="true">
       <div class="container-fluid">
-        <div class="row justify-content-start">
+        <div class="row justify-content-evenly">
           <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ações</div>
           <hr class="horizontal dark m-0 mb-2" />
           <div class="row justify-content-between">
@@ -59,7 +59,7 @@ $page = 'os';
           </div>
           <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Filtros</div>
           <hr class="horizontal dark m-0" />
-          <div class="col-1 ">
+          <div class="col-2 ">
             <div class="input-group input-group-outline my-3">
               <label class="form-label">Guichê</label>
               <select id="ticket" class="form-select" placeholder="Guichê">
@@ -93,10 +93,6 @@ $page = 'os';
               <input id="date" type="text" class="form-control">
             </div>
           </div>
-          <div class='col-2 mt-2 text-center'>
-            <Strong class='pt-3' id='labelIncomming'></Strong><br>
-            <Strong class='pt-3' id='labelTotal'></Strong>
-          </div>
           <div class="col-1 text-end mt-3 pe-4">
             <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom"
               title="Pesquisar" onClick="listServiccesOrders(),saveFields();">
@@ -106,6 +102,14 @@ $page = 'os';
               title="Limpar Filtros" onClick="clearfilters();">
               <i class='material-symbols-rounded'>clear_all</i>
             </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class='col-2 text-center'>
+            <Strong class='pt-3' id='labelIncomming'></Strong><br>
+          </div>
+          <div class="col-2">
+            <Strong class='pt-3' id='labelTotal'></Strong>
           </div>
         </div>
       </div>
@@ -338,37 +342,37 @@ $page = 'os';
     }
 
     $(function() {
-        $('#date').daterangepicker({
-          timePicker: true,
-          startDate: moment().subtract(6, 'days').startOf('day'),
-          endDate: moment().endOf('day'),
-          locale: {
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Cancelar",
-            fromLabel: "De",
-            toLabel: "Até",
-            weekLabel: "S",
-            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
-            monthNames: [
-              "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-              "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-            ],
-            firstDay: 0 // Domingo como primeiro dia da semana
-          },
-          ranges: {
-            "Hoje": [moment().startOf('day'), moment().endOf('day')],
-            "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-            "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
-            "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
-            "Este Mês": [moment().startOf('month'), moment().endOf('month')],
-            "Mês Passado": [
-              moment().subtract(1, 'month').startOf('month'),
-              moment().subtract(1, 'month').endOf('month')
-            ]
-          }
-        });
+      $('#date').daterangepicker({
+        timePicker: true,
+        startDate: moment().subtract(6, 'days').startOf('day'),
+        endDate: moment().endOf('day'),
+        locale: {
+          format: 'DD/MM/YYYY',
+          applyLabel: "Aplicar",
+          cancelLabel: "Cancelar",
+          fromLabel: "De",
+          toLabel: "Até",
+          weekLabel: "S",
+          daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+          monthNames: [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+          ],
+          firstDay: 0 // Domingo como primeiro dia da semana
+        },
+        ranges: {
+          "Hoje": [moment().startOf('day'), moment().endOf('day')],
+          "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+          "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+          "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+          "Este Mês": [moment().startOf('month'), moment().endOf('month')],
+          "Mês Passado": [
+            moment().subtract(1, 'month').startOf('month'),
+            moment().subtract(1, 'month').endOf('month')
+          ]
+        }
       });
+    });
 
     const listServiccesOrders = () => {
       $.post("../php/back_serviceorder.php", {
