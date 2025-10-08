@@ -25,7 +25,8 @@ switch ($data->action) {
           remainder = $data->remainder,
           sevicentry = '$entry',
           servicexit = '$out',
-          serviceproof = '$proof'
+          serviceproof = '$proof',
+          generalObservations = '$data->generalObservations'
         WHERE id = $data->id"
       );
 
@@ -62,8 +63,8 @@ switch ($data->action) {
       }
     } else {
 
-      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,idpayment,ticket,incoming,total,remainder,sevicentry,servicexit, serviceproof)
-      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out', '$proof' FROM serviceorders WHERE `status` = 1");
+      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,idpayment,ticket,incoming,total,remainder,sevicentry,servicexit, serviceproof,generalObservations)
+      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out', '$proof', $data->generalObservations FROM serviceorders WHERE `status` = 1");
 
       $execute = $stmt->execute();
       $lastInsertId = $pdo->lastInsertId();
@@ -201,6 +202,7 @@ switch ($data->action) {
         so.idclient,
         so.sevicentry,
         so.serviceproof,
+        so.generalObservations,
         so.servicexit,
         so.idpayment,
         FORMAT(so.incoming, 2) AS incoming,
@@ -240,6 +242,7 @@ switch ($data->action) {
         'idclient' => (int) $value['idclient'],
         'sevicentry' => $value['sevicentry'],
         'serviceproof' => $value['serviceproof'],
+        'generalObservations' => $value['generalObservations'],
         'servicexit' => $value['servicexit'],
         'incoming' => $value['incoming'],
         'total' => $value['total'],

@@ -1,3 +1,7 @@
+<?php 
+  $config = (Object) parse_ini_file("../config.ini", true);
+?>
+
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2"
   id="sidenav-main">
   <div class="sidenav-header text-center">
@@ -5,7 +9,7 @@
       aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" href="#" target="_blank">
       <img src="../assets/img/walpaper.png" class="navbar-brand-img" alt="main_logo">
-      <span class="ms-1 text-sm text-dark"><strong class="name">Costureiros</strong></span>
+      <span class="ms-1 text-sm text-dark"><strong class="name"><?php echo $config->settings['name'] ?></strong></span>
     </a>
   </div>
   <hr class="horizontal dark mt-0 mb-2">

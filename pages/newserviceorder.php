@@ -136,6 +136,10 @@ $page = 'os';
                       </table>
                     </div>
                   </div>
+                  <div class="input-group input-group-outline my-3 is-filled">
+                    <label class="form-label">Observações Gerais</label>
+                    <textarea id="generalObservations" type="text" class="form-control" autocomplete="off"></textarea>
+                  </div>
                   <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Soma</div>
                   <hr class="horizontal dark m-0" />
                   <div class="row">
@@ -450,7 +454,7 @@ $page = 'os';
             <div class="d-flex px-2 py-1">
               <div class="input-group input-group-outline my-3 ${classstyle} obs${row}">
                 <label class="form-label">Observações</label>
-                <input id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})' autocomplete="off">
+                <textarea id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})' autocomplete="off" style="resize: both;"></textarea>
               </div>
             </div>
           </td>
@@ -661,6 +665,7 @@ $page = 'os';
             incoming: $('#incoming').val(),
             total: $('#total').val(),
             remainder: $('#remainder').val(),
+            generalObservations: $('#generalObservations').val(),
             data
           })
           .done(function(response) {
@@ -696,6 +701,7 @@ $page = 'os';
               $("#entry").val(element.sevicentry);
               $("#proof").val(element.serviceproof);
               $("#exit").val(element.servicexit);
+              $("#generalObservations").val(element.generalObservations);
               setTimeout(() => {
                 ticket.setValue([element.ticket]);
               }, 1200);
