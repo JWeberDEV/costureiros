@@ -7,11 +7,11 @@ $response = (object) [];
 switch ($data->action) {
   case 'save_orderservice':
     $entry = date_create($data->entry);
-    $entry = date_format($entry, "Y-m-d");
+    $entry = date_format($entry, "Y-m-d H:i:s");
     $out = date_create($data->exit);
-    $out = date_format($out, "Y-m-d");
+    $out = date_format($out, "Y-m-d H:i:s");
     $proof = date_create($data->proof);
-    $proof = date_format($proof, "Y-m-d");
+    $proof = date_format($proof, "Y-m-d H:i:s");
 
     if ($data->id > 0) {
 

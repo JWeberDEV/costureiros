@@ -12,6 +12,7 @@ switch ($data->action) {
       'name' => "$data->name",
       'phone' => "$data->phone",
       'phoneOption' => "$data->phoneOption",
+      'birthDate' => "$data->birthDate",
       'cep' => "$data->cep",
       'city' => "$data->city",
       'neigbouhod' => "$data->neigbouhod",
@@ -31,6 +32,7 @@ switch ($data->action) {
           name = :name,
           phone = :phone,
           phoneOption = :phoneOption,
+          birthDate = :birthDate,
           cep = :cep,
           city = :city,
           neigbouhod = :neigbouhod,
@@ -54,8 +56,8 @@ switch ($data->action) {
       }
     } else {
 
-      $stmt = $pdo->prepare("INSERT INTO clients (name,phone,phoneOption,cep,city,neigbouhod,street,obs,number,balance,debit)
-      VALUES (:name, :phone, :phoneOption,:cep, :city, :neigbouhod, :street, :obs, :number, :debit, :debit)");
+      $stmt = $pdo->prepare("INSERT INTO clients (name,phone,phoneOption,birthDate,cep,city,neigbouhod,street,obs,number,balance,debit)
+      VALUES (:name, :phone, :phoneOption, :birthDate,:cep, :city, :neigbouhod, :street, :obs, :number, :debit, :debit)");
 
       $execute = $stmt->execute($arrayData);
 
@@ -120,4 +122,32 @@ switch ($data->action) {
 
     print_r(json_encode($results));
     break;
+  case 'check_new_births':
+    $stmt = $pdo->prepare("SELECT COUNT(id) as count FROM clients WHERE MONTH(birthDate) = MONTH(NOW()) AND DAY(birthDate) = DAY(NOW())");
+    $stmt->execute() or die("Failed to execute");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
+
+    $response = [];
+    foreach ($results as $key => $value) {
+      $response[] = [
+        'count' => $value['count'],
+      ];
+    }
+
+    echo (json_encode($response));
+    break;
+  case 'get_name_births':
+  $stmt = $pdo->prepare("SELECT name FROM clients WHERE MONTH(birthDate) = MONTH(NOW()) AND DAY(birthDate) = DAY(NOW())");
+  $stmt->execute() or die("Failed to execute");
+  $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
+
+  $response = [];
+  foreach ($results as $key => $value) {
+    $response[] = [
+      'name' => $value['name'],
+    ];
+  }
+
+  echo (json_encode($response));
+  break;
 }

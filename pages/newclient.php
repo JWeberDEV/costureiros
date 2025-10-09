@@ -58,6 +58,12 @@ $page = 'clients';
                         <input id="phoneOption" type="text" class="form-control" maxlength="11" autocomplete="off">
                       </div>
                     </div>
+                    <div class="col-3">
+                      <div class="input-group input-group-outline my-3 is-filled">
+                        <label class="form-label">DT Aniversário</label>
+                        <input id="birthDate" type="date" class="form-control">
+                      </div>
+                    </div>
                   </div>
                   <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Endereço</div>
                   <div class="row">
@@ -219,7 +225,8 @@ $page = 'clients';
           id: $('#id').val(),
           name: $('#name').val(),
           phone: $('#phone').val(),
-          phoneOption: $('#phoneOption').val(),
+          phoneOption: $('#phoneOption').val() || '',
+          birthDate: $('#birthDate').val(),
           cep: $('#cep').val(),
           city: $('#city').val(),
           neigbouhod: $('#neigbouhod').val(),
@@ -240,7 +247,7 @@ $page = 'clients';
           $('.load').hide();
           if (data.class == 'bg-gradient-success') {
             setTimeout(() => {
-              window.location = '../pages/clients.php';
+              // window.location = '../pages/clients.php';
             }, 2000);
           }
         });
@@ -259,6 +266,7 @@ $page = 'clients';
           $("#name").val(response.name);
           $("#phone").val(response.phone);
           $("#phoneOption").val(response.phoneOption);
+          $("#birthDate").val(response.birthDate);
           $("#cep").val(response.cep);
           $("#city").val(response.city);
           $("#neigbouhod").val(response.neigbouhod);

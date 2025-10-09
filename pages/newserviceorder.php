@@ -64,19 +64,19 @@ $page = 'os';
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 entry">
                         <label class="form-label">DT Entrada</label>
-                        <input id="entry" type="date" class="form-control">
+                        <input id="entry" type="datetime-local" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 exit">
                         <label class="form-label">DT Prova</label>
-                        <input id="proof" type="date" class="form-control">
+                        <input id="proof" type="datetime-local" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 exit">
                         <label class="form-label">DT Saída</label>
-                        <input id="exit" type="date" class="form-control">
+                        <input id="exit" type="datetime-local" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
@@ -612,7 +612,7 @@ $page = 'os';
         $('.load').show();
         let data = [];
 
-        if (!$('#ticket').val() || !$('#client').val() || !$('#entry').val() || !$('#exit').val()) {
+        if (!$('#ticket').val() || !$('#client').val() || !$('#entry').val() || !$('#exit').val() || !$('#payment').val()) {
           showToast({
             class: 'bg-gradient-warning',
             message: 'Verifique os campos que precisam ser preenchidos'

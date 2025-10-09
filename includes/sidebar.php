@@ -1,5 +1,5 @@
-<?php 
-  $config = (Object) parse_ini_file("../config.ini", true);
+<?php
+$config = (object) parse_ini_file("../config.ini", true);
 ?>
 
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2"
@@ -64,7 +64,17 @@
       </li>
     </ul>
   </div>
-  <div class="text-center">
+  <div class="text-center buttons">
+    <a type="button"
+      href="../pages/births.php"
+      class="btn bg-gradient-dark"
+      data-bs-toggle="tooltip"
+      data-bs-placement="bottom"
+      title="Aniversariantes do dia"
+      onclick="setCollapsed()">
+      <i class="material-symbols-rounded">notifications</i>
+      <span id="birthNotification" class=""></span>
+    </a>
     <button type="button"
       class="btn bg-gradient-dark"
       data-bs-toggle="tooltip"
@@ -76,6 +86,10 @@
   </div>
 </aside>
 <script>
+  $(document).ready(function() {
+    checkNewBirths();
+  });
+
   const setCollapsed = () => {
     const aside = $('aside');
     const name = $('.name');
