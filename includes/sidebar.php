@@ -5,6 +5,7 @@ $config = (object) parse_ini_file("../config.ini", true);
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2"
   id="sidenav-main">
   <div class="sidenav-header text-center">
+    <input type="hidden" name="name" value="<?php echo $page; ?>">
     <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
       aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" href="#" target="_blank">
@@ -92,7 +93,6 @@ $config = (object) parse_ini_file("../config.ini", true);
 
   const setCollapsed = () => {
     const aside = $('aside');
-    const name = $('.name');
     const os = $('.os');
     const clients = $('.clients');
     const services = $('.services');
@@ -102,7 +102,7 @@ $config = (object) parse_ini_file("../config.ini", true);
     if (aside.hasClass('collapsed')) {
       aside.removeClass('collapsed fixed-start-collapsed');
       aside.addClass('expanded fixed-start');
-      name.html('Costureiros');
+      $("#name").html($('input[name="name"]').val());
       os.html('OS');
       clients.html('Cadastro de clientes');
       services.html('Cadastro de serviços');
@@ -111,7 +111,7 @@ $config = (object) parse_ini_file("../config.ini", true);
     } else {
       aside.removeClass('expanded fixed-start');
       aside.addClass('collapsed fixed-start-collapsed');
-      name.html('');
+      $("#name").html('');
       os.html('');
       clients.html('');
       services.html('');

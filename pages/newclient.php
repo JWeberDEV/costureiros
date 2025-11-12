@@ -226,15 +226,15 @@ $page = 'clients';
           name: $('#name').val(),
           phone: $('#phone').val(),
           phoneOption: $('#phoneOption').val() || '',
-          birthDate: $('#birthDate').val(),
-          cep: $('#cep').val(),
-          city: $('#city').val(),
-          neigbouhod: $('#neigbouhod').val(),
-          street: $('#street').val(),
-          obs: $('#obs').val(),
-          number: $('#number').val(),
-          balance: $('#balance').val(),
-          debit: $('#debit').val(),
+          birthDate: $('#birthDate').val() || '',
+          cep: $('#cep').val() || '',
+          city: $('#city').val() || '',
+          neigbouhod: $('#neigbouhod').val() || '',
+          street: $('#street').val() || '',
+          obs: $('#obs').val() || '',
+          number: $('#number').val() || '',
+          balance: $('#balance').val() || '',
+          debit: $('#debit').val() || '',
         })
         .done(response => {
           let data = JSON.parse(response);
@@ -247,7 +247,7 @@ $page = 'clients';
           $('.load').hide();
           if (data.class == 'bg-gradient-success') {
             setTimeout(() => {
-              // window.location = '../pages/clients.php';
+              window.location = '../pages/clients.php';
             }, 2000);
           }
         });

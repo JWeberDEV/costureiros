@@ -64,7 +64,7 @@ switch ($data->action) {
     } else {
 
       $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,idpayment,ticket,incoming,total,remainder,sevicentry,servicexit, serviceproof,generalObservations)
-      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out', '$proof', $data->generalObservations FROM serviceorders WHERE `status` = 1");
+      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out', '$proof', '$data->generalObservations' FROM serviceorders WHERE `status` = 1");
 
       $execute = $stmt->execute();
       $lastInsertId = $pdo->lastInsertId();

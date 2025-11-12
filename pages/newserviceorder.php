@@ -1,5 +1,6 @@
 <?php
 $page = 'os';
+$config = (object) parse_ini_file("../config.ini", true);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -55,7 +56,7 @@ $page = 'os';
                   <div class="row" style="position: relative; z-index: 11;">
                     <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dados da Ordem de serviço</div>
                     <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
+                      <div class="input-group input-group-outline my-3 z-index-2">
                         <label class="form-label">Guichê</label>
                         <select id="ticket" class="form-select" placeholder="Guichê">
                         </select>
@@ -408,59 +409,59 @@ $page = 'os';
         let classstyle = "is-filled";
 
         $('.lines').append(`
-        <tr class='line' row='${row}' idOrder='${idOrder}' idService='${selectId}'>
-          <td>
-          <button type="button" class="btn bg-gradient-success mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <i class='material-symbols-rounded pt-1 pb-1'>add</i>
-          </button>
-          </td>
-          <td>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" ${issue == 1 ? 'checked' : ''} onClick="setIssue({idOrder:${idOrder}, row:${row}})" id="issue${row}">
-            </div>
-          </td>
-          <td>
-            <div class="d-flex px-2 py-1 m-2 is-filled">
-              <select id='${selectId}' class="form-control service${row}" ${service} onchange='setPrice(${row}), calculator();'>
-            </div>
-          </td>
-          <td colspan='2'>
-            <div class="d-flex px-2 py-1">
-              <div class="input-group input-group-outline my-3 ${classstyle} item${row}">
-                <label class="form-label">Item</label>
-                <input id="item${row}" type="text" class="form-control" onblur="onkeydown='setIsFilled(${row})'" onkeydown='setIsFilled(${row})' autocomplete="off">
+          <tr class='line' row='${row}' idOrder='${idOrder}' idService='${selectId}'>
+            <td>
+            <button type="button" class="btn bg-gradient-success mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <i class='material-symbols-rounded pt-1 pb-1'>add</i>
+            </button>
+            </td>
+            <td>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" ${issue == 1 ? 'checked' : ''} onClick="setIssue({idOrder:${idOrder}, row:${row}})" id="issue${row}">
               </div>
-            </div>
-          </td>
-          <td>
-            <div class="d-flex px-2 py-1">
-              <div class="input-group input-group-outline my-3 ${classstyle} price${row}">
-                <span class="input-group-text">R$:</span>
-                <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Preço</label>
-                <input id="price${row}" type="number" class="form-control extra-padding" autocomplete="off">
+            </td>
+            <td>
+              <div class="d-flex px-2 py-1 m-2 is-filled">
+                <select id='${selectId}' class="form-control service${row}" ${service} onchange='setPrice(${row}), calculator();'>
               </div>
-            </div>
-          </td>
-          <td>
-            <div class="d-flex px-2 py-1">
-              <div class="input-group input-group-outline my-3 ${classstyle} discount${row}">
-                <span class="input-group-text">R$:</span>
-                <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Desconto</label>
-                <input id="discount${row}" type="number" class="form-control extra-padding" onkeydown='setIsFilled(${row})' onblur='format(${row});calculator()' autocomplete="off">
+            </td>
+            <td colspan='2'>
+              <div class="d-flex px-2 py-1">
+                <div class="input-group input-group-outline my-3 ${classstyle} item${row}">
+                  <label class="form-label">Item</label>
+                  <input id="item${row}" type="text" class="form-control" onblur="onkeydown='setIsFilled(${row})'" onkeydown='setIsFilled(${row})' autocomplete="off">
+                </div>
               </div>
-            </div>
-          </td>
-          <td colspan='2'>
-            <div class="d-flex px-2 py-1">
-              <div class="input-group input-group-outline my-3 ${classstyle} obs${row}">
-                <label class="form-label">Observações</label>
-                <textarea id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})' autocomplete="off" style="resize: both;"></textarea>
+            </td>
+            <td>
+              <div class="d-flex px-2 py-1">
+                <div class="input-group input-group-outline my-3 ${classstyle} price${row}">
+                  <span class="input-group-text">R$:</span>
+                  <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Preço</label>
+                  <input id="price${row}" type="number" class="form-control extra-padding" autocomplete="off">
+                </div>
               </div>
-            </div>
-          </td>
-          <td class="text-center ps-0">
-            <button type="button" id='remove${row}' class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row},${idOrder})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
-          </td>
+            </td>
+            <td <?php if ($config->settings['discount'] == 'disabled') { echo 'style="display: none;"'; } ?>>
+              <div class="d-flex px-2 py-1">
+                <div class="input-group input-group-outline my-3 ${classstyle} discount${row}">
+                  <span class="input-group-text">R$:</span>
+                  <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Desconto</label>
+                  <input id="discount${row}" type="number" class="form-control extra-padding" onkeydown='setIsFilled(${row})' onblur='format(${row});calculator()' autocomplete="off">
+                </div>
+              </div>
+            </td>
+            <td colspan='2'>
+              <div class="d-flex px-2 py-1">
+                <div class="input-group input-group-outline my-3 ${classstyle} obs${row}">
+                  <label class="form-label">Observações</label>
+                  <textarea id="obs${row}" type="text" class="form-control" onkeydown='setIsFilled(${row})' autocomplete="off" style="resize: both;"></textarea>
+                </div>
+              </div>
+            </td>
+            <td class="text-center ps-0">
+              <button type="button" id='remove${row}' class="btn btn-danger mt-3 ms-4" onclick="removeRow(${row},${idOrder})"><i class='material-symbols-rounded pt-1 pb-1'>remove</i></button>
+            </td>
         </tr>
       `);
         $(`#price${row}`).mask("###.###.00", {
@@ -660,7 +661,7 @@ $page = 'os';
             ticket: $('#ticket').val(),
             payment: $('#payment').val(),
             entry: $('#entry').val(),
-            proof: $('#proof').val(),
+            proof: $('#proof').val() || '',
             exit: $('#exit').val(),
             incoming: $('#incoming').val(),
             total: $('#total').val(),
