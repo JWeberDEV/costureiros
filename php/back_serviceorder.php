@@ -149,6 +149,8 @@ switch ($data->action) {
          END,
     s.serviceorder DESC";
 
+    // echo $query;exit;
+
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -304,34 +304,6 @@ $config = (object) parse_ini_file("../config.ini", true);
       }
 
       $(document).ready(async function() {
-        await updateTickets();
-        $('.load').hide();
-        $('.load-modal').hide();
-        $(`.entry`).addClass('is-filled');
-        $(`.exit`).addClass('is-filled');
-        // $('#incoming').mask("###.###.00", {
-        //   reverse: true
-        // });
-        $('#total').mask("###.###.00", {
-          reverse: true
-        });
-        $('#remainder').mask("###.###.00", {
-          reverse: true
-        });
-        $('#price').mask("###.###.00", {
-          reverse: true
-        });
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        id = urlParams.get('id');
-        ticketid = urlParams.get('ticket');
-        await fetchServices();
-        if (!id) {
-          addRow();
-        } else {
-          await listServiceId(id);
-        }
-
         let clientSelectize = $(`#client`).selectize({
           valueField: 'id',
           labelField: 'name',
@@ -378,6 +350,34 @@ $config = (object) parse_ini_file("../config.ini", true);
           payment.addOption(response);
           payment.refreshOptions(false);
         });
+        
+        await updateTickets();
+        $('.load').hide();
+        $('.load-modal').hide();
+        $(`.entry`).addClass('is-filled');
+        $(`.exit`).addClass('is-filled');
+        // $('#incoming').mask("###.###.00", {
+        //   reverse: true
+        // });
+        $('#total').mask("###.###.00", {
+          reverse: true
+        });
+        $('#remainder').mask("###.###.00", {
+          reverse: true
+        });
+        $('#price').mask("###.###.00", {
+          reverse: true
+        });
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        id = urlParams.get('id');
+        ticketid = urlParams.get('ticket');
+        await fetchServices();
+        if (!id) {
+          addRow();
+        } else {
+          await listServiceId(id);
+        }
 
         if (statusOs == 2) {
           $('#save').attr('disabled', true);
@@ -705,13 +705,13 @@ $config = (object) parse_ini_file("../config.ini", true);
               $("#generalObservations").val(element.generalObservations);
               setTimeout(() => {
                 ticket.setValue([element.ticket]);
-              }, 1200);
+              }, 1500);
               setTimeout(() => {
                 client.setValue([element.idclient]);
-              }, 1200);
+              }, 1500);
               setTimeout(() => {
                 payment.setValue([element.idpayment]);
-              }, 1200);
+              }, 1500);
               $('.osStatus').addClass(element.button);
               $('.osStatus').text(element.status);
 
@@ -861,11 +861,11 @@ $config = (object) parse_ini_file("../config.ini", true);
 
                 window.location.reload();
 
-                // if (response.stauts != 2) {
-                //   setTimeout(() => {
-                //     window.location = '../pages/serviceorder.php';
-                //   }, 2000);
-                // }
+                if (response.stauts != 2) {
+                  setTimeout(() => {
+                    window.location = '../pages/serviceorder.php';
+                  }, 2000);
+                }
               });
           },
         });
