@@ -43,7 +43,7 @@ $page = 'clients';
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 name">
                         <label class="form-label">Nome</label>
-                        <input id="name" type="user" class="form-control" autocomplete="off">
+                        <input id="client" type="user" class="form-control" autocomplete="off">
                       </div>
                     </div>
                     <div class="col-3">
@@ -223,7 +223,7 @@ $page = 'clients';
       $.post("../php/back_client.php", {
           action: 'save_client',
           id: $('#id').val(),
-          name: $('#name').val(),
+          name: $('#client').val(),
           phone: $('#phone').val(),
           phoneOption: $('#phoneOption').val() || '',
           birthDate: $('#birthDate').val() || '',
@@ -263,7 +263,7 @@ $page = 'clients';
         .done(function(response) {
           response = JSON.parse(response);
           $("#id").val(response.id);
-          $("#name").val(response.name);
+          $("#client").val(response.name);
           $("#phone").val(response.phone);
           $("#phoneOption").val(response.phoneOption);
           $("#birthDate").val(response.birthDate);
