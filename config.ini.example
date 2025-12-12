@@ -1,6 +1,6 @@
 [settings]
 name = "Costureiros"
-discount = 'enabled'
-balance = 'enabled'
-debit  = 'enabled'
-obs = 'enabled'
+discount = 'disabled'
+balance = 'disabled'
+debit  = 'disabled'
+obs = 'disabled'
