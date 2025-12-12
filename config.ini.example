@@ -1,3 +1,6 @@
 [settings]
 name = "Costureiros"
 discount = 'enabled'
+balance = 'enabled'
+debit  = 'enabled'
+obs = 'enabled'

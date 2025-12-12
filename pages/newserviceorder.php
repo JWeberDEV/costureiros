@@ -87,14 +87,18 @@ $config = (object) parse_ini_file("../config.ini", true);
                         </select>
                       </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2" <?php if ($config->settings['balance'] == 'disabled') {
+                                          echo 'style="display: none;"';
+                                        } ?>>
                       <div class="input-group input-group-outline my-3 is-filled balance">
                         <span class="input-group-text">R$:</span>
                         <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Saldo</label>
                         <input id="balance" type="number" class="form-control extra-padding" disabled>
                       </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2" <?php if ($config->settings['debit'] == 'disabled') {
+                                          echo 'style="display: none;"';
+                                        } ?>>
                       <div class="input-group input-group-outline my-3 is-filled debit">
                         <span class="input-group-text">R$:</span>
                         <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;Débito</label>
@@ -350,7 +354,7 @@ $config = (object) parse_ini_file("../config.ini", true);
           payment.addOption(response);
           payment.refreshOptions(false);
         });
-        
+
         await updateTickets();
         $('.load').hide();
         $('.load-modal').hide();
@@ -442,7 +446,9 @@ $config = (object) parse_ini_file("../config.ini", true);
                 </div>
               </div>
             </td>
-            <td <?php if ($config->settings['discount'] == 'disabled') { echo 'style="display: none;"'; } ?>>
+            <td <?php if ($config->settings['discount'] == 'disabled') {
+                  echo 'style="display: none;"';
+                } ?>>
               <div class="d-flex px-2 py-1">
                 <div class="input-group input-group-outline my-3 ${classstyle} discount${row}">
                   <span class="input-group-text">R$:</span>
@@ -451,7 +457,9 @@ $config = (object) parse_ini_file("../config.ini", true);
                 </div>
               </div>
             </td>
-            <td colspan='2'>
+            <td colspan='2' <?php if ($config->settings['obs'] == 'disabled') {
+                              echo 'style="display: none;"';
+                            } ?>>
               <div class="d-flex px-2 py-1">
                 <div class="input-group input-group-outline my-3 ${classstyle} obs${row}">
                   <label class="form-label">Observações</label>
@@ -697,6 +705,10 @@ $config = (object) parse_ini_file("../config.ini", true);
               os = element.serviceorder;
               name = element.name;
               statusOs = element.servicestatus;
+              fetchTicket().then(res => {
+                ticket.addOption(res);
+                ticket.refreshOptions(false);
+              });
               $("#id").val(element.serviceorder);
               $("#os").html('Nº ' + element.serviceorder);
               $("#entry").val(element.sevicentry);
