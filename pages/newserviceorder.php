@@ -126,7 +126,9 @@ $config = (object) parse_ini_file("../config.ini", true);
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Item</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3"></th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Preço</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Desconto</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3" <?php if ($config->settings['discount'] == 'disabled') {
+                                                                                                                    echo 'style="display: none;"';
+                                                                                                                  } ?>>>Desconto</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Observação</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3"></th>
                             <th class="text-end">
