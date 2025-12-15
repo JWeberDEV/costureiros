@@ -128,7 +128,7 @@ $config = (object) parse_ini_file("../config.ini", true);
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Preço</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3" <?php if ($config->settings['discount'] == 'disabled') {
                                                                                                                     echo 'style="display: none;"';
-                                                                                                                  } ?>>>Desconto</th>
+                                                                                                                  } ?>>Desconto</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Observação</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3"></th>
                             <th class="text-end">
@@ -686,11 +686,11 @@ $config = (object) parse_ini_file("../config.ini", true);
             $('#save').removeAttr('disabled');
             $('.notload').show();
             $('.load').hide();
-            // if (response.class == 'bg-gradient-success') {
-            //   setTimeout(() => {
-            //     window.location = '../pages/serviceorder.php';
-            //   }, 2000);
-            // }
+            if (response.class == 'bg-gradient-success') {
+              setTimeout(() => {
+                window.location = '../pages/serviceorder.php';
+              }, 2000);
+            }
           });
       }
 
