@@ -3,4 +3,3 @@ name = "Costureiros"
 discount = 'disabled'
 balance = 'disabled'
 debit  = 'disabled'
-obs = 'disabled'

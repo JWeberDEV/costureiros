@@ -457,9 +457,7 @@ $config = (object) parse_ini_file("../config.ini", true);
                 </div>
               </div>
             </td>
-            <td colspan='2' <?php if ($config->settings['obs'] == 'disabled') {
-                              echo 'style="display: none;"';
-                            } ?>>
+            <td colspan='2'>
               <div class="d-flex px-2 py-1">
                 <div class="input-group input-group-outline my-3 ${classstyle} obs${row}">
                   <label class="form-label">Observações</label>
@@ -686,11 +684,11 @@ $config = (object) parse_ini_file("../config.ini", true);
             $('#save').removeAttr('disabled');
             $('.notload').show();
             $('.load').hide();
-            if (response.class == 'bg-gradient-success') {
-              setTimeout(() => {
-                window.location = '../pages/serviceorder.php';
-              }, 2000);
-            }
+            // if (response.class == 'bg-gradient-success') {
+            //   setTimeout(() => {
+            //     window.location = '../pages/serviceorder.php';
+            //   }, 2000);
+            // }
           });
       }
 

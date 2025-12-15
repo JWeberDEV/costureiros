@@ -1,15 +1,23 @@
 const showToast = (args) => {
-  $("#infoToast").addClass(`text-center ${args.class}`);
-  $(".html").html(`<strong>${args.message}</strong>`);
-  $("#infoToast").toast("show");
-
-  setTimeout(() => {
-    $("#infoToast").removeClass(
-      "bg-gradient-danger",
-      "bg-gradient-success",
-      "bg-gradient-warning"
-    );
-  }, "2000");
+  if (args.class == "bg-gradient-success") {
+    $("#successToast").toast("show");
+    $(".successHtml").html(`<strong>${args.message}</strong>`);
+    setTimeout(() => {
+      $(".successHtml").html("");
+    }, "4000");
+  } else if (args.class == "bg-gradient-danger") {
+    $("#dangerToast").toast("show");
+    $(".dangerHtml").html(`<strong>${args.message}</strong>`);
+    setTimeout(() => {
+      $(".dangerHtml").html("");
+    }, "4000");
+  } else if (args.class == "bg-gradient-warning") {
+    $("#warningToast").toast("show");
+    $(".warningHtml").html(`<strong>${args.message}</strong>`);
+    setTimeout(() => {
+      $(".warningHtml").html("");
+    }, "4000");
+  }
 };
 
 const hoje = new Date().toISOString().slice(0, 10);
@@ -18,8 +26,8 @@ const dataVisto = localStorage.getItem("aniversario_visto");
 const clearNotification = () => {
   localStorage.setItem("aniversario_visto", hoje);
   showToast({
-    class: 'bg-gradient-success',
-    message: 'Notificação marcada como vista'
+    class: "bg-gradient-success",
+    message: "Notificação marcada como vista",
   });
 };
 
@@ -57,4 +65,3 @@ const triggerNotificationAudio = () => {
   const audio = new Audio("../assets/audio/notification.mp3");
   audio.play();
 };
-
