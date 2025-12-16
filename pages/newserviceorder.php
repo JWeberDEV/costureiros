@@ -62,24 +62,46 @@ $config = (object) parse_ini_file("../config.ini", true);
                         </select>
                       </div>
                     </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 entry">
-                        <label class="form-label">DT Entrada</label>
-                        <input id="entry" type="datetime-local" class="form-control">
+                    <?php if ($config->settings['name'] == 'Costureiros') { ?>
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 entry">
+                          <label class="form-label">DT Entrada</label>
+                          <input id="entry" type="date" class="form-control">
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 exit">
-                        <label class="form-label">DT Prova</label>
-                        <input id="proof" type="datetime-local" class="form-control">
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 exit">
+                          <label class="form-label">DT Saída</label>
+                          <input id="exit" type="date" class="form-control">
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 exit">
-                        <label class="form-label">DT Saída</label>
-                        <input id="exit" type="datetime-local" class="form-control">
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3">
+                          <label class="form-label">Horário de Retirada</label>
+                          <select id="time" class="form-select" placeholder="Horário de Retirada" onchange="checkPickupTime()">
+                          </select>
+                        </div>
                       </div>
-                    </div>
+                    <?php } else { ?>
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 entry">
+                          <label class="form-label">DT Entrada</label>
+                          <input id="entry" type="datetime-local" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 proof">
+                          <label class="form-label">DT Prova</label>
+                          <input id="proof" type="datetime-local" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 exit">
+                          <label class="form-label">DT Saída</label>
+                          <input id="exit" type="datetime-local" class="form-control">
+                        </div>
+                      </div>
+                    <?php } ?>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3">
                         <label class="form-label">Cliente</label>
@@ -262,6 +284,13 @@ $config = (object) parse_ini_file("../config.ini", true);
       let id = "";
       let statusOs = "";
 
+      const fetchTimes = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'load_times'
+        })
+        return JSON.parse(response);
+      }
+
       const fetchClients = async () => {
         const response = await $.post("../php/back_serviceorder.php", {
           action: 'load_clients'
@@ -352,15 +381,36 @@ $config = (object) parse_ini_file("../config.ini", true);
 
         payment = paymentSelectize[0].selectize;
 
-        fetchPayment().then(response => {
-          payment.addOption(response);
-          payment.refreshOptions(false);
-        });
+        <?php if ($config->settings['name'] == 'Costureiros') { ?>
+          fetchPayment().then(response => {
+            payment.addOption(response);
+            payment.refreshOptions(false);
+          });
+
+          let timeSelectize = $(`#time`).selectize({
+            valueField: 'name',
+            labelField: 'name',
+            searchField: ['name'],
+            sortField: 'name',
+            sortField: "$order",
+            create: false,
+          });
+
+          time = timeSelectize[0].selectize;
+
+          fetchTimes().then(response => {
+            time.addOption(response);
+            time.refreshOptions(false);
+          });
+        <?php } ?>
+
+
 
         await updateTickets();
         $('.load').hide();
         $('.load-modal').hide();
         $(`.entry`).addClass('is-filled');
+        $(`.proof`).addClass('is-filled');
         $(`.exit`).addClass('is-filled');
         // $('#incoming').mask("###.###.00", {
         //   reverse: true
@@ -393,6 +443,24 @@ $config = (object) parse_ini_file("../config.ini", true);
           });
         }
       });
+
+      const checkPickupTime = () => {
+        const selectedTime = $('#time').val();
+        const exit = $('#exit').val();
+        $.post("../php/back_serviceorder.php", {
+          action: 'empty_time_check',
+          id: selectedTime,
+          exit: exit
+        }).then((response) => {
+          if (response == 1) {
+            time.setValue([]);
+            showToast({
+              class: 'bg-gradient-danger',
+              message: 'Horário já preenchido para a data de entrega selecionada.'
+            });
+          }
+        });
+      }
 
       const addRow = (args = {}) => {
         let row = "";
@@ -621,7 +689,7 @@ $config = (object) parse_ini_file("../config.ini", true);
         $('.load').show();
         let data = [];
 
-        if (!$('#ticket').val() || !$('#client').val() || !$('#entry').val() || !$('#exit').val() || !$('#payment').val()) {
+        if (!$('#ticket').val() || !$('#client').val() || !$('#entry').val() || !$('#exit').val()) {
           showToast({
             class: 'bg-gradient-warning',
             message: 'Verifique os campos que precisam ser preenchidos'
@@ -667,10 +735,11 @@ $config = (object) parse_ini_file("../config.ini", true);
             id,
             client: $('#client').val(),
             ticket: $('#ticket').val(),
-            payment: $('#payment').val(),
+            payment: $('#payment').val() || 5,
             entry: $('#entry').val(),
             proof: $('#proof').val() || '',
             exit: $('#exit').val(),
+            time: $('#time').val() || '00:00',
             incoming: $('#incoming').val(),
             total: $('#total').val(),
             remainder: $('#remainder').val(),

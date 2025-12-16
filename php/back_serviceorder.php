@@ -12,6 +12,7 @@ switch ($data->action) {
     $out = date_format($out, "Y-m-d H:i:s");
     $proof = date_create($data->proof);
     $proof = date_format($proof, "Y-m-d H:i:s");
+    $servicePickup = $data->time;
 
     if ($data->id > 0) {
 
@@ -26,6 +27,7 @@ switch ($data->action) {
           sevicentry = '$entry',
           servicexit = '$out',
           serviceproof = '$proof',
+          servicePickup = '$servicePickup',
           generalObservations = '$data->generalObservations'
         WHERE id = $data->id"
       );
@@ -63,8 +65,8 @@ switch ($data->action) {
       }
     } else {
 
-      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,idpayment,ticket,incoming,total,remainder,sevicentry,servicexit, serviceproof,generalObservations)
-      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out', '$proof', '$data->generalObservations' FROM serviceorders WHERE `status` = 1");
+      $stmt = $pdo->prepare("INSERT INTO serviceorders (serviceorder,idclient,idpayment,ticket,incoming,total,remainder,sevicentry,servicexit,serviceproof,servicepickup,generalObservations)
+      SELECT IFNULL(MAX(serviceorder), 0) + 1, $data->client, $data->payment, $data->ticket, $data->incoming, $data->total, $data->remainder, '$entry', '$out', '$proof', '$servicePickup', '$data->generalObservations' FROM serviceorders WHERE `status` = 1");
 
       $execute = $stmt->execute();
       $lastInsertId = $pdo->lastInsertId();
@@ -531,5 +533,34 @@ switch ($data->action) {
     }
 
     echo (json_encode($response));
+    break;
+  case 'load_times':
+    $query = "SELECT id,name
+      FROM time
+      WHERE status = 1
+    ";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute() or die("Failed to execute");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die("Failed to fetch");
+
+    $response = [];
+    foreach ($results as $key => $value) {
+      $response[] = [
+        'id' => $value['id'],
+        'name' => $value['name'],
+      ];
+    }
+
+    echo (json_encode($response));
+    break;
+  case 'empty_time_check':
+    $date = date('Y-m-d');
+
+    $stmt = $pdo->prepare("SELECT servicepickup FROM serviceorders WHERE DATE(servicexit) = '$data->exit' AND servicepickup = '$data->id'");
+    $stmt->execute() or die("Failed to execute");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) or die('0');
+    $rowCount = $stmt->rowCount();
+    echo $rowCount;
     break;
 }

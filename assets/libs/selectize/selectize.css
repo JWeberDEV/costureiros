@@ -449,9 +449,9 @@
   display: none;
 }
 .selectize-input.focus {
-  border-color: #e91e63 !important;
+  border-color: #2E2D76 !important;
   /* border-top-color: transparent !important; */
-  box-shadow: inset 1px 0 #e91e63, inset -1px 0 #e91e63, inset 0 -1px #e91e63, inset 0 1px #e91e63;
+  box-shadow: inset 1px 0 #2E2D76, inset -1px 0 #2E2D76, inset 0 -1px #2E2D76, inset 0 1px #2E2D76;
 }
 .is-invalid .selectize-input {
   border-color: #dc3545;
@@ -559,7 +559,7 @@
 }
 
 .selectize-input.filled-no-focus {
-  border: 2px solid #e91e63  !important;
+  border: 2px solid #2E2D76  !important;
   padding-top: 7px!important;
   padding-bottom: 7px!important;
 }
