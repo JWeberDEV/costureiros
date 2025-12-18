@@ -151,8 +151,6 @@ switch ($data->action) {
          END,
     s.serviceorder DESC";
 
-    // echo $query;exit;
-
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -481,6 +479,7 @@ switch ($data->action) {
           GROUP BY ticket
       ) latest ON so.id = latest.max_id
       WHERE so.servicestatus = 2
+      AND so.status = 1
       ORDER BY so.ticket
     ");
     $stmt->execute();

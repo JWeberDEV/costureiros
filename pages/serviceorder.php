@@ -18,6 +18,7 @@ $page = 'os';
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
+  <?php require_once("../includes/toast.php") ?>
   <?php require_once("../includes/sidebar.php") ?>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Filters -->
@@ -167,10 +168,6 @@ $page = 'os';
         tickets.refreshOptions(false);
       });
 
-      $('.notify').click();
-      setTimeout(() => {
-        listServiccesOrders();
-      }, 10);
       $(`.date`).addClass('is-filled');
 
       let clientSelectize = $(`#client`).selectize({
@@ -249,7 +246,7 @@ $page = 'os';
           },
         ],
         onInitialize: function() {
-          this.setValue(1);
+          this.setValue(3);
         }
       });
 
@@ -296,7 +293,11 @@ $page = 'os';
         });
       }
 
-      setFields();
+      if (localStorage.getItem('client') || localStorage.getItem('status') || localStorage.getItem('period') || localStorage.getItem('date') || localStorage.getItem('ticket')) {
+        setFields();
+      } else {
+        verifyLateServices();
+      }
     });
 
     const saveFields = () => {
@@ -330,6 +331,7 @@ $page = 'os';
         localStorage.removeItem('status');
         localStorage.removeItem('period');
         localStorage.removeItem('date');
+        localStorage.removeItem('ticket');
       }, 1400)
 
     }
@@ -340,39 +342,6 @@ $page = 'os';
       $('#date').val('');
       $('#period').val('');
     }
-
-    $(function() {
-      $('#date').daterangepicker({
-        timePicker: true,
-        startDate: moment().subtract(6, 'days').startOf('day'),
-        endDate: moment().endOf('day'),
-        locale: {
-          format: 'DD/MM/YYYY',
-          applyLabel: "Aplicar",
-          cancelLabel: "Cancelar",
-          fromLabel: "De",
-          toLabel: "Até",
-          weekLabel: "S",
-          daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
-          monthNames: [
-            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-          ],
-          firstDay: 0 // Domingo como primeiro dia da semana
-        },
-        ranges: {
-          "Hoje": [moment().startOf('day'), moment().endOf('day')],
-          "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-          "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
-          "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
-          "Este Mês": [moment().startOf('month'), moment().endOf('month')],
-          "Mês Passado": [
-            moment().subtract(1, 'month').startOf('month'),
-            moment().subtract(1, 'month').endOf('month')
-          ]
-        }
-      });
-    });
 
     const listServiccesOrders = () => {
       $.post("../php/back_serviceorder.php", {
@@ -445,6 +414,9 @@ $page = 'os';
                 </div>
               </td>
               <td class='text-end'>
+                <button type='button' class='btn bg-gradient-info m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Encerrar OS' onclick='finishOs(${item.id})'>
+                  <i class='material-symbols-rounded opacity-5'>check</i>
+                </button>
                 <a type='button' class='btn bg-gradient-warning m-0' data-bs-toggle='tooltip' data-bs-placement='bottom' title='Editar' href='../pages/newserviceorder.php?id=${item.id}&ticket=${item.ticket}' onClick="saveFields()">
                   <i class='material-symbols-rounded opacity-5'>edit</i>
                 </a>
@@ -492,17 +464,91 @@ $page = 'os';
 
           $('.data').html(html);
 
-          // Initialize DataTable after updating the table
           $('#table').DataTable({
             language: {
               url: "../assets/libs/datatable/pt-br.json"
             },
             searching: false,
-            pagingType: false
+            pagingType: false,
+            pageLength: 25,
           });
         });
 
       saveFields();
+    }
+
+    $(function() {
+      $('#date').daterangepicker({
+        timePicker: true,
+        startDate: moment().subtract(6, 'days').startOf('day'),
+        endDate: moment().endOf('day'),
+        locale: {
+          format: 'DD/MM/YYYY',
+          applyLabel: "Aplicar",
+          cancelLabel: "Cancelar",
+          fromLabel: "De",
+          toLabel: "Até",
+          weekLabel: "S",
+          daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+          monthNames: [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+          ],
+          firstDay: 0 // Domingo como primeiro dia da semana
+        },
+        ranges: {
+          "Hoje": [moment().startOf('day'), moment().endOf('day')],
+          "Ontem": [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+          "Últimos 7 Dias": [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+          "Últimos 30 Dias": [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+          "Este Mês": [moment().startOf('month'), moment().endOf('month')],
+          "Mês Passado": [
+            moment().subtract(1, 'month').startOf('month'),
+            moment().subtract(1, 'month').endOf('month')
+          ]
+        }
+      });
+    });
+
+    const finishOs = (arg) => {
+      let html =
+        `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+          </br></br>
+          <div class="alert alert-danger" role="alert">
+            <p style="color:#fff;"><strong>Tem Certeza de que deseja encerrar esta OS?</strong></p>
+          </div>
+        `;
+
+      Swal.fire({
+        html: html,
+        customClass: 'swal-height',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        showCancelButton: true,
+        allowEnterKey: true,
+        confirmButtonColor: "#43a047",
+        cancelButtonColor: "#f44335",
+        customClass: {
+          confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+          cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+        },
+        width: 500,
+        preConfirm: () => {
+          $.post("../php/back_serviceorder.php", {
+              action: 'set_os_status',
+              id: arg,
+              statusOs: 2
+            })
+            .done(async function(response) {
+              response = JSON.parse(response);
+              showToast({
+                class: response.class,
+                message: response.message
+              });
+              listServiccesOrders();
+            });
+        },
+      });
     }
 
     const deleteServiceOrder = (args) => {
@@ -562,11 +608,10 @@ $page = 'os';
     }
 
     const verifyLateServices = () => {
-      const lastDay = moment().endOf("month").format("YYYY-MM-DD");
       $.post("../php/back_serviceorder.php", {
         action: 'verify_late_services',
         entry: moment().startOf("month").format("YYYY-MM-DD"),
-        out: lastDay
+        out: moment().endOf("month").format("YYYY-MM-DD")
       })
       listServiccesOrders();
     }

@@ -119,6 +119,6 @@ $pdf->writeHTML($table);
 
 $currentY = $pdf->GetY();
 $currentX = $pdf->GetX();
-$pdf->Image($bottom, $currentX + 15, $currentY, 160, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false);
+$pdf->Image($bottom, $currentX , $currentY, 190, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false);
 
 $pdf->Output('Ordem de Serviço.pdf', 'I');

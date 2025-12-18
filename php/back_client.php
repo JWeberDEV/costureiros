@@ -73,7 +73,7 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'list_clients':
-    $query = "SELECT id,name,phone,street,number,obs FROM clients where status = 1";
+    $query = "SELECT id,name,phone,street,number,obs FROM clients where status = 1 ORDER BY id DESC";
 
     if ($data->client) {
       $query .= " AND `name` LIKE '%$data->client%'";
