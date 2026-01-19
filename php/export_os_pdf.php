@@ -16,7 +16,7 @@ $pdf->Ln(20);
 
 $pdf->Cell(0, 10, "Cliente: $data->name  Entrada: $data->entry Saida: $data->exit", 0, 1, 'C');
 $pdf->SetFont('helvetica', '', 10);
-$top = __DIR__ . '/../assets/img/walpaper.png';
+$top = __DIR__ . '/../assets/img/walpaperw.jpg';
 $bottom = __DIR__ . '/../assets/img/pix.jpg';
 $currentY = $pdf->GetY();
 
