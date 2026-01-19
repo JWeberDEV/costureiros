@@ -75,7 +75,7 @@ $config = (object) parse_ini_file("../config.ini", true);
                           <input id="exit" type="date" class="form-control">
                         </div>
                       </div>
-                      <div class="col-3">
+                      <div class="col-3 z-index-2">
                         <div class="input-group input-group-outline my-3">
                           <label class="form-label">Horário de Retirada</label>
                           <select id="time" class="form-select" placeholder="Horário de Retirada" onchange="checkPickupTime()">
