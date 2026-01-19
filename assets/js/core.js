@@ -4,19 +4,19 @@ const showToast = (args) => {
     $(".successHtml").html(`<strong>${args.message}</strong>`);
     setTimeout(() => {
       $(".successHtml").html("");
-    }, "4000");
+    }, "6000");
   } else if (args.class == "bg-gradient-danger") {
     $("#dangerToast").toast("show");
     $(".dangerHtml").html(`<strong>${args.message}</strong>`);
     setTimeout(() => {
       $(".dangerHtml").html("");
-    }, "4000");
+    }, "6000");
   } else if (args.class == "bg-gradient-warning") {
     $("#warningToast").toast("show");
     $(".warningHtml").html(`<strong>${args.message}</strong>`);
     setTimeout(() => {
       $(".warningHtml").html("");
-    }, "4000");
+    }, "6000");
   }
 };
 
