@@ -82,35 +82,19 @@ $config = (object) parse_ini_file("../config.ini", true);
               </select>
             </div>
           </div>
-          <?php if ($config->settings['name'] == 'Costureiros') { ?>
-            <div class="col-2 ">
-              <div class="input-group input-group-outline my-3">
-                <label class="form-label ">Periodo</label>
-                <select id="period" class="form-select" placeholder="Periodo">
-                </select>
-              </div>
+          <div class="col-2 ">
+            <div class="input-group input-group-outline my-3">
+              <label class="form-label ">Periodo</label>
+              <select id="period" class="form-select" placeholder="Periodo">
+              </select>
             </div>
-            <div class="col-2">
-              <div class="input-group input-group-outline my-3 date  ">
-                <label class="form-label">Intervalo</label>
-                <input id="date" type="text" class="form-control">
-              </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group input-group-outline my-3 date  ">
+              <label class="form-label">Intervalo</label>
+              <input id="date" type="text" class="form-control">
             </div>
-          <?php } else { ?>
-            <div class="col-2 " style="display: none;">
-              <div class="input-group input-group-outline my-3">
-                <label class="form-label ">Periodo</label>
-                <select id="period" class="form-select" placeholder="Periodo">
-                </select>
-              </div>
-            </div>
-            <div class="col-2">
-              <div class="input-group input-group-outline my-3 date  ">
-                <label class="form-label">Data de entrega</label>
-                <input id="date" type="text" class="form-control">
-              </div>
-            </div>
-          <?php } ?>
+          </div>
           <div class="col-1 text-end mt-3 pe-4">
             <button type="button" class="btn bg-gradient-info" data-bs-toggle="tooltip" data-bs-placement="bottom"
               title="Pesquisar" onClick="listServiccesOrders(),saveFields();">
@@ -366,7 +350,7 @@ $config = (object) parse_ini_file("../config.ini", true);
           ticket: $('#ticket').val() != '' ? $('#ticket').val() : 0,
           client: $('#client').val(),
           status: $('#status').val() != '' ? $('#status').val() : 7,
-          period: $('#period').val() || 2,
+          period: $('#period').val(),
           date: $('#date').val(),
         })
         .done(function(response) {

@@ -140,9 +140,9 @@ switch ($data->action) {
     }
 
     if ($data->period == 1) {
-      $query .= " AND s.sevicentry BETWEEN '$start' AND '$end'";
+      $query .= " AND DATE(s.servicexit) BETWEEN '$start' AND '$end'";
     } else if ($data->period == 2) {
-      $query .= " AND s.servicexit BETWEEN '$start' AND '$end'";
+      $query .= " AND DATE(s.servicexit) BETWEEN '$start' AND '$end'";
     }
 
     $query .= " ORDER BY CASE
