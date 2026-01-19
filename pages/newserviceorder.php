@@ -73,54 +73,44 @@ $config = (object) parse_ini_file("../config.ini", true);
                       </div>
                     </div>
                     <?php if ($config->settings['name'] == 'Costureiros') { ?>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 entry">
-                        <label class="form-label">DT Entrada</label>
-                        <input id="entry" type="date" class="form-control">
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 entry">
+                          <label class="form-label">DT Entrada</label>
+                          <input id="entry" type="date" class="form-control">
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 exit">
-                        <label class="form-label">DT Saída</label>
-                        <input id="exit" type="date" class="form-control">
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 exit">
+                          <label class="form-label">DT Saída</label>
+                          <input id="exit" type="date" class="form-control">
+                        </div>
                       </div>
-<<<<<<< HEAD
                       <div class="col-3 z-index-2">
                         <div class="input-group input-group-outline my-3">
                           <label class="form-label">Horário de Retirada</label>
                           <select id="time" class="form-select" placeholder="Horário de Retirada" onchange="checkPickupTime()">
                           </select>
                         </div>
-=======
-                    </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
-                        <label class="form-label">Horário de Retirada</label>
-                        <select id="time" class="form-select" placeholder="Horário de Retirada"
-                          onchange="checkPickupTime()">
-                        </select>
->>>>>>> 811330ad559801eef7493098ed08cfbd4f9f211b
                       </div>
-                    </div>
                     <?php } else { ?>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 entry">
-                        <label class="form-label">DT Entrada</label>
-                        <input id="entry" type="datetime-local" class="form-control">
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 entry">
+                          <label class="form-label">Data de Entrada</label>
+                          <input id="entry" type="datetime-local" class="form-control">
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 proof">
-                        <label class="form-label">DT Prova</label>
-                        <input id="proof" type="datetime-local" class="form-control">
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 proof">
+                          <label class="form-label">Data de Prova</label>
+                          <input id="proof" type="datetime-local" class="form-control">
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3 exit">
-                        <label class="form-label">DT Saída</label>
-                        <input id="exit" type="datetime-local" class="form-control">
+                      <div class="col-3">
+                        <div class="input-group input-group-outline my-3 exit">
+                          <label class="form-label">Data de Entrega</label>
+                          <input id="exit" type="datetime-local" class="form-control">
+                        </div>
                       </div>
-                    </div>
                     <?php } ?>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3">
@@ -301,125 +291,92 @@ $config = (object) parse_ini_file("../config.ini", true);
     </div>
 
     <script>
-    $.fn.toNumber = function() {
-      return parseFloat($(this).val()) || 0;
-    }
+      $.fn.toNumber = function() {
+        return parseFloat($(this).val()) || 0;
+      }
 
-    let client = "";
-    let ticket = "";
-    let ticketid = "";
-    let service = "";
-    let services = [];
-    let os = "";
-    let name = "";
-    let id = "";
-    let statusOs = "";
+      let client = "";
+      let ticket = "";
+      let ticketid = "";
+      let service = "";
+      let services = [];
+      let os = "";
+      let name = "";
+      let id = "";
+      let statusOs = "";
 
-    const fetchTimes = async () => {
-      const response = await $.post("../php/back_serviceorder.php", {
-        action: 'load_times'
-      })
-      return JSON.parse(response);
-    }
+      const fetchTimes = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'load_times'
+        })
+        return JSON.parse(response);
+      }
 
-    const fetchClients = async () => {
-      const response = await $.post("../php/back_serviceorder.php", {
-        action: 'load_clients'
-      })
-      return JSON.parse(response);
-    }
+      const fetchClients = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'load_clients'
+        })
+        return JSON.parse(response);
+      }
 
-    const fetchServices = async () => {
-      const response = await $.post("../php/back_serviceorder.php", {
-        action: 'load_services'
-      })
-      services = JSON.parse(response);
-    }
+      const fetchServices = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'load_services'
+        })
+        services = JSON.parse(response);
+      }
 
-    const fetchTicket = async () => {
-      const response = await $.post("../php/back_serviceorder.php", {
-        action: 'load_tickets',
-        ticketid
-      })
-      return JSON.parse(response);
-    }
+      const fetchTicket = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'load_tickets',
+          ticketid
+        })
+        return JSON.parse(response);
+      }
 
-    const fetchPayment = async () => {
-      const response = await $.post("../php/back_serviceorder.php", {
-        action: 'load_payments'
-      })
-      return JSON.parse(response);
-    }
+      const fetchPayment = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'load_payments'
+        })
+        return JSON.parse(response);
+      }
 
-    $('#incoming').on('keyup', function() {
-      setTimeout(() => {
-        budget();
-      }, 1500);
-    });
-
-    $('#total').on('keyup', function() {
-      setTimeout(() => {
-        budget();
-      }, 500);
-    });
-
-    const updateTickets = async () => {
-      const response = await $.post("../php/back_serviceorder.php", {
-        action: 'update_ticket_status'
-      })
-    }
-
-    $(document).ready(async function() {
-      let clientSelectize = $(`#client`).selectize({
-        valueField: 'id',
-        labelField: 'name',
-        searchField: ['name'],
-        sortField: 'name',
-        create: false,
+      $('#incoming').on('keyup', function() {
+        setTimeout(() => {
+          budget();
+        }, 1500);
       });
 
-      client = clientSelectize[0].selectize;
-
-      fetchClients().then(response => {
-        client.addOption(response);
-        client.refreshOptions(false);
+      $('#total').on('keyup', function() {
+        setTimeout(() => {
+          budget();
+        }, 500);
       });
 
-      let ticketSelectize = $(`#ticket`).selectize({
-        valueField: 'id',
-        labelField: 'name',
-        searchField: ['name'],
-        sortField: 'name',
-        sortField: "$order",
-        create: false,
-      });
+      const updateTickets = async () => {
+        const response = await $.post("../php/back_serviceorder.php", {
+          action: 'update_ticket_status'
+        })
+      }
 
-      ticket = ticketSelectize[0].selectize;
+      $(document).ready(async function() {
+        let clientSelectize = $(`#client`).selectize({
+          valueField: 'id',
+          labelField: 'name',
+          searchField: ['name'],
+          sortField: 'name',
+          create: false,
+        });
 
-      fetchTicket().then(response => {
-        ticket.addOption(response);
-        ticket.refreshOptions(false);
-      });
+        client = clientSelectize[0].selectize;
 
-      let paymentSelectize = $(`#payment`).selectize({
-        valueField: 'id',
-        labelField: 'payment',
-        searchField: ['payment'],
-        sortField: 'payment',
-        sortField: "$order",
-        create: false,
-      });
+        fetchClients().then(response => {
+          client.addOption(response);
+          client.refreshOptions(false);
+        });
 
-      payment = paymentSelectize[0].selectize;
-
-      fetchPayment().then(response => {
-        payment.addOption(response);
-        payment.refreshOptions(false);
-      });
-
-      <?php if ($config->settings['name'] == 'Costureiros') { ?>
-        let timeSelectize = $(`#time`).selectize({
-          valueField: 'name',
+        let ticketSelectize = $(`#ticket`).selectize({
+          valueField: 'id',
           labelField: 'name',
           searchField: ['name'],
           sortField: 'name',
@@ -427,92 +384,125 @@ $config = (object) parse_ini_file("../config.ini", true);
           create: false,
         });
 
-        time = timeSelectize[0].selectize;
+        ticket = ticketSelectize[0].selectize;
 
-        fetchTimes().then(response => {
-          time.addOption(response);
-          time.refreshOptions(false);
+        fetchTicket().then(response => {
+          ticket.addOption(response);
+          ticket.refreshOptions(false);
         });
-      <?php } ?>
 
-      await updateTickets();
-      $('.load').hide();
-      $('.load-modal').hide();
-      $(`.entry`).addClass('is-filled');
-      $(`.proof`).addClass('is-filled');
-      $(`.exit`).addClass('is-filled');
-      // $('#incoming').mask("###.###.00", {
-      //   reverse: true
-      // });
-      $('#total').mask("###.###.00", {
-        reverse: true
-      });
-      $('#remainder').mask("###.###.00", {
-        reverse: true
-      });
-      $('#price').mask("###.###.00", {
-        reverse: true
-      });
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      id = urlParams.get('id');
-      ticketid = urlParams.get('ticket');
-      await fetchServices();
-      if (!id) {
-        addRow();
-      } else {
-        await listServiceId(id);
-      }
-
-      if (statusOs == 2) {
-        $('#save').attr('disabled', true);
-        $('.line').each(function() {
-          const row = $(this).attr('row');
-          $(`#remove${row}`).attr('disabled', true);
+        let paymentSelectize = $(`#payment`).selectize({
+          valueField: 'id',
+          labelField: 'payment',
+          searchField: ['payment'],
+          sortField: 'payment',
+          sortField: "$order",
+          create: false,
         });
-      }
-    });
 
-    const checkPickupTime = () => {
-      const selectedTime = $('#time').val();
-      const exit = $('#exit').val();
-      $.post("../php/back_serviceorder.php", {
-        action: 'empty_time_check',
-        id: selectedTime,
-        exit: exit
-      }).then((response) => {
-        if (response == 1) {
-          time.setValue([]);
-          showToast({
-            class: 'bg-gradient-danger',
-            message: 'Horário já preenchido para a data de entrega selecionada.'
+        payment = paymentSelectize[0].selectize;
+
+        fetchPayment().then(response => {
+          payment.addOption(response);
+          payment.refreshOptions(false);
+        });
+
+        <?php if ($config->settings['name'] == 'Costureiros') { ?>
+          let timeSelectize = $(`#time`).selectize({
+            valueField: 'name',
+            labelField: 'name',
+            searchField: ['name'],
+            sortField: 'name',
+            sortField: "$order",
+            create: false,
+          });
+
+          time = timeSelectize[0].selectize;
+
+          fetchTimes().then(response => {
+            time.addOption(response);
+            time.refreshOptions(false);
+          });
+        <?php } ?>
+
+        await updateTickets();
+        $('.load').hide();
+        $('.load-modal').hide();
+        $(`.entry`).addClass('is-filled');
+        $(`.proof`).addClass('is-filled');
+        $(`.exit`).addClass('is-filled');
+        // $('#incoming').mask("###.###.00", {
+        //   reverse: true
+        // });
+        $('#total').mask("###.###.00", {
+          reverse: true
+        });
+        $('#remainder').mask("###.###.00", {
+          reverse: true
+        });
+        $('#price').mask("###.###.00", {
+          reverse: true
+        });
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        id = urlParams.get('id');
+        ticketid = urlParams.get('ticket');
+        await fetchServices();
+        if (!id) {
+          addRow();
+        } else {
+          await listServiceId(id);
+        }
+
+        if (statusOs == 2) {
+          $('#save').attr('disabled', true);
+          $('.line').each(function() {
+            const row = $(this).attr('row');
+            $(`#remove${row}`).attr('disabled', true);
           });
         }
       });
-    }
 
-    const addRow = (args = {}) => {
-      let row = "";
-      let actual = '';
-
-      $('tr.line').each(function() {
-        actual = $(this).attr('row')
-      });
-
-      if (parseInt($('tr.line').attr('row'), 10) > 0) {
-        row = parseInt($('tr.line').attr('row'), 10) + parseInt(actual, 10);
-      } else {
-        row = 1;
+      const checkPickupTime = () => {
+        const selectedTime = $('#time').val();
+        const exit = $('#exit').val();
+        $.post("../php/back_serviceorder.php", {
+          action: 'empty_time_check',
+          id: selectedTime,
+          exit: exit
+        }).then((response) => {
+          if (response == 1) {
+            time.setValue([]);
+            showToast({
+              class: 'bg-gradient-danger',
+              message: 'Horário já preenchido para a data de entrega selecionada.'
+            });
+          }
+        });
       }
-      const issue = args?.element?.issue ? `${args.element.issue}` : 0;
-      const selectId = args?.element?.idservice ? `${args.element.idservice}` : '';
-      const idOrder = args?.element?.idorder ? `${args.element.idorder}` : '';
-      const service = args?.element?.service ? `placeholder=${args.element.service}` :
-        'placeholder="Selecione o Serviço"';
-      let id = '';
-      let classstyle = "is-filled";
 
-      $('.lines').append(`
+      const addRow = (args = {}) => {
+        let row = "";
+        let actual = '';
+
+        $('tr.line').each(function() {
+          actual = $(this).attr('row')
+        });
+
+        if (parseInt($('tr.line').attr('row'), 10) > 0) {
+          row = parseInt($('tr.line').attr('row'), 10) + parseInt(actual, 10);
+        } else {
+          row = 1;
+        }
+        const issue = args?.element?.issue ? `${args.element.issue}` : 0;
+        const selectId = args?.element?.idservice ? `${args.element.idservice}` : '';
+        const idOrder = args?.element?.idorder ? `${args.element.idorder}` : '';
+        const service = args?.element?.service ? `placeholder=${args.element.service}` :
+          'placeholder="Selecione o Serviço"';
+        let id = '';
+        let classstyle = "is-filled";
+
+        $('.lines').append(`
           <tr class='line' row='${row}' idOrder='${idOrder}' idService='${selectId}'>
             <td>
             <button type="button" class="btn bg-gradient-success mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -570,27 +560,362 @@ $config = (object) parse_ini_file("../config.ini", true);
             </td>
         </tr>
       `);
-      $(`#price${row}`).mask("###.###.00", {
-        reverse: true
-      });
-      $(`#discount${row}`).mask("###.###.00", {
-        reverse: true
-      });
-      if (args.row) {
-        setActive();
-      } else {
-        counterSelectorServices(row);
+        $(`#price${row}`).mask("###.###.00", {
+          reverse: true
+        });
+        $(`#discount${row}`).mask("###.###.00", {
+          reverse: true
+        });
+        if (args.row) {
+          setActive();
+        } else {
+          counterSelectorServices(row);
+        }
       }
-    }
 
-    function removeRow(row, idOrder) {
+      function removeRow(row, idOrder) {
 
-      if (id && $(`.service${row}`).val()) {
+        if (id && $(`.service${row}`).val()) {
+          let html =
+            `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+          </br></br>
+          <div class="alert alert-danger" role="alert">
+            <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este Serviço?</strong></p>
+          </div>
+        `;
+
+          Swal.fire({
+            html: html,
+            customClass: 'swal-height',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Confirmar',
+            showCancelButton: true,
+            allowEnterKey: true,
+            confirmButtonColor: "#43a047",
+            cancelButtonColor: "#f44335",
+            customClass: {
+              confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+              cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+            },
+            width: 500,
+            preConfirm: () => {
+              $.post("../php/back_serviceorder.php", {
+                  action: 'delete_service',
+                  idOrder
+                })
+                .done(function(response) {
+                  response = JSON.parse(response);
+                  if (response.code == 1) {
+                    $(`tr[row='${row}']`).remove();
+                    calculator();
+                  }
+                });
+            },
+          });
+        } else {
+          $(`tr[row='${row}']`).remove();
+        }
+      }
+
+      const format = (arg) => {
+        let val = parseFloat($(`#discount${arg}`).val());
+        let formattedVal = val.toFixed(2);
+        $(`#discount${arg}`).val(formattedVal).trigger('input');
+      }
+
+      const counterSelectorServices = (row, value) => {
+        const serviceSelectize = $(`.service${row}`).selectize({
+          valueField: 'id',
+          labelField: 'service',
+          searchField: ['service'],
+          sortField: 'service',
+          create: false,
+        });
+
+        service = serviceSelectize[0].selectize;
+
+        service.addOption(services);
+        service.refreshOptions(false);
+
+        if (value) {
+          service.setValue(value);
+        }
+      };
+
+      const setPrice = (arg) => {
+        const serviceId = $(`.service${arg}`).val();
+        const price = services.find(service => service.id == serviceId).price;
+        $(`#price${arg}`).val(price);
+        $(`.price${arg}`).addClass('is-filled');
+      }
+
+      const setIsFilled = (arg) => {
+        if ($(`#item${arg}`).val()) {
+          $(`.item${arg}`).addClass('is-filled');
+        }
+
+        if ($(`#discount${arg}`).val()) {
+          $(`.discount${arg}`).addClass('is-filled');
+        }
+
+        if ($(`#obs${arg}`).val()) {
+          $(`.obs${arg}`).addClass('is-filled');
+        }
+      }
+
+      const confirmSaveOs = () => {
+        if (parseFloat($('#incoming').val()) > parseFloat($('#total').val())) {
+          let html =
+            `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
+          </br></br>
+          <div class="alert alert-danger" role="alert">
+            <p style="color:#fff;">
+              <strong>
+                O valor de entrada é maior que o valor total.
+                Tem Certeza de que deseja excluir este Serviço?
+              </strong>
+            </p>
+          </div>
+        `;
+
+          Swal.fire({
+            html: html,
+            customClass: 'swal-height',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Confirmar',
+            showCancelButton: true,
+            allowEnterKey: true,
+            confirmButtonColor: "#43a047",
+            cancelButtonColor: "#f44335",
+            customClass: {
+              confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
+              cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
+            },
+            width: 500,
+          }).then((result) => {
+            if (!result.isConfirmed) {
+              return;
+            }
+            saveOrderService();
+          });
+        } else {
+          saveOrderService();
+        }
+      }
+
+      const saveOrderService = () => {
+        $('#save').attr('disabled', 'disabled');
+        $('.notload').hide();
+        $('.load').show();
+        let data = [];
+
+        if (!$('#ticket').val() || !$('#client').val() || !$('#entry').val() || !$('#exit').val()) {
+          showToast({
+            class: 'bg-gradient-warning',
+            message: 'Verifique os campos que precisam ser preenchidos'
+          });
+          $('#save').removeAttr('disabled');
+          $('.notload').show();
+          $('.load').hide();
+          return;
+        }
+
+        if (!$('#incoming').val()) {
+          showToast({
+            class: 'bg-gradient-danger',
+            message: 'É preciso preencher corretamente o campo de entrada'
+          });
+          $('#save').removeAttr('disabled');
+          $('.notload').show();
+          $('.load').hide();
+          return;
+        }
+
+        $('.line').each(function() {
+          const row = $(this).attr('row');
+          const idService = $(`.service${row}`).val();
+          const order = $(this).attr('idorder');
+          const item = $(this).find(`#item${row}`).val();
+          const priceValue = $(this).find(`#price${row}`).val();
+          const discountValue = $(this).find(`#discount${row}`).val();
+          const obsValue = $(this).find(`#obs${row}`).val();
+
+          data.push({
+            idService: idService || '',
+            order: order || '',
+            item: item || '',
+            price: parseFloat(priceValue) || 0,
+            discount: parseFloat(discountValue) || 0,
+            obs: obsValue || ''
+          });
+        });
+
+        $.post("../php/back_serviceorder.php", {
+            action: 'save_orderservice',
+            id,
+            client: $('#client').val(),
+            ticket: $('#ticket').val(),
+            payment: $('#payment').val() || 5,
+            entry: $('#entry').val(),
+            proof: $('#proof').val() || '',
+            exit: $('#exit').val(),
+            time: $('#time').val() || '00:00',
+            incoming: $('#incoming').val(),
+            total: $('#total').val(),
+            remainder: $('#remainder').val(),
+            generalObservations: $('#generalObservations').val(),
+            data
+          })
+          .done(function(response) {
+            response = JSON.parse(response);
+            showToast({
+              class: response.class,
+              message: response.message
+            });
+            $('#save').removeAttr('disabled');
+            $('.notload').show();
+            $('.load').hide();
+            if (response.class == 'bg-gradient-success') {
+              setTimeout(() => {
+                window.location = '../pages/serviceorder.php';
+              }, 2000);
+            }
+          });
+      }
+
+      const listServiceId = async (arg) => {
+        let response = await $.post("../php/back_serviceorder.php", {
+            action: "list_serviceorder_id",
+            id: arg
+          })
+          .done(function(response) {
+            response = JSON.parse(response);
+            response.forEach(element => {
+              os = element.serviceorder;
+              name = element.name;
+              statusOs = element.servicestatus;
+              fetchTicket().then(res => {
+                ticket.addOption(res);
+                ticket.refreshOptions(false);
+              });
+              $("#id").val(element.serviceorder);
+              $("#os").html('Nº ' + element.serviceorder);
+              $("#entry").val(element.sevicentry);
+              $("#proof").val(element.serviceproof);
+              $("#exit").val(element.servicexit);
+              $("#generalObservations").val(element.generalObservations);
+              setTimeout(() => {
+                ticket.setValue([element.ticket]);
+              }, 1500);
+              setTimeout(() => {
+                client.setValue([element.idclient]);
+              }, 1500);
+              setTimeout(() => {
+                payment.setValue([element.idpayment]);
+              }, 1500);
+              $('.osStatus').addClass(element.button);
+              $('.osStatus').text(element.status);
+
+              let row = '';
+              let actual = '';
+
+              $('tr.line').each(function() {
+                actual = $(this).attr('row')
+              });
+
+              if (parseInt($('tr.line').attr('row'), 10) > 0) {
+                row = parseInt($('tr.line').attr('row'), 10) + parseInt(actual, 10);
+              } else {
+                row = 1;
+              }
+
+              addRow({
+                row,
+                element
+              });
+
+              const serviceSelectize = $(`.service${row}`).selectize({
+                valueField: 'id',
+                labelField: 'service',
+                searchField: ['service'],
+                sortField: 'service',
+                create: false,
+              });
+              service = serviceSelectize[0].selectize;
+              service.addOption(services);
+
+              service.setValue(element.idservice)
+              $(`#item${row}`).val(element.item);
+              $(`#price${row}`).val(element.price);
+              $(`#discount${row}`).val(element.discount);
+              $(`#obs${row}`).val(element.obs);
+              $(`.total`).addClass('is-filled');
+              $(`.remainder`).addClass('is-filled');
+              $("#incoming").val(element.incoming);
+              $("#total").val(element.total);
+              $("#remainder").val(element.remainder);
+              $("#balance").val(element.balance);
+              $("#debit").val(element.debit);
+            });
+
+            setActive();
+          })
+      }
+
+      const setActive = () => {
+        let data = ['ticket'];
+
+        data.forEach(element => {
+          if ($(`#${element}`).val()) {
+            $(`.${element}`).addClass('is-filled');
+          }
+        });
+      }
+
+      const calculator = () => {
+        let value = 0;
+        let discount = 0;
+        $('.line').each(function() {
+          const row = $(this).attr('row');
+          value += $(this).find(`#price${row}`).toNumber();
+          discount += $(this).find(`#discount${row}`).toNumber();
+        });
+
+        let result = value - discount;
+        let formattedResult = result.toFixed(2);
+        $('#total').val(formattedResult).trigger('input');
+        $(`.total`).addClass('is-filled');
+
+        budget();
+      }
+
+      const budget = () => {
+        let incoming = $(`#incoming`).toNumber() ? $(`#incoming`).toNumber() : 0;
+        if (incoming == 0) {
+          // $(`#incoming`).val('0.00').trigger('input');
+          $(`.incoming`).addClass('is-filled');
+        }
+        let result = $(`#total`).toNumber() - incoming;
+        let formattedResult = result.toFixed(2);
+        $(`#remainder`).val(formattedResult).trigger('input');
+        $(`.remainder`).addClass('is-filled');
+      }
+
+      const exportOs = () => {
+        url = `../php/export_os_pdf.php?id=${encodeURIComponent(id)}&
+          os=${encodeURIComponent(os)}
+          &entry=${encodeURIComponent($("#entry").val())}
+          &exit=${encodeURIComponent($("#exit").val())}
+          &name=${encodeURIComponent(name)}`;
+        window.open(url, '_blank');
+      }
+
+      const finishOs = (arg) => {
         let html =
           `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
           </br></br>
           <div class="alert alert-danger" role="alert">
-            <p style="color:#fff;"><strong>Tem Certeza de que deseja excluir este Serviço?</strong></p>
+            <p style="color:#fff;"><strong>Tem Certeza de que deseja alterar o estado desta OS?</strong></p>
           </div>
         `;
 
@@ -610,444 +935,111 @@ $config = (object) parse_ini_file("../config.ini", true);
           width: 500,
           preConfirm: () => {
             $.post("../php/back_serviceorder.php", {
-                action: 'delete_service',
-                idOrder
+                action: 'set_os_status',
+                id,
+                statusOs: arg
               })
-              .done(function(response) {
+              .done(async function(response) {
                 response = JSON.parse(response);
-                if (response.code == 1) {
-                  $(`tr[row='${row}']`).remove();
-                  calculator();
+                showToast({
+                  class: response.class,
+                  message: response.message
+                });
+                statusOs = response.status;
+                if (response.status == 2) {
+                  $('#save').attr('disabled', true);
+                  $('.line').each(function() {
+                    const row = $(this).attr('row');
+                    $(`#remove${row}`).attr('disabled', true);
+                  });
+                } else {
+                  $('#save').attr('disabled', false);
+                  $('.line').each(function() {
+                    const row = $(this).attr('row');
+                    $(`#remove${row}`).attr('disabled', false);
+                  });
+                }
+
+                window.location.reload();
+
+                if (response.stauts != 2) {
+                  setTimeout(() => {
+                    window.location = '../pages/serviceorder.php';
+                  }, 2000);
                 }
               });
           },
         });
-      } else {
-        $(`tr[row='${row}']`).remove();
-      }
-    }
-
-    const format = (arg) => {
-      let val = parseFloat($(`#discount${arg}`).val());
-      let formattedVal = val.toFixed(2);
-      $(`#discount${arg}`).val(formattedVal).trigger('input');
-    }
-
-    const counterSelectorServices = (row, value) => {
-      const serviceSelectize = $(`.service${row}`).selectize({
-        valueField: 'id',
-        labelField: 'service',
-        searchField: ['service'],
-        sortField: 'service',
-        create: false,
-      });
-
-      service = serviceSelectize[0].selectize;
-
-      service.addOption(services);
-      service.refreshOptions(false);
-
-      if (value) {
-        service.setValue(value);
-      }
-    };
-
-    const setPrice = (arg) => {
-      const serviceId = $(`.service${arg}`).val();
-      const price = services.find(service => service.id == serviceId).price;
-      $(`#price${arg}`).val(price);
-      $(`.price${arg}`).addClass('is-filled');
-    }
-
-    const setIsFilled = (arg) => {
-      if ($(`#item${arg}`).val()) {
-        $(`.item${arg}`).addClass('is-filled');
       }
 
-      if ($(`#discount${arg}`).val()) {
-        $(`.discount${arg}`).addClass('is-filled');
-      }
-
-      if ($(`#obs${arg}`).val()) {
-        $(`.obs${arg}`).addClass('is-filled');
-      }
-    }
-
-    const confirmSaveOs = () => {
-      if (parseFloat($('#incoming').val()) > parseFloat($('#total').val())) {
-        let html =
-          `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
-          </br></br>
-          <div class="alert alert-danger" role="alert">
-            <p style="color:#fff;">
-              <strong>
-                O valor de entrada é maior que o valor total.
-                Tem Certeza de que deseja excluir este Serviço?
-              </strong>
-            </p>
-          </div>
-        `;
-
-        Swal.fire({
-          html: html,
-          customClass: 'swal-height',
-          cancelButtonText: 'Cancelar',
-          confirmButtonText: 'Confirmar',
-          showCancelButton: true,
-          allowEnterKey: true,
-          confirmButtonColor: "#43a047",
-          cancelButtonColor: "#f44335",
-          customClass: {
-            confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
-            cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
-          },
-          width: 500,
-        }).then((result) => {
-          if (!result.isConfirmed) {
-            return;
-          }
-          saveOrderService();
-        });
-      } else {
-        saveOrderService();
-      }
-    }
-
-    const saveOrderService = () => {
-      $('#save').attr('disabled', 'disabled');
-      $('.notload').hide();
-      $('.load').show();
-      let data = [];
-
-      if (!$('#ticket').val() || !$('#client').val() || !$('#entry').val() || !$('#exit').val()) {
-        showToast({
-          class: 'bg-gradient-warning',
-          message: 'Verifique os campos que precisam ser preenchidos'
-        });
-        $('#save').removeAttr('disabled');
-        $('.notload').show();
-        $('.load').hide();
-        return;
-      }
-
-      if (!$('#incoming').val()) {
-        showToast({
-          class: 'bg-gradient-danger',
-          message: 'É preciso preencher corretamente o campo de entrada'
-        });
-        $('#save').removeAttr('disabled');
-        $('.notload').show();
-        $('.load').hide();
-        return;
-      }
-
-      $('.line').each(function() {
-        const row = $(this).attr('row');
-        const idService = $(`.service${row}`).val();
-        const order = $(this).attr('idorder');
-        const item = $(this).find(`#item${row}`).val();
-        const priceValue = $(this).find(`#price${row}`).val();
-        const discountValue = $(this).find(`#discount${row}`).val();
-        const obsValue = $(this).find(`#obs${row}`).val();
-
-        data.push({
-          idService: idService || '',
-          order: order || '',
-          item: item || '',
-          price: parseFloat(priceValue) || 0,
-          discount: parseFloat(discountValue) || 0,
-          obs: obsValue || ''
-        });
-      });
-
-      $.post("../php/back_serviceorder.php", {
-          action: 'save_orderservice',
-          id,
-          client: $('#client').val(),
-          ticket: $('#ticket').val(),
-          payment: $('#payment').val() || 5,
-          entry: $('#entry').val(),
-          proof: $('#proof').val() || '',
-          exit: $('#exit').val(),
-          time: $('#time').val() || '00:00',
-          incoming: $('#incoming').val(),
-          total: $('#total').val(),
-          remainder: $('#remainder').val(),
-          generalObservations: $('#generalObservations').val(),
-          data
-        })
-        .done(function(response) {
-          response = JSON.parse(response);
-          showToast({
-            class: response.class,
-            message: response.message
+      saveService = () => {
+        $('#save').attr('disabled', 'disabled');
+        $('.unload-modal').hide();
+        $('.load-modal').show();
+        $.post("../php/back_service.php", {
+            action: 'save_service',
+            id: "",
+            service: $('#service').val(),
+            price: $('#price').val(),
+          })
+          .done(response => {
+            let data = JSON.parse(response);
+            showToast({
+              class: data.class,
+              message: data.message
+            });
+            $('#save').removeAttr('disabled');
+            $('.unload-modal').show();
+            $('.load-modal').hide();
+            refreshSelectize();
+            $('.modal').modal('hide');
+            $('#service').val('');
+            $('#price').val('');
           });
-          $('#save').removeAttr('disabled');
-          $('.notload').show();
-          $('.load').hide();
-          if (response.class == 'bg-gradient-success') {
-            setTimeout(() => {
-              window.location = '../pages/serviceorder.php';
-            }, 2000);
+      }
+
+      const refreshSelectize = async () => {
+        await fetchServices();
+        $('.line').each(function() {
+          const row = $(this).attr('row');
+          const $select = $(`.service${row}`);
+
+          if (!$select.val() || $select.val().length === 0) {
+            $select[0].selectize.addOption(services);
+            $select[0].selectize.refreshOptions();
           }
         });
-    }
+      }
 
-    const listServiceId = async (arg) => {
-      let response = await $.post("../php/back_serviceorder.php", {
-          action: "list_serviceorder_id",
-          id: arg
-        })
-        .done(function(response) {
-          response = JSON.parse(response);
-          response.forEach(element => {
-            os = element.serviceorder;
-            name = element.name;
-            statusOs = element.servicestatus;
-            fetchTicket().then(res => {
-              ticket.addOption(res);
-              ticket.refreshOptions(false);
-            });
-            $("#id").val(element.serviceorder);
-            $("#os").html('Nº ' + element.serviceorder);
-            $("#entry").val(element.sevicentry);
-            $("#proof").val(element.serviceproof);
-            $("#exit").val(element.servicexit);
-            $("#generalObservations").val(element.generalObservations);
-            setTimeout(() => {
-              ticket.setValue([element.ticket]);
-            }, 1500);
-            setTimeout(() => {
-              client.setValue([element.idclient]);
-            }, 1500);
-            setTimeout(() => {
-              payment.setValue([element.idpayment]);
-            }, 1500);
-            $('.osStatus').addClass(element.button);
-            $('.osStatus').text(element.status);
-
-            let row = '';
-            let actual = '';
-
-            $('tr.line').each(function() {
-              actual = $(this).attr('row')
-            });
-
-            if (parseInt($('tr.line').attr('row'), 10) > 0) {
-              row = parseInt($('tr.line').attr('row'), 10) + parseInt(actual, 10);
-            } else {
-              row = 1;
-            }
-
-            addRow({
-              row,
-              element
-            });
-
-            const serviceSelectize = $(`.service${row}`).selectize({
-              valueField: 'id',
-              labelField: 'service',
-              searchField: ['service'],
-              sortField: 'service',
-              create: false,
-            });
-            service = serviceSelectize[0].selectize;
-            service.addOption(services);
-
-            service.setValue(element.idservice)
-            $(`#item${row}`).val(element.item);
-            $(`#price${row}`).val(element.price);
-            $(`#discount${row}`).val(element.discount);
-            $(`#obs${row}`).val(element.obs);
-            $(`.total`).addClass('is-filled');
-            $(`.remainder`).addClass('is-filled');
-            $("#incoming").val(element.incoming);
-            $("#total").val(element.total);
-            $("#remainder").val(element.remainder);
-            $("#balance").val(element.balance);
-            $("#debit").val(element.debit);
-          });
-
-          setActive();
-        })
-    }
-
-    const setActive = () => {
-      let data = ['ticket'];
-
-      data.forEach(element => {
-        if ($(`#${element}`).val()) {
-          $(`.${element}`).addClass('is-filled');
+      const setIssue = (args) => {
+        let issue = "";
+        let id = args.idOrder;
+        if ($(`#issue${args.row}`).prop('checked')) {
+          issue = 1;
+        } else {
+          issue = 0;
         }
-      });
-    }
 
-    const calculator = () => {
-      let value = 0;
-      let discount = 0;
-      $('.line').each(function() {
-        const row = $(this).attr('row');
-        value += $(this).find(`#price${row}`).toNumber();
-        discount += $(this).find(`#discount${row}`).toNumber();
-      });
-
-      let result = value - discount;
-      let formattedResult = result.toFixed(2);
-      $('#total').val(formattedResult).trigger('input');
-      $(`.total`).addClass('is-filled');
-
-      budget();
-    }
-
-    const budget = () => {
-      let incoming = $(`#incoming`).toNumber() ? $(`#incoming`).toNumber() : 0;
-      if (incoming == 0) {
-        // $(`#incoming`).val('0.00').trigger('input');
-        $(`.incoming`).addClass('is-filled');
-      }
-      let result = $(`#total`).toNumber() - incoming;
-      let formattedResult = result.toFixed(2);
-      $(`#remainder`).val(formattedResult).trigger('input');
-      $(`.remainder`).addClass('is-filled');
-    }
-
-    const exportOs = () => {
-      url = `../php/export_os_pdf.php?id=${encodeURIComponent(id)}&
-          os=${encodeURIComponent(os)}
-          &entry=${encodeURIComponent($("#entry").val())}
-          &exit=${encodeURIComponent($("#exit").val())}
-          &name=${encodeURIComponent(name)}`;
-      window.open(url, '_blank');
-    }
-
-    const finishOs = (arg) => {
-      let html =
-        `<i style="font-size: 130px; color: #edb72c;" class="fa-solid fa-triangle-exclamation"></i>
-          </br></br>
-          <div class="alert alert-danger" role="alert">
-            <p style="color:#fff;"><strong>Tem Certeza de que deseja alterar o estado desta OS?</strong></p>
-          </div>
-        `;
-
-      Swal.fire({
-        html: html,
-        customClass: 'swal-height',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Confirmar',
-        showCancelButton: true,
-        allowEnterKey: true,
-        confirmButtonColor: "#43a047",
-        cancelButtonColor: "#f44335",
-        customClass: {
-          confirmButton: 'btn bg-gradient-success mb-0 toast-btn',
-          cancelButton: 'btn bg-gradient-secondary mb-0 toast-btn'
-        },
-        width: 500,
-        preConfirm: () => {
-          $.post("../php/back_serviceorder.php", {
-              action: 'set_os_status',
-              id,
-              statusOs: arg
-            })
-            .done(async function(response) {
-              response = JSON.parse(response);
+        $.post("../php/back_serviceorder.php", {
+            action: 'update_issue',
+            id,
+            issue
+          })
+          .done(function(response) {
+            let data = JSON.parse(response);
+            if (data.code == 1) {
               showToast({
-                class: response.class,
-                message: response.message
+                class: 'bg-gradient-success',
+                message: 'Item atualizado com sucesso'
               });
-              statusOs = response.status;
-              if (response.status == 2) {
-                $('#save').attr('disabled', true);
-                $('.line').each(function() {
-                  const row = $(this).attr('row');
-                  $(`#remove${row}`).attr('disabled', true);
-                });
-              } else {
-                $('#save').attr('disabled', false);
-                $('.line').each(function() {
-                  const row = $(this).attr('row');
-                  $(`#remove${row}`).attr('disabled', false);
-                });
-              }
-
-              window.location.reload();
-
-              if (response.stauts != 2) {
-                setTimeout(() => {
-                  window.location = '../pages/serviceorder.php';
-                }, 2000);
-              }
-            });
-        },
-      });
-    }
-
-    saveService = () => {
-      $('#save').attr('disabled', 'disabled');
-      $('.unload-modal').hide();
-      $('.load-modal').show();
-      $.post("../php/back_service.php", {
-          action: 'save_service',
-          id: "",
-          service: $('#service').val(),
-          price: $('#price').val(),
-        })
-        .done(response => {
-          let data = JSON.parse(response);
-          showToast({
-            class: data.class,
-            message: data.message
+            } else {
+              showToast({
+                class: 'bg-gradient-danger',
+                message: 'Erro ao atualizar item'
+              });
+            }
           });
-          $('#save').removeAttr('disabled');
-          $('.unload-modal').show();
-          $('.load-modal').hide();
-          refreshSelectize();
-          $('.modal').modal('hide');
-        });
-    }
-
-    const refreshSelectize = async () => {
-      await fetchServices();
-      $('.line').each(function() {
-        const row = $(this).attr('row');
-        const $select = $(`.service${row}`);
-
-        if (!$select.val() || $select.val().length === 0) {
-          $select[0].selectize.addOption(services);
-          $select[0].selectize.refreshOptions();
-        }
-      });
-    }
-
-    const setIssue = (args) => {
-      let issue = "";
-      let id = args.idOrder;
-      if ($(`#issue${args.row}`).prop('checked')) {
-        issue = 1;
-      } else {
-        issue = 0;
       }
-
-      $.post("../php/back_serviceorder.php", {
-          action: 'update_issue',
-          id,
-          issue
-        })
-        .done(function(response) {
-          let data = JSON.parse(response);
-          if (data.code == 1) {
-            showToast({
-              class: 'bg-gradient-success',
-              message: 'Item atualizado com sucesso'
-            });
-          } else {
-            showToast({
-              class: 'bg-gradient-danger',
-              message: 'Erro ao atualizar item'
-            });
-          }
-        });
-    }
     </script>
 </body>
 

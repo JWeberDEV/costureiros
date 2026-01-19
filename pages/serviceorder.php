@@ -1,5 +1,6 @@
 <?php
 $page = 'os';
+$config = (object) parse_ini_file("../config.ini", true);
 ?>
 
 <!DOCTYPE html>

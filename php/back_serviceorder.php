@@ -12,7 +12,7 @@ switch ($data->action) {
     $out = date_format($out, "Y-m-d H:i:s");
     $proof = date_create($data->proof);
     $proof = date_format($proof, "Y-m-d H:i:s");
-    $servicePickup = $data->time;
+    $servicePickup = $data->time || '00:00';
 
     if ($data->id > 0) {
 
@@ -140,9 +140,9 @@ switch ($data->action) {
     }
 
     if ($data->period == 1) {
-      $query .= " AND s.sevicentry BETWEEN '$start' AND '$end'";
+      $query .= " AND DATE(s.servicexit) BETWEEN '$start' AND '$end'";
     } else if ($data->period == 2) {
-      $query .= " AND s.servicexit BETWEEN '$start' AND '$end'";
+      $query .= " AND DATE(s.servicexit) BETWEEN '$start' AND '$end'";
     }
 
     $query .= " ORDER BY CASE
