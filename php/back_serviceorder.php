@@ -12,7 +12,7 @@ switch ($data->action) {
     $out = date_format($out, "Y-m-d H:i:s");
     $proof = date_create($data->proof);
     $proof = date_format($proof, "Y-m-d H:i:s");
-    $servicePickup = $data->time;
+    $servicePickup = $data->time || '00:00';
 
     if ($data->id > 0) {
 

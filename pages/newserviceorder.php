@@ -84,31 +84,30 @@ $config = (object) parse_ini_file("../config.ini", true);
                         <label class="form-label">DT Saída</label>
                         <input id="exit" type="date" class="form-control">
                       </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="input-group input-group-outline my-3">
-                        <label class="form-label">Horário de Retirada</label>
-                        <select id="time" class="form-select" placeholder="Horário de Retirada"
-                          onchange="checkPickupTime()">
-                        </select>
+                      <div class="col-3 z-index-2">
+                        <div class="input-group input-group-outline my-3">
+                          <label class="form-label">Horário de Retirada</label>
+                          <select id="time" class="form-select" placeholder="Horário de Retirada" onchange="checkPickupTime()">
+                          </select>
+                        </div>
                       </div>
                     </div>
                     <?php } else { ?>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 entry">
-                        <label class="form-label">DT Entrada</label>
+                        <label class="form-label">Data de Entrada</label>
                         <input id="entry" type="datetime-local" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 proof">
-                        <label class="form-label">DT Prova</label>
+                        <label class="form-label">Data de Prova</label>
                         <input id="proof" type="datetime-local" class="form-control">
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="input-group input-group-outline my-3 exit">
-                        <label class="form-label">DT Saída</label>
+                        <label class="form-label">Data de Entrega</label>
                         <input id="exit" type="datetime-local" class="form-control">
                       </div>
                     </div>
@@ -994,6 +993,8 @@ $config = (object) parse_ini_file("../config.ini", true);
           $('.load-modal').hide();
           refreshSelectize();
           $('.modal').modal('hide');
+          $('#service').val('');
+          $('#price').val('');
         });
     }
 
