@@ -12,7 +12,7 @@ switch ($data->action) {
     $out = date_format($out, "Y-m-d H:i:s");
     $proof = date_create($data->proof);
     $proof = date_format($proof, "Y-m-d H:i:s");
-    $servicePickup = $data->time || '00:00';
+    $servicePickup = $data->time;
 
     if ($data->id > 0) {
 
@@ -207,6 +207,7 @@ switch ($data->action) {
         so.generalObservations,
         so.servicexit,
         so.idpayment,
+        so.servicepickup,
         FORMAT(so.incoming, 2) AS incoming,
         FORMAT(so.total, 2) AS total,
         FORMAT(so.remainder, 2) AS remainder,
@@ -265,6 +266,7 @@ switch ($data->action) {
         'button' => $value['button'],
         'status' => $value['status'],
         'issue' => $value['issue'],
+        'servicepickup' => $value['servicepickup'],
       ];
     }
 

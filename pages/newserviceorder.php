@@ -76,13 +76,13 @@ $config = (object) parse_ini_file("../config.ini", true);
                       <div class="col-3">
                         <div class="input-group input-group-outline my-3 entry">
                           <label class="form-label">DT Entrada</label>
-                          <input id="entry" type="date" class="form-control">
+                          <input id="entry" type="datetime-local" class="form-control">
                         </div>
                       </div>
                       <div class="col-3">
                         <div class="input-group input-group-outline my-3 exit">
                           <label class="form-label">DT Saída</label>
-                          <input id="exit" type="date" class="form-control">
+                          <input id="exit" type="datetime-local" class="form-control">
                         </div>
                       </div>
                       <div class="col-3 z-index-2">
@@ -813,6 +813,10 @@ $config = (object) parse_ini_file("../config.ini", true);
               setTimeout(() => {
                 payment.setValue([element.idpayment]);
               }, 1500);
+              setTimeout(() => {
+                time.setValue([element.servicepickup.substring(0, 5)]);
+              }, 1500);
+              
               $('.osStatus').addClass(element.button);
               $('.osStatus').text(element.status);
 
