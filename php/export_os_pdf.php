@@ -7,8 +7,8 @@ $data->entry = date_format(new DateTime($data->entry), 'd/m/Y');
 $data->exit = date_format(new DateTime($data->exit), 'd/m/Y');
 $pdf = new TCPDF();
 
-$pdf->SetCreator('Vitor');
-$pdf->SetAuthor('Vitor');
+$pdf->SetCreator('Josias');
+$pdf->SetAuthor('Josias');
 $pdf->SetTitle('Ordem de serviço');
 $pdf->AddPage();
 
@@ -16,7 +16,7 @@ $pdf->Ln(20);
 
 $pdf->Cell(0, 10, "Cliente: $data->name  Entrada: $data->entry Saida: $data->exit", 0, 1, 'C');
 $pdf->SetFont('helvetica', '', 10);
-$top = __DIR__ . '/../assets/img/walpaperw.jpg';
+$top = __DIR__ . '/../assets/img/walpaperw.png';
 $bottom = __DIR__ . '/../assets/img/pix.jpg';
 $currentY = $pdf->GetY();
 

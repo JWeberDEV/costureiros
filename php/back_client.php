@@ -73,11 +73,14 @@ switch ($data->action) {
     echo (json_encode($response));
     break;
   case 'list_clients':
-    $query = "SELECT id,name,phone,street,number,obs FROM clients where status = 1 ORDER BY id DESC";
+    $query = "SELECT id,name,phone,street,number,obs FROM clients where status = 1";
 
     if ($data->client) {
       $query .= " AND `name` LIKE '%$data->client%'";
     }
+
+    $query .= " ORDER BY name ASC";
+
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
