@@ -93,7 +93,7 @@ $config = (object) parse_ini_file("../config.ini", true);
           <div class="col-2">
             <div class="input-group input-group-outline my-3 date  ">
               <label class="form-label">Intervalo</label>
-              <input id="date" type="text" class="form-control">
+              <input id="date" type="text" class="form-control" autocomplete="off">
             </div>
           </div>
           <div class="col-1 text-end mt-3 pe-4">

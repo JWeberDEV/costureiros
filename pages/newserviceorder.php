@@ -353,12 +353,6 @@ $config = (object) parse_ini_file("../config.ini", true);
         }, 500);
       });
 
-      const updateTickets = async () => {
-        const response = await $.post("../php/back_serviceorder.php", {
-          action: 'update_ticket_status'
-        })
-      }
-
       $(document).ready(async function() {
         let clientSelectize = $(`#client`).selectize({
           valueField: 'id',
@@ -425,7 +419,6 @@ $config = (object) parse_ini_file("../config.ini", true);
           });
         <?php } ?>
 
-        await updateTickets();
         $('.load').hide();
         $('.load-modal').hide();
         $(`.entry`).addClass('is-filled');
