@@ -154,11 +154,11 @@ $config = (object) parse_ini_file("../config.ini", true);
                           <tr>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Pronto</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-15">Serviço
-                            </th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Item
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Item
                             </th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3"></th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Serviço
+                            </th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Preço
                             </th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3" <?php if ($config->settings['discount'] == 'disabled') {
@@ -507,17 +507,17 @@ $config = (object) parse_ini_file("../config.ini", true);
                 <input class="form-check-input" type="checkbox" ${issue == 1 ? 'checked' : ''} onClick="setIssue({idOrder:${idOrder}, row:${row}})" id="issue${row}">
               </div>
             </td>
-            <td>
-              <div class="d-flex px-2 py-1 m-2 is-filled">
-                <select id='${selectId}' class="form-control service${row}" ${service} onchange='setPrice(${row}), calculator();'>
-              </div>
-            </td>
             <td colspan='2'>
               <div class="d-flex px-2 py-1">
                 <div class="input-group input-group-outline my-3 ${classstyle} item${row}">
                   <label class="form-label">Item</label>
                   <input id="item${row}" type="text" class="form-control" onblur="onkeydown='setIsFilled(${row})'" onkeydown='setIsFilled(${row})' autocomplete="off">
                 </div>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex px-2 py-1 m-2 is-filled">
+                <select id='${selectId}' class="form-control service${row}" ${service} onchange='setPrice(${row}), calculator();'>
               </div>
             </td>
             <td>
